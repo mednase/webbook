@@ -1,0 +1,26 @@
+administrator_users:
+    path:    /all
+    defaults: { _controller: MainBundle:Administrator/User:index }
+
+administrator_new_user:
+    path:    /new
+    defaults: { _controller: MainBundle:Administrator/User:new }
+
+administrator_delete_user:
+    path:    /delete
+    defaults: { _controller: MainBundle:Administrator/User:delete }
+    methods: [POST]
+
+administrator_edit_user:
+    path:    /{id}/edit
+    defaults: { _controller: MainBundle:Administrator/User:edit }
+
+administrator_show_user:
+    path:    /{id}/show
+    defaults: { _controller: MainBundle:Administrator/User:show }
+
+administrator_switch_account_enabled:
+    path:   /{id}/switch_account_enabled
+    defaults: { _controller: MainBundle:Administrator/User:switchEnabled }
+    options:
+        expose: true

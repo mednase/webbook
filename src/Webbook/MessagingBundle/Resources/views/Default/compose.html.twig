@@ -1,0 +1,104 @@
+{% extends '@Messaging/message.layout.html.twig' %}
+{% block message_body %}
+    <div class="col-md-9">
+        <div class="inbox-body row" style="padding:10px 0;">
+            {{ form_start(messageForm,{'attr':{enctype:"multipart/form-data",'class':'messageForm',novalidate:true} }) }}
+            <div class="col-md-12" style="padding:0;">
+                <div class="form-group col-md-12">
+                    <label style="margin-top: 8px;" class="sbold" for="messageFor">Pour :</label>
+                        <select class="form-control has-feedback" id="messageFor" multiple name="receivers[]">
+                            {% for user in users %}
+                                {% if user.id != app.user.id %}
+                                    <option value="{{ user.id }}">{{ user.profile.fullName }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    <div class="help-block with-errors">vous devez sélectionner au moin une personne</div>
+                </div>
+                <div class="form-group col-md-12" >
+                    <label style="margin-top: 8px;" class="sbold" for="subject">Sujet :</label>
+                        {{ form_widget(messageForm.subject,{'attr':{'class':'form-control has-feedback','placeholder':'Sujet'}}) }}
+                    <div class="help-block with-errors">vous devez entrer le sujet du message</div>
+
+                </div>
+                <div class="form-group col-md-12">
+                        {{ form_widget(messageForm.body,{'attr':{'class':'summernote'}}) }}
+                    <div class="help-block with-errors">Le contenu de message ne peut pas etre vide (3 caractéres minimum)</div>
+                </div>
+                <div class="col-md-12">
+                    <label for="attachments" class="sbold">Pièces jointes :</label>
+                    <input id="attachments" type="file" name="attachments[]" multiple>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" style="margin-top: 10px">
+                    <button class="btn green"><i class="fa fa-envelope"></i>Envoyer Message</button>
+            </div>
+            {{ form_end(messageForm) }}
+        </div>
+    </div>
+{% endblock %}
+{% block under_js %}
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote(
+                {
+                    height: 300,
+                    language: 'fr',
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']]
+                    ],
+                }).trigger('summernote.change');
+            $(".summernote").on("summernote.change", function (e) {   // callback as jquery custom event
+                 $(this).val().length >= 3?$(this).closest('.form-group').removeClass('has-error').addClass('has-success'):
+                    $(this).closest('.form-group').addClass('has-error').removeClass('has-success');            });
+
+            $('.note-editor [data-event="insertUnorderedList"]').tooltip('disable');
+            $('.note-btn.btn.btn-default.btn-sm').attr('data-original-title','');
+            $('input[type=file]').fileinput();
+            $('#messageFor').select2({
+                placeholder: "Selectionner un ou plusieurs utilisateurs"
+            });
+
+            $('.messageForm').on('submit',function ($event) {
+                var users=$('#messageFor');
+                var subject=$('#webbook_messagingbundle_message_subject');
+                var content=$('#webbook_messagingbundle_message_body');
+
+                var error=false;
+
+                if(!users.val()){
+                    error=true;
+                    users.closest('.form-group').addClass('has-error');
+                }
+                if(!subject.val()){
+                    error=true;
+                    subject.closest('.form-group').addClass('has-error');
+                }
+                if(!content.val() || $.trim(content.val()).length<3){
+                    error=true;
+                    content.closest('.form-group').addClass('has-error');
+                }
+                if(error){
+                    users.on('change',function () {
+                        $(this).val()?$(this).closest('.form-group').removeClass('has-error').addClass('has-success'):
+                            $(this).closest('.form-group').addClass('has-error').removeClass('has-success');
+                    });
+                    subject.on('change',function () {
+                        $(this).val()?$(this).closest('.form-group').removeClass('has-error').addClass('has-success'):
+                            $(this).closest('.form-group').addClass('has-error').removeClass('has-success');
+                    });
+                    $event.preventDefault();
+                }
+
+            })
+
+        });
+
+
+    </script>
+{% endblock %}

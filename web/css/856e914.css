@@ -1,0 +1,422 @@
+.book-collection {
+    background-color: #fff;
+    width: 100%;
+    padding: 100px 0;
+}
+.book-collection ::-webkit-scrollbar {
+    width: 10px;
+}
+
+.book-collection  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: #ff851d!important;
+    border-radius: 1px!important;
+}
+
+.book-collection  ::-webkit-scrollbar-thumb {
+    border-radius: inherit!important;
+    -webkit-box-shadow: #ff851d!important;
+}
+
+.sidebar h3 {
+    font-weight: bold;
+    border-bottom: 1px solid #f8f8f8;
+    padding: 15px;
+    margin: 0;
+    background: #f8f8f8;
+    font-size: 24px;
+}
+.sec-heading h3{
+    font-size: 28px;
+}
+
+.sidebar {
+    background: #f8f8f8;
+}
+.sidebar ul {
+    height: 584px;
+    overflow-y: scroll;
+}
+.sidebar ul li {
+    position: relative;
+}
+.sidebar ul li.ui-state-active a {
+    color: #fff;
+}
+.sidebar ul li a {
+    padding: 10px 20px;
+    position: relative;
+    z-index: 2;
+}
+.sidebar ul li a.active {
+    color:white;
+    background-color:#49bdbc ;
+}
+/*
+=============================================
+			PAPULAR BOOKS SECTION
+=============================================
+*/
+
+.lib-papular-books{
+    padding:70px 0px;
+}
+.lib-papular-books .nav-tabs{
+    float:left;
+    width:50%;
+    text-align:center;
+    margin:-24px 0px 0px 0px;
+    border:none;
+    float:right;
+}
+.lib-papular-books .tab-content{
+    float:left;
+    width:50%;
+    padding:0px 15px;
+}
+.lib-papular-books .nav-tabs > li{
+    margin-top: 24px;
+}
+.lib-papular-books .nav-tabs > li > a{
+    display:block;
+    font-size:14px;
+    font-weight:bold;
+    margin:0px;
+    color:#333;
+    padding:0px;
+    float:left;
+}
+.lib-papular-books .nav-tabs > li > a:hover, .lib-papular-books .nav-tabs > li.active > a, .lib-papular-books .nav-tabs > li.active > a:focus{
+    color:#fff;
+    outline:none;
+}
+.lib-papular{
+    float:left;
+    width:100%;
+    border:solid 1px #CCC;
+    padding:10px 20px 10px 10px;
+}
+.lib-papular .kode-thumb{
+    float:left;
+}
+.lib-papular .kode-thumb img{
+    float: left;
+    width: 100%;
+}
+.lib-papular .kode-text{
+    padding:10px 0px 0px 270px;
+}
+.lib-papular .kode-text h2{
+    font-size:19px;
+    margin-bottom:10px;
+}
+.lib-papular .kode-text h4{
+    font-size:14px;
+    margin: 0px 0px 10px;
+}
+.lib-papular .lib-price{
+    float:left;
+    width:100%;
+}
+.lib-papular .lib-price h3{
+    float:left;
+}
+.lib-papular .lib-price a{
+    float:right;
+    color:#333;
+    font-weight:bold;
+}
+.lib-papular .lib-price a:hover{
+    text-decoration: underline;
+}
+
+.lib-papular-thumb{
+    float:left;
+    width:100%;
+    border:solid 1px #CCC;
+    padding:5px;
+}
+.lib-papular-thumb img{
+    width:100%;
+    float:left;
+}
+.lib-papular-books .rating {
+    text-align: left;
+}
+.lib-papular-books .rating > span{
+    color: #000;
+}
+/*
+=============================================
+			HEADING STYLE 2
+=============================================
+*/
+.kode-text h2, .lib-blog-2 .kode-text h3 {
+    font-family: 'Open Sans', sans-serif;
+    color: #262626;
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: uppercase;
+    line-height: 26px;
+    text-overflow: ellipsis;
+    margin: 0px 0px 10px 0px;
+}
+.section-heading-1{
+    float:left;
+    width:100%;
+    text-align:center;
+    margin-bottom:36px;
+    position:relative;
+    margin-top:-5px;
+}
+.section-heading-1 h2{
+    font-size:32px;
+    text-align:center;
+    font-family: 'Raleway', sans-serif;
+    text-transform:capitalize;
+}
+.kode-icon{
+    float:left;
+    width:100%;
+}
+.section-heading-1 .kode-icon:before, .section-heading-1 .kode-icon:after{
+    content:"";
+    position:absolute;
+    left:35%;
+    margin:auto;
+    bottom:14px;
+    width:150px;
+    height:1px;
+    background-color:#CCC;
+}
+.section-heading-1 .kode-icon:after{
+    left:auto;
+    right:35%;
+
+}
+.section-heading-1 i{
+    font-size:20px;
+    color:#333;
+}
+.section-heading-1.dark-sec h2,  .section-heading-1.dark-sec p, .section-heading-1.dark-sec p:after, .section-heading-1.dark-sec i{
+    color:#fff;
+}
+.section-heading-1.dark-sec{
+}
+.section-heading-1.dark-sec p:before, .section-heading-1.dark-sec p:after{
+    background-color:#fff;
+}
+.section-heading-1 p{
+    margin-bottom:17px;
+}
+
+/*
+/* most popular book section */
+.lib-papular-books {
+    padding: 70px 0px;
+}
+.section-heading-1 {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 36px;
+    position: relative;
+    margin-top: -5px;
+}
+.section-heading-1 h2 {
+    font-size: 32px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    text-transform: capitalize;
+}
+.kode-icon {
+    float: left;
+    width: 100%;
+}
+.section-heading-1 i {
+    font-size: 20px;
+    color: #333;
+}
+.lib-papular-books .nav-tabs {
+    float: left;
+    width: 50%;
+    text-align: center;
+    margin: -24px 0px 0px 0px;
+    border: none;
+    float: right;
+}
+.lib-papular-books .nav-tabs > li > a:hover, .lib-papular-books .nav-tabs > li.active > a, .lib-papular-books .nav-tabs > li.active > a:focus {
+    color: #fff;
+    outline: none;
+}
+.lib-papular-thumb {
+    float: left;
+    width: 100%;
+    border: solid 1px #CCC;
+    padding: 5px;
+}
+.lib-papular-thumb img {
+    width: 100%;
+    float: left;
+}
+.section-heading{
+    float:left;
+    width:100%;
+    padding:0px 100px;
+    text-align:center;
+    margin:0px 0px 30px 0px;
+}
+.section-heading h2{
+    font-size:44px;
+    color:#333;
+    text-transform:uppercase;
+    margin:0px 0px 10px 0px;
+}
+.section-heading h5{
+    font-size:16px;
+    color:#9f9f9f;
+    margin:0px;
+    font-weight:normal;
+}
+.section-heading p{
+    color:#9f9f9f;
+    margin:0px 0px 15px 0px;
+    padding:0px 0px 15px 0px;
+    position:relative;
+}
+.section-heading p:before{
+    content:"";
+    width:50px;
+    height:2px;
+    background-color:#9f9f9f;
+    position:absolute;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    margin:auto;
+}
+.nav-tabs > li.active > a{
+    background-color: #FF9606;
+}
+.nav-tabs > li.active:hover > a{
+    background-color: #FF9606;
+}
+.tab-content > .tab-pane {
+    display: none;
+}
+.tab-content > .active {
+    display: block!important;
+}
+.lib-price h3{
+    clear: both;
+    margin: 0px 0 12px;
+    font-family: 'Open Sans', sans-serif;
+    color: #262626;
+    font-weight: 700;
+}
+.lib-price a{
+    background-color: #ff9606;
+    text-decoration: none!important;;
+    color: white!important;
+}
+/* Pricing section */
+.features-section {
+    background-color: #f5f5f5;
+    padding-top: 30px;
+    padding-bottom: 60px;
+}
+.pricingTable{
+    text-align: center;
+    transform: translateY(0);
+    transition: all 0.3s ease 0s;
+}
+.pricingTable:hover{
+    transform: translateY(-20px);
+    box-shadow: 0 0 20px #000;
+}
+.pricingTable .pricingTable-header{
+    background: #3d3d3d;
+    padding: 20px 0;
+    position: relative;
+    transition: all 0.3s ease 0s;
+}
+.pricingTable:hover .pricingTable-header{
+    background: rgb(73, 189, 188);
+}
+.pricingTable .pricingTable-header:before,
+.pricingTable .pricingTable-header:after{
+    content: "";
+    width: 25px;
+    height: 20px;
+    background: #313131;
+    position: absolute;
+    bottom: 0;
+}
+.pricingTable .pricingTable-header:before{
+    left: 0;
+}
+.pricingTable .pricingTable-header:after{
+    right: 0;
+}
+.pricingTable .title{
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+}
+.pricingTable .currency{
+    display: inline-block;
+    font-size: 25px;
+    font-weight: 900;
+    color: #fff;
+    margin-right: 3px;
+}
+.pricingTable .price-value{
+    display: inline-block;
+    font-size: 25px;
+    font-weight: 900;
+    color: #fff;
+    padding-right: 5px;
+}
+.pricingTable .month{
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+}
+.pricingTable .pricing-content{
+    background: #313131;
+    padding: 25px 20px;
+}
+.pricingTable .pricing-content ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.pricingTable .pricing-content ul li{
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.pricingTable .pricing-content ul li span{
+    font-weight: 700;
+    padding-right: 5px;
+}
+.pricingTable .pricingTable-signup{
+    display: block;
+    padding: 10px 0;
+    background: #3d3d3d;
+    font-size: 14px;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    transition: all 0.3s ease 0s;
+}
+.pricingTable .pricingTable-signup:hover{
+    box-shadow: 0 0 10px rgb(73, 189, 188);
+}
+.pricingTable:hover .pricingTable-signup{
+    background: rgb(73, 189, 188);
+}
+@media only screen and (max-width: 990px){
+    .pricingTable{ margin-bottom: 40px; }
+}

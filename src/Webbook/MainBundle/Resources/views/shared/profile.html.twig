@@ -1,0 +1,176 @@
+{% extends "@Main/layout.html.twig" %}
+
+{% block body %}
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ url('author_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Profil</span>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <div class="col-md-12 portlet custom-bg">
+            {{ form_start(form,{'attr':{enctype:"multipart/form-data",class:'form-horizantal'}}) }}
+            <div class="col-md-3" style="padding: 50px">
+                <div class="userpic">
+                    <div class="userpic-wrapper">
+                        <img id="avatar" src="{% if app.user.picture is not null %}
+                        {{ vich_uploader_asset(app.user.picture,'mediaFile') }}
+                        {% else %}
+                        {{ asset('assets/img/avatar/no-avatar.png') }}
+                        {% endif %}">
+                    </div>
+                    <div id="picture-widget" class="hidden">
+                        {{ form_widget(form.picture) }}
+                    </div>
+                    <i id="init-avatar" class="ion-ios-close-outline "></i>
+                    <div class="change-userpic button">Changer photo de profil
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row" style="padding: 20px">
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.profile.lastName, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.profile.lastName,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.profile.lastName) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.profile.firstName, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.profile.firstName,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.profile.firstName) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.profile.phone, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.profile.phone,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.profile.phone) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.profile.address, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.profile.address,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.profile.address) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.profile.birthday, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.profile.birthday,{'attr':{'class':'form-control datepicker'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.profile.birthday) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-md-12">
+                {% if is_granted('ROLE_AUTHOR')  %}
+                <div class="row form-group margin-top-10">
+                    {{ form_label(form.bibliography, null,{ 'label_attr': {'class': 'col-md-2 col-md-offset-1 custom-lb'}}) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.bibliography,{'attr':{'class':'form-control','rows':10}}) }}
+                        <div class="font-red" style="list-style: none">
+                            {{ form_errors(form.bibliography) }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row" style="padding: 50px">
+                    <h2 style="margin-top: 0px;margin-bottom: 15px" class="font-green-jungle bold">Information du compte
+                        :</h2>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.username, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.username) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.email,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.email,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.plainPassword.first,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.plainPassword.first,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.plainPassword.first) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(form.plainPassword.second,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(form.plainPassword.second,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(form.plainPassword.second) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center margin-top-10" style="margin-bottom: 10px">
+                    <input  class="btn blue" type="submit" value="Enregister"/>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form,{'render_rest':false}) }}
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/profile.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            var original_img="{{ asset('assets/img/avatar/no-avatar.png') }}";
+            $('.change-userpic').click(function () {
+                $('.input-avatar').attr('accept','image/*').click();
+            });
+            $('.input-avatar').change(function () {
+                readURL(this);
+            });
+            $('#init-avatar').click(function () {
+                $('#avatar').attr('src',original_img);
+                $('.input-avatar').val("");
+            });
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#avatar').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        })
+
+    </script>
+ {% endblock %}

@@ -1,0 +1,27 @@
+{% trans_default_domain 'FOSUserBundle' %}
+<div class="container" style="margin-top:20px;min-height: 350px">
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
+                <h2><span class="form-title">Récupération du mot de passe.</span></h2>
+                <hr class="colorgraph">
+                <div>
+                    {% if invalid_username is defined %}
+                        <p>{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}) }}</p>
+                    {% endif %}
+                    <input type="text" id="username" name="username" required="required" class="form-control input-lg"
+                           placeholder="{{ 'resetting.request.username'|trans }}"/>
+                </div>
+                <div>
+                    <input type="submit" value="{{ 'resetting.request.submit'|trans }}"
+                           class="btn btn-lg btn-success btn-block" style="margin-top:5px"/>
+                    <p class="text-center" style="font-size: 15px;color: white">
+                        Tu te rappelle de votre mot de passe ? <a style="font-weight: 600;color: #D91E18!important;"
+                                                                  href="{{ path('fos_user_security_login') }}">Connecter
+                            par ici </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

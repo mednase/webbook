@@ -1,0 +1,235 @@
+{% extends "@Main/layout.html.twig" %}
+{% block title %}
+    Messages
+{% endblock %}
+{% block body %}
+    <div class="inbox">
+        <div class="row">
+            <div class="col-md-3">
+                <form action="{{ url('messaging_search',{role:getRole()} ) }}">
+                    <div class="input-group" style="margin-bottom: 20px">
+                        <input {% if search is defined %} value="{{ search }}" {% endif %} name="searchMessage" type="text" class="form-control" placeholder="Rechercher .. ">
+                        <span class="input-group-btn">
+                                <button type="submit" class="btn green">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                        </span>
+                    </div>
+                </form>
+                <div class="inbox-sidebar">
+                    <a href="{{ url('messaging_compose',{role:getRole()}) }}" id="btn-compose-message"
+                       class="btn red compose-btn btn-block"><i
+                                class="fa fa-pencil-square-o"></i>Composer
+                    </a>
+                    <ul class="inbox-nav">
+                        <li class="{% block BCMInbox %}{% endblock %}">
+                            <a href="{{ url('messaging_inbox',{role:getRole()}) }}">
+                                <span class="fa fa-inbox"></span>
+                                Boîte de réception
+                                {% if  countNewMessages()>0 %}
+                                <span class="badge badge-success msg-nb">{{ countNewMessages() }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li class="{% block BCMSent %}{% endblock %}">
+                            <a href="{{ url('messaging_sent',{role:getRole()}) }}">
+                                <span class="fa fa-send-o"></span>
+                                Messages envoyés
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="{% block BCMImportant %}{% endblock %}">
+                            <a href="{{ url('messaging_important',{role:getRole()}) }}" class="sbold uppercase">
+                                <span class="fa fa-star" style="color: #73879C!important"></span> Important</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% block message_body %}
+            {% endblock %}
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-inbox">
+    <div id="RoleDiv" data-role="{{ getRole() }}"></div>
+{% endblock %}
+{% block stylesheets %}
+    <style>
+        .view-message {
+            padding-left: 5px;
+        }
+        .no-message{
+            color: #73879c;
+            font-size: 40px!important;
+            padding: 150px 0!important;
+            font-weight: 700;
+        }
+
+
+        .select2-selection__choice {
+            border: none !important;
+            font-size: 17px !important;
+            color: white !important;
+            background-color: #4abdbc !important;
+        }
+
+        .select2-selection__choice__remove {
+            color: #e7505a !important;
+            font-weight: 900 !important;
+            font-size: 18px !important;
+        }
+
+        .select2-selection.has-error, .form-control.has-error {
+            border: 2px solid #e35b5a;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border: 2px solid #52bad5 !important;
+            outline: 0;
+        }
+
+        .compose-tab .inbox-body {
+            background-color: #f5f5f5 !important;
+        }
+
+        li.groupes > h3 {
+            text-align: center;
+            font-weight: 700;
+            color: #659be0;
+        }
+
+        li.groupes-item {
+            padding: 5px !important;
+            line-height: 20px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: grey;
+        }
+
+        li.groupes-item i {
+            margin-right: 5px;
+        }
+
+        .datepicker {
+            z-index: 1 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/inbox.min.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            const ROLE=$("#RoleDiv").data('role');
+            $(document).on('change', '#dateSearch', function () {
+                $('#page-loader').removeClass('hidden');
+                var date = $(this).val();
+                window.location = Routing.generate('messaging_inbox',{role:ROLE,date:date});
+            })
+            $('.important-btn').change(function () {
+                var elem=$(this);
+                var _id=elem.data('msg');
+                $.ajax({
+                    url:Routing.generate('set_important_msg',{role:ROLE}),
+                    method:'post',
+                    data:{messages:[_id]},
+                    success:function () {
+                        elem.parent().find('i').toggleClass('fa-star-o fa-star')
+                    }
+                });
+            });
+            $(document).on('click','#check-all-msg',function () {
+                var checked=$(this).prop('checked');
+                $('input[name="msg-check[]"]').each(function () {
+                    if(checked != $(this).prop('checked'))
+                        $(this).closest('label').click();
+                });
+            });
+            $(document).on('click','#btn-dlt-st-msg',function () {
+                var data=[];
+                var elems=[];
+                $('input[name="msg-check[]"]:checked').each(function () {
+                    var tr = $(this).closest('tr');
+                    data.push(tr.data('id'));
+                    elems.push(tr);
+                });
+                $.ajax({
+                    url:Routing.generate('messaging_delete_sent_messages',{role:ROLE}),
+                    method:'post',
+                    data:{messages:data},
+                    success:function () {
+                        $.each(elems,function (i,e) {
+                            e.remove();
+                        });
+                    }
+                });
+            });
+            $(document).on('click','#btn-dlt-msg',function () {
+                var data=[];
+                var elems=[];
+                $('input[name="msg-check[]"]:checked').each(function () {
+                    var tr = $(this).closest('tr');
+                    data.push(tr.data('id'));
+                    elems.push(tr);
+                });
+                $.ajax({
+                    url:Routing.generate('messaging_delete_inbox_messages',{role:ROLE}),
+                    method:'post',
+                    data:{messages:data},
+                    success:function () {
+                        $.each(elems,function (i,e) {
+                            e.remove();
+                        });
+                    }
+                });
+            });
+            $('#btn-dlt-imp').click(function () {
+                var data=[];
+                var elems=[];
+                $('input[name="msg-check[]"]:checked').each(function () {
+                    var tr = $(this).closest('tr');
+                    data.push(tr.data('id'));
+                    elems.push(tr);
+                });
+                $.ajax({
+                    url:Routing.generate('set_important_msg',{role:ROLE}),
+                    method:'post',
+                    data:{messages:data},
+                    success:function () {
+                        $.each(elems,function (i,e) {
+                            e.remove();
+                        });
+                    }
+                });
+            });
+
+            $(document).on('click','#btn-mq-read',function () {
+                var data = [];
+                var elems = [];
+                $('input[name="msg-check[]"]:checked').each(function () {
+                    var tr = $(this).closest('tr');
+                    if (tr.hasClass('unread')) {
+                        data.push(tr.data('id'));
+                        elems.push(tr);
+                    }
+                });
+
+                $.ajax({
+                    url: Routing.generate('messaging_mark_as_read', {role: ROLE}),
+                    method: 'POST',
+                    data: {messages: data},
+                    success: function () {
+                        $.each(elems, function (i, o) {
+                            o.removeClass('unread')
+                        });
+                        var nbMsg = $('.msg-nb');
+                        var nbMessages = parseInt(nbMsg.text()) - elems.length;
+                        nbMessages > 0 ? nbMsg.text(nbMessages) : nbMsg.remove();
+
+                    }
+                })
+            });
+        })
+    </script>
+    {% block under_js %}
+    {% endblock %}
+{% endblock %}

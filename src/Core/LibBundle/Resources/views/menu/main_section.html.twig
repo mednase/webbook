@@ -1,0 +1,115 @@
+{# {% block mainMenu %} #}
+<a class="dropdown-toggle project-name" data-toggle="dropdown" href="#">
+    {% if 'analyzer_' in route %} Exploitation des données
+    {% elseif 'enter_data' in route %} Saisie des enquêtes
+    {% elseif 'central_purchasing' in route %} Centrale d'achat
+    {% elseif 'administration' in route %} Administration
+    {% elseif 'trombinoscope' in route %} Trombinoscope
+    {% else %}{{ get_params('project_title') }}
+    {% endif %} <img src="{{ asset('assets/img/icon/arrow-down.png') }}" alt="">
+</a>
+<div class="dropdown-menu dropdown-user">
+    <!-- begin content modules -->
+    <div class="content-modules">
+        <div class="row placeholders">
+            {% set status = menu_status('enter_data') %}
+            <div class="col-md-3 col-sm-3 {% if not status %}disbale-element{% endif %}">
+                <div class="placeholder">
+                    <a class="placeholder{% if 'enter_data' in route %} active{% endif %}"
+                       {% if status %}href="{{ first_target_bundle('enter_data') }}"{% endif %}>
+                                              <span class="icon-module">
+                                                  <img src="{{ asset('assets/img/menu/saisie-enquetes.png') }}"
+                                                       alt="Saisie des enquêtes">
+                                              </span>
+
+                        <h2>Saisie des enquêtes</h2>
+                    </a>
+                </div>
+            </div>
+            {% set status = menu_status('analyzer_') %}
+            <div class="col-md-3 col-sm-3 {% if not status %}disbale-element{% endif %}">
+                <div class="placeholder">
+                    <a class="placeholder{% if 'analyzer_' in route %} active{% endif %}"
+                       {% if status %}href="{{ first_target_bundle('analyzer_') }}"{% endif %}>
+                                            <span class="icon-module"><img
+                                                        src="{{ asset('assets/img/menu/exploitation-donneees.png') }}"
+                                                        alt="Exploitation des données">  </span>
+
+                        <h2>Exploitation des données</h2>
+                    </a>
+                </div>
+            </div>
+            {% set status = menu_status('central_purchasing') %}
+            <div class="col-md-3 col-sm-3{% if not status %} disbale-element{% endif %}">
+                <div class="placeholder">
+                    {% set routeCentralPurchasing = central_achat_route() %}
+                    <a class="placeholder{% if 'central_purchasing' in route %} active{% endif %}" {% if status and (routeCentralPurchasing != null) %}href="{{ routeCentralPurchasing }}"{% endif %}>
+                            <span class="icon-module">
+                                <img src="{{ asset('assets/img/menu/centrale-achat.png') }}" alt="Centrale d ‘achat">
+                            </span>
+                        <h2>Centrale d ‘achat </h2>
+                    </a>
+                </div>
+            </div>
+            {% set status = menu_status('own_cloud') %}
+            <div class="col-md-3 col-sm-3{% if not status %} disbale-element{% endif %}">
+                <div class="placeholder">
+                    <a href="{{ get_params('cloud.login') }}?token={{ app.user.authToken }}&email={{ app.user.email }}&verify_url={{ url('rse_check_session') }}"
+                       target="_blank"
+                       class="placeholder {% if status %}{% endif %}">
+                                            <span class="icon-module"><img
+                                                        src="{{ asset('assets/img/menu/documents.png') }}"
+                                                        alt="Documents">  </span>
+
+                        <h2>Documents</h2>
+                    </a>
+                </div>
+            </div>
+            {% set status = menu_status('rse') %}
+            <div class="col-md-3 col-sm-3 {% if not status %} disbale-element{% endif %}">
+                <div class="placeholder">
+                    {% set url = '&token=' ~ app.user.authToken ~ '&email=' ~ app.user.email ~ '&verify_url=' ~ url('rse_check_session') %}
+                    <a {% if status %}href="{{ get_params('rse.default_url') ~ url }}"{% endif %} class="placeholder" target="_blank">
+                                            <span class="icon-module"><img
+                                                        src="{{ asset('assets/img/menu/commission-groupes-travail.png') }}"
+                                                        alt="Commissions et groupes de travail">  </span>
+
+                        <h2>Commissions et groupes de travail</h2>
+                    </a>
+                </div>
+            </div>
+            {% set status = menu_status('trombinoscope') %}
+            <div class="col-md-3 col-sm-3{% if not status %} disbale-element{% endif %}">
+                <div class="placeholder">
+                    <a class="placeholder{% if 'trombinoscope' in route %} active{% endif %}"
+                       {% if status %}href="{{ path('trombinoscope_people') }}"{% endif %}>
+                                            <span class="icon-module"><img
+                                                        src="{{ asset('assets/img/menu/trombinoscope.png') }}"
+                                                        alt="Trombinoscope">  </span>
+
+                        <h2>Trombinoscope</h2>
+                    </a>
+                </div>
+            </div>
+            {% set status = menu_status('administration_') %}
+            {% set path = url('administration_intranet_utilisateurs', {'mode' : 'admin'}) %}
+            {% if is_granted('ROLE_GENERAL') %}
+                {% set path = url('administration_intranet_utilisateurs', {'mode' : 'super-admin'}) %}
+            {% endif %}
+            <div class="col-md-3 col-sm-3{% if not status %} disbale-element{% endif %}">
+                <div class="placeholder">
+                    <a {% if status %}href="{{ path }}"{% endif %}
+                       class="placeholder{% if 'administration' in route %} active{% endif %}">
+                                            <span class="icon-module"><img
+                                                        src="{{ asset('assets/img/menu/administration.png') }}"
+                                                        alt="Administration">  </span>
+
+                        <h2>Administration</h2>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of content modules -->
+</div>
+{# {% endblock %} #}

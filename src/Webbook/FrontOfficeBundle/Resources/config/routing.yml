@@ -1,0 +1,49 @@
+api_categories:
+    path:     /categories
+    defaults: { _controller: FrontOfficeBundle:Default:getCategories }
+
+register_page:
+    path:   /register/{plan}
+    defaults: { _controller: UserBundle:Default:register }
+
+api_home:
+    path:   /home
+    defaults: { _controller: FrontOfficeBundle:Default:home}
+
+api_get_book:
+    path:   /book/{token}
+    defaults: { _controller: FrontOfficeBundle:Default:getBook }
+
+api_get_upcoming_books:
+    path:   /upcoming_books
+    defaults: { _controller: FrontOfficeBundle:Default:upcomingBooks }
+
+api_get_lastpublished_books:
+    path:   /last_published_books
+    defaults: { _controller: FrontOfficeBundle:Default:lastPublishedBooks }
+
+api_get_best_books:
+    path:   /best_books
+    defaults: { _controller: FrontOfficeBundle:Default:bestBooks }
+
+api_get_best_selling_books:
+    path:   /best_selling_books
+    defaults: { _controller: FrontOfficeBundle:Default:bestSellingBooks }
+
+api_get_book_pdf:
+    path:   /book/{token}/pdf
+    defaults: { _controller: FrontOfficeBundle:Default:getBookPdf }
+
+api_subscribe_newsletter:
+    path:   /newsletter/subscribe
+    defaults: { _controller: FrontOfficeBundle:Default:newsletterSubscribe }
+    methods: [POST]
+
+api_category_books:
+    path:   /books/{id}/{page}
+    defaults: { _controller: FrontOfficeBundle:Default:getBookByCategory }
+
+api_shopping_cart_books:
+    path:   /shopping_cart/books
+    defaults: { _controller: FrontOfficeBundle:Default:getShoppingCartBooks}
+

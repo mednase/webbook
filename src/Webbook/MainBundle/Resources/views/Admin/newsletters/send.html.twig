@@ -1,0 +1,75 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+   Envoyer newsLetter
+{% endblock %}
+
+{% block body %}
+   <div class="page-bar">
+      <ul class="page-breadcrumb">
+         <li>
+            <i class="icon-home"></i>
+            <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+            <i class="fa fa-angle-right"></i>
+         </li>
+         <li>
+            <span class="active">Envoyer newsLetter</span>
+         </li>
+
+      </ul>
+   </div>
+<div class="container-fluid">
+   <div class="row">
+      <div class="portlet ">
+         <div class="portlet-body col-md-12" style="padding: 10px 0">
+            <form method="post">
+               <div class="col-md-12 form-group">
+                  <div class="col-md-5">
+                     <label class="control-label" for="list-newsletter">Selectionner Votre newsletter :</label>
+                     <p class="text-muted">Sélectionnez une newsletter de la liste disponible.Pour crée s'il vous plaît aller au menu composer newsletter</p>
+                  </div>
+                  <div class="col-md-6">
+                     <select name="newsletter" id="list-newsletter" class="form-control" >
+                        {% for newsletter in newsLetters %}
+                           <option value="{{ newsletter.id }}">{{ newsletter.subject }}</option>
+                        {% endfor %}
+                     </select>
+                  </div>
+               </div>
+               <div class="col-md-12 form-group">
+                  <div class="col-md-5">
+                     <label for="subscriberGrp" class="control-label">Selectionner un group</label>
+                     <p class="text-muted">Selectionner un groupe d'abonnée</p>
+                  </div>
+                  <div class="col-md-6">
+                     <select multiple name="subscriberGrp[]" id="subscriberGrp" class="form-control select2">
+                        <option value="0">Tous les abonneés</option>
+                        <option value="1">Propriétaire d'abonnement par theme</option>
+                        <option value="2">Propriétaire d'abonnement global</option>
+                        <option value="3">Tous Les propriétaire d'abonnements</option>
+                        <option value="4">Seulement les inscrits</option>
+                        <option value="5">Seulement les non inscrits</option>
+                     </select>
+                  </div>
+               </div>
+
+
+               <div class="col-md-12 pull-left" style="margin-top: 10px">
+                  <button type="submit" class="btn blue">Envoyer Email</button>
+                  <button type="reset" class="btn btn-default">X Annuler</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<input type="hidden" value="" id="menuSelected" data-menu="page-send-newsletter">
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

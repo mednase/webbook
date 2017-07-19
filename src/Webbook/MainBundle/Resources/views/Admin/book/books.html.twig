@@ -1,0 +1,116 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    Liste des  Livres
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Liste des livres</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="icon-c-books"></span> &nbsp; Liste des livres </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <a href="{{ url('administrator_new_book') }}" style="margin-top: 5px" class="btn btn-sm blue"><i class="fa fa-plus"></i>Nouveau Livre</a>
+                    <div class="tools">
+                        <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body ">
+                    <table class="table table-striped table-bordered minimisedDataTable" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="hidden-sm hidden-xs text-center">Date Creation</th>
+                            <th>Titre</th>
+                            <th class="hidden-sm hidden-xs">Categorie</th>
+                            <th class="hidden-sm hidden-xs">Auteurs Principaux</th>
+                            <th class="text-center col-md-3 col-lg-2 col-sm-3 col-xs-5">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for book in books %}
+                            <tr>
+                                <td class="hidden-sm hidden-xs text-center">{{ book.createdAt|date('d-m-Y') }}</td>
+                                <td>{{ book.title }}</td>
+                                <td class="hidden-sm hidden-xs">{{ book.category.name }}</td>
+                                <td class="hidden-sm hidden-xs">
+                                    {% for auth in book.mainAuthors %}
+                                        {% if loop.index>1 %} , {% endif %}
+                                        {{ auth.profile.fullName }}
+                                    {% endfor %}
+                                </td>
+                                <td  class="text-center col-md-3 col-lg-2 col-sm-3 col-xs-5">
+                                    <a data-toggle="tooltip" data-title="Détails du livre" href="{{ url('administrator_edit_book',{token:book.token}) }}"
+                                        class="btn green btn-icon-only "><i class="fa fa-eye"></i></a>
+                                    <button data-toggle="tooltip" data-title="Supprimer" data-url="{{ url('administrator_book_delete',{token:book.token}) }}"
+                                                class="btn red btn-icon-only  btn-delete-book"><i
+                                                    class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-books">
+
+{% endblock %}
+{% block stylesheets %}
+    <style>
+
+    </style>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $(".btn-delete-book").click(function () {
+                var ligne = $(this).closest('tr');
+                var url = $(this).data('url');
+                swal({
+                    title: "Êtes-vous sûr",
+                    text: "Voulez vous vraiment supprimer ce livre",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText:"Annuler",
+                    confirmButtonText:"Confirmer",
+                    cancelButtonClass:'red',
+                    confirmButtonClass:'blue',
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function () {
+                    $.ajax({
+                        url: url,
+                        method: "POST",
+                        success: function () {
+                            swal("Ce livre a été supprimer !");
+                            ligne.remove();
+                        },
+                        error: function () {
+                            swal("Erreur !");
+                        }
+                    })
+
+                });
+            })
+
+        })
+    </script>
+{% endblock %}

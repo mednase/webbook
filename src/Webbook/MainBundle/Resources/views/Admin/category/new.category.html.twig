@@ -1,0 +1,51 @@
+{% extends '@Main/layout.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    Ajouter une categorie
+{% endblock %}
+
+{% block classBody %}
+    page-container-bg-solid page-header-fixed
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Ajouter une categorie </span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-tag"></span> &nbsp; Ajouter une categorie </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="tools">
+                        <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body ">
+                    {{ form_start(form) }}
+                    {{ form_row(form.name) }}
+                    <div class="text-center" style="margin-top: 15px">
+                        <button class="btn blue">Enregistrer</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-new-category">
+
+{% endblock %}

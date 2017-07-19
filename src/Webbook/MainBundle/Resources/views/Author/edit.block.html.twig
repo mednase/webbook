@@ -1,0 +1,80 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    {{ version.bookBlock.book.title }} - {{ version.bookBlock.title }} - v {{ version.number }}
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('author_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="material-icons dp48">library_books</i>
+                <a href="{{ url('author_my_books') }}">Mes livres</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{{ url('author_show_book',{token:version.bookBlock.book.token}) }}">{{ version.bookBlock.book.title }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">{{ version.bookBlock.book.title }} - {{ version.bookBlock.title }} - v {{ version.number }} </span>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {{ form_start(form,{'attr':{'class':'blockForm'}} ) }}
+            <div class="portlet box green-meadow col-md-12" style="margin-bottom: 15px">
+                <div class="portlet-title">
+                    <h4 class="pull-left">Contenu du bloc</h4>
+                    <div class="tools">
+                        <a data-placement="bottom" href="javascript:;" class="collapse" data-original-title="reduire"
+                           title=""> </a>
+                        <a data-placement="bottom" href="" class="fullscreen" data-original-title="plein ecran"
+                           title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12">
+                    <div class="col-md-12" style="display: block;">
+
+                        <div class="slidershell">
+                            <div class="sliderfill progress-bar progress-bar-striped active"></div>
+                            <div class="slidertrack text-center"><strong id="ps-txt"> Progression </strong></div>
+                            <div class="sliderthumb"></div>
+                            <div class="slidervalue">0</div>
+                            {{ form_widget(form.progress,{"attr":{"class":"progress-slider","data-min":version.progress}}) }}
+                        </div>
+                        {{ form_widget(form.content,{"attr":{"class":"tinyMince"}}) }}
+                    </div>
+
+                    <div class="col-md-12 text-center" style="margin-top: 15px;">
+                        <button type="submit" class="btn  blue "></i>Enregistrer Modification</button>
+                        <button class="btn red "
+                                data-url="{{ url('author_block_version_cancel',{token:version.token}) }}"
+                                type="button" id="cancelVersionCreation">Annuler la version
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        </div>
+    </div>
+    <div id="fm-token" data-token="{{ version.token }}"></div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-books">
+
+{% endblock %}
+{% block stylesheets %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('assets/global/plugins/tinymce/js/tinymce/skins/lightgray/skin.min.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript"
+            src="{{ asset('assets/global/plugins/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('assets/global/plugins/tinymce/js/tinymce/langs/fr_FR.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/pages/js/author_edit_block.js') }}"></script>
+{% endblock %}

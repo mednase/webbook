@@ -1,0 +1,84 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    Gérer les roles
+{% endblock %}
+
+{% block classBody %}
+{% endblock %}
+{% block body %}
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active"> Gérer les roles</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-wrench"></span> Gérer les roles</h2>
+    </div>
+    <div class="portlet box red col-md-12" style="overflow: hidden!important;">
+        <div class="portlet-title">
+            <div class="caption"></div>
+        </div>
+        <div class="portlet-body change-user-roles" data-url="{{ path('administrator_manage_roles') }}">
+            <table id="teacherTable"
+                   class=" table table-striped table-bordered table-hover dataTable no-footer datatable"
+                   cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom Complet</th>
+                    <th class="text-center"> Administrateur</th>
+                    <th class="text-center"> Validateur</th>
+                    <th class="text-center"> Auteur</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr class="username-{{ user.username }}" data-username="{{ user.username }}">
+                        <td style="max-width:90px!important;overflow: hidden ">{{ user.username }}</td>
+                        <td>{{ user.profile.fullName }}</td>
+                        <td class="role-{{ user.username }}" data-role="ROLE_ADMINISTRATOR">
+                            <div class="mt-radio-list" data-error-container="#form_2_membership_error">
+                                <label class="mt-radio">
+                                    <input type="radio" name="{{ user.username }}"
+                                           {% if 'ROLE_ADMINISTRATOR' in user.roles %}checked="checked"{% endif %}>
+                                    <span></span>
+                                </label>
+                            </div>
+
+                        </td>
+                        <td class="role-{{ user.username }}" data-role="ROLE_VALIDATOR">
+                            <div class="mt-radio-list" data-error-container="#form_2_membership_error">
+                                <label class="mt-radio">
+                                    <input type="radio" name="{{ user.username }}"
+                                           {% if 'ROLE_VALIDATOR' in user.roles %}checked="checked"{% endif %}>
+                                    <span></span>
+                                </label>
+                            </div>
+
+                        </td>
+                        <td class="role-{{ user.username }}" data-role="ROLE_AUTHOR">
+                            <div class="mt-radio-list" data-error-container="#form_2_membership_error">
+                                <label class="mt-radio">
+                                    <input type="radio" name="{{ user.username }}"
+                                           {% if 'ROLE_AUTHOR' in user.roles %}checked="checked"{% endif %}>
+                                    <span></span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+    <input type="hidden" value="" id="menuSelected" data-menu="page-switch-role">
+{% endblock %}

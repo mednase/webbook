@@ -1,0 +1,78 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    Les Abonnements
+{% endblock %}
+
+{% block classBody %}
+    page-container-bg-solid page-header-fixed
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Les Abonnements</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2>     <span class="fa fa-id-card-o"></span>    &nbsp; Les Abonnements </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box red">
+                <div class="portlet-title">
+                        <div class="tools">
+                            <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                            <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                        </div>
+                    <div class="caption">
+                        <a href="javascript:;" class="btn btn-default btn-sm btn-circle">
+                            <i class="fa fa-print"></i> Imprimer </a>
+                    </div>
+                </div>
+                <div class="portlet-body ">
+                    <table  class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Nom de proprietaire</th>
+                            <th>Nom d'établissement</th>
+                            <th>Adresse d'établissement</th>
+                            <th>Type</th>
+                            <th>Date Debut</th>
+                            <th>Date Fin</th>
+                            <th>Prix</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for subscription in subscriptions %}
+                            <tr>
+                                <td>{{ subscription.user.profile.fullName }}</td>
+                                <td>{{ subscription.establishmentName }}</td>
+                                <td>{{ subscription.establishmentAddress}}</td>
+                                <td>{% if subscription.type==1 %}Global{% else %} Par Thème {% endif %}</td>
+                                <td>{{ subscription.dateFrom|date('d-m-Y') }}</td>
+                                <td>{{ subscription.dateTo|date('d-m-Y') }}</td>
+                                <td>200 $</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-subscriptions">
+{% endblock %}
+
+    {% block javascripts %}
+        <script>
+        </script>
+    {% endblock %}

@@ -1,0 +1,110 @@
+services:
+  parameters.lib.twig_extension:
+    class: Core\LibBundle\Extension\Parameters
+    tags:
+      - { name: twig.extension }
+    arguments: ["@service_container"]
+  _input_array:
+    class: Core\LibBundle\Form\Type\ArrayType
+    tags:
+        - { name: form.type, alias: array }
+  weeks_widget:
+    class: Core\LibBundle\Form\Type\WeeksType
+    tags:
+        - { name: form.type, alias: weeks }
+  years_widget:
+    class: Core\LibBundle\Form\Type\YearType
+    tags:
+        - { name: form.type, alias: years }
+  selectize_widget:
+    class: Core\LibBundle\Form\Type\SelectizeType
+    tags:
+        - { name: form.type, alias: selectize }
+  selectize_choice_widget:
+    class: Core\LibBundle\Form\Type\SelectizeChoiceType
+    tags:
+        - { name: form.type, alias: selectize_choice }
+  select_checkbox_widget:
+    class: Core\LibBundle\Form\Type\SelectCheckbox
+    tags:
+        - { name: form.type, alias: select_checkbox }
+
+  # Years Selector Multiple
+  years_selector_widget:
+    class: Core\LibBundle\Form\Type\YearsSelector
+    tags:
+        - { name: form.type, alias: years_selector }
+
+  # Cueillettes selector with region clickable
+  select_checkbox_cueillettes_widget:
+    class: Core\LibBundle\Form\Type\SelectCheckboxCueillettes
+    tags:
+        - { name: form.type, alias: select_checkbox_cueillettes }
+    arguments: ["@doctrine.orm.entity_manager"]
+
+  # Cueillettes selector simple
+  select_checkbox_cueillette_widget:
+    class: Core\LibBundle\Form\Type\SelectCheckboxCueillette
+    tags:
+        - { name: form.type, alias: select_checkbox_cueillette }
+    
+  select_checkbox_entity_widget:
+    class: Core\LibBundle\Form\Type\SelectCheckboxEntity
+    tags:
+        - { name: form.type, alias: select_checkbox_entity }
+  tooltip_text_widget:
+    class: Core\LibBundle\Form\Type\TooltipText
+    tags:
+        - { name: form.type, alias: tooltip_text }
+
+  price_integer_widget:
+    class: Core\LibBundle\Form\Type\PriceInteger
+    tags:
+        - { name: form.type, alias: price_integer }
+
+  price_float_widget:
+    class: Core\LibBundle\Form\Type\PriceFloat
+    tags:
+        - { name: form.type, alias: price_float }
+  price_string_widget:
+    class: Core\LibBundle\Form\Type\PriceString
+    tags:
+        - { name: form.type, alias: price_string }
+
+  full_width_text_widget:
+      class: Core\LibBundle\Form\Type\FullWidthText
+      tags:
+          - { name: form.type, alias: full_width_text }
+  checkbox_custom_widget:
+      class: Core\LibBundle\Form\Type\Checkbox
+      tags:
+          - { name: form.type, alias: checkbox_custom }
+  # chlorofil.menu_renderer:
+  #       # The class implements Knp\Menu\Renderer\RendererInterface
+  #       class: Core\LibBundle\Menu\Render\CustomRenderer
+  #       arguments: [@twig, knp_menu.renderer.twig.template, @knp_menu.matcher] # set your own dependencies here
+  #       tags:
+  #           # The alias is what is used to retrieve the menu
+  #           - { name: knp_menu.renderer, alias: chlorofil }
+
+  # category for product selector
+  select_checkbox_products_widget:
+    class: Core\LibBundle\Form\Type\SelectCheckboxProducts
+    tags:
+        - { name: form.type, alias: select_checkbox_products }
+    arguments: ["@doctrine.orm.entity_manager"]
+
+  mobelite_radio_widget:
+    class: Core\LibBundle\Form\Type\RadioType
+    tags:
+        - { name: form.type, alias: mobelite_radio }
+    arguments: ["@doctrine.orm.entity_manager"]
+  mobelite_file_widget:
+    class: Core\LibBundle\Form\Type\MobeliteFile
+    tags:
+        - { name: form.type, alias: mobelite_file }
+
+  # mobelite.form.type_extension.single_upload:
+  #   class: Core\LibBundle\Form\Extension\MobeliteUploadExtension
+  #   tags:
+  #       - { name: form.type_extension, alias: form }

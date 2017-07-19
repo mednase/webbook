@@ -1,0 +1,62 @@
+{% extends "MainBundle::layout.html.twig" %}
+{% block classBody %}page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo{% endblock %}
+{% block title %}
+    Demandes de validation
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a >Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="fa fa-check-square-o"></i>
+                <span>Demandes de validation</span>
+            </li>
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-check-square-o"></span> &nbsp; Demandes de validation</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-body">
+                    <table class="table  table-bordered ">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Date de la Demande</th>
+                                <th>Titre du bloc</th>
+                                <th class="text-center">Version du block</th>
+                                <th class="text-center">Demander par</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for validationRequest in validationRequests %}
+                                <tr>
+                                    <td class="text-center">{{ validationRequest.date|date('d-m-Y') }}</td>
+                                    <td>{{ validationRequest.version.bookBlock.title }}</td>
+                                    <td class="text-center"><div class="label label-success bold">v {{ validationRequest.version.number|number_format(1,'.','.') }}</div></td>
+                                    <td class="text-center">{{ validationRequest.version.createdBy.fullName }}</td>
+                                    <td class="text-center" >
+                                        {% if validationRequest.progress==100 %}
+                                            <button class="btn green disabled">Verification Terminer</button>
+                                            {% else %}
+                                            <a href="{{ url('validator_verify_version',{token:validationRequest.token}) }}" class="btn green">Verifier la version</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-validation-requests">
+
+{% endblock %}

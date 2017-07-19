@@ -1,0 +1,50 @@
+
+    /**
+     * Edits an existing {{ entity }} entity.
+     *
+{% if 'annotation' == format %}
+     * @Route("/{id}", name="{{ route_name_prefix }}_update")
+     * @Method("PUT")
+     * @Template("{{ bundle }}:{{ entity }}:edit.html.twig")
+{% endif %}
+     */
+    public function updateAction(Request $request, $token)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->findOneBy(array(
+            'token' => $token
+        ));
+
+        if (!$entity) {
+            $this->get('session')->getFlashBag()->add('warning', 'Impossible de trouver {{ entity }} souhaité(e).');
+            return $this->redirect($this->generateUrl('dashboard'));
+        }
+
+        $form = $this->createForm(new {{ entity_class }}Type(), $entity);
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em->persist($entity);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success', '{{ entity|title }} '.$entity.' a été mis à jour '.$entity);
+
+            return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', array('token' => $token)));
+        } else {
+            $this->get('session')->getFlashBag()->add('warning', 'Une erreur est survenue lors de la mise à jour du {{ entity|title }}.');
+        }
+
+{% if 'annotation' == format %}
+        return array(
+            'entity'      => $entity,
+            'form'   => $form->createView(),
+            'action' => $this->generateUrl('{{ route_name_prefix }}_update', array('token' => $token))
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'})|lower }}:edit.html.twig', array(
+            'entity'      => $entity,
+            'form'   => $form->createView(),
+            'action' => $this->generateUrl('{{ route_name_prefix }}_update', array('token' => $token))
+        ));
+{% endif %}
+    }

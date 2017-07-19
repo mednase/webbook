@@ -1,0 +1,67 @@
+{% extends '@Main/layout.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    Information d'utilisateur
+{% endblock %}
+
+{% block classBody %}
+    page-container-bg-solid page-header-fixed
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Information d'utilisateur</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-id-card"></span> &nbsp; Information d'utilisateur </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box red">
+                <div class="portlet-title">
+                    <div class="caption"></div>
+                </div>
+                <div class="portlet-body ">
+
+                    <table>
+                        <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ user.id }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <ul>
+                        <li>
+                            <a href="{{ path('administrator_users') }}">Back to the list</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administrator_edit_user', { 'id': user.id }) }}">Edit</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+    {% block javascripts %}
+        <script>
+            $(document).ready(function () {
+            })
+
+        </script>
+    {% endblock %}

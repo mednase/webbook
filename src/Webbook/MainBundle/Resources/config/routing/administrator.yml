@@ -1,0 +1,73 @@
+administrator_homepage:
+    path:    /
+    defaults: { _controller: MainBundle:Administrator/Administrator:index }
+
+administrator_user:
+    resource: "administrator/administrator_user.yml"
+    prefix:    /users
+
+administrator_author:
+    resource: "administrator/administrator_author.yml"
+    prefix:    /author
+
+administrator_book:
+    resource: "administrator/administrator_book.yml"
+    prefix:    /book
+
+administrator_newsletter:
+    resource: "administrator/administrator_newsletter.yml"
+    prefix:    /newsletter
+
+administrator_profile:
+    path:    /profile
+    defaults: { _controller: MainBundle:Main:profile }
+
+administrator_manage_roles:
+    path:   /manage-roles
+    defaults: { _controller: MainBundle:Administrator/Administrator:manageRoles }
+
+administrator_publish_block_version:
+    path:   /block/version/{token}/publish
+    defaults: { _controller: MainBundle:Administrator/Book:publishBlockVersion }
+    methods: [POST]
+
+administrator_display_version_progression:
+    path:   /version/{token}/progression
+    defaults: { _controller: MainBundle:Administrator/Administrator:versionProgression }
+
+administrator_clients:
+    path:   /clients
+    defaults: { _controller: MainBundle:Administrator/Administrator:clients }
+
+administrator_show_client:
+    path:   /client/{id}/show
+    defaults: { _controller: MainBundle:Administrator/Administrator:showClient }
+
+administrator_subscriptions:
+    path:   /subscriptions
+    defaults: { _controller: MainBundle:Administrator/Administrator:subscriptions }
+
+administrator_purchases:
+    path:   /purchases
+    defaults: { _controller: MainBundle:Administrator/Administrator:purchases }
+
+administrator_parameters_subscription:
+    path:   /parameters/subscription
+    defaults: { _controller: MainBundle:Administrator/Administrator:parametersSubscription }
+
+administrator_parameters_general:
+    path:   /parameters/general
+    defaults: { _controller: MainBundle:Administrator/Administrator:parametersGeneral }
+
+administrator_new_category:
+    path:   /category/new
+    defaults: { _controller: MainBundle:Administrator/Administrator:newCategory }
+
+administrator_category_list:
+    path:   /category/list
+    defaults: { _controller: MainBundle:Administrator/Administrator:listCategories }
+
+administrator_delete_category:
+    path:   /category/{id}/delete
+    defaults: { _controller: MainBundle:Administrator/Administrator:removeCategory }
+    methods: [POST]

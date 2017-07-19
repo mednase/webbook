@@ -1,0 +1,48 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    Paramètre d'abonnement
+{% endblock %}
+
+{% block classBody %}
+{% endblock %}
+{% block body %}
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">paramètre d'abonnement</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-cogs"></span> Paramètre d'abonnement</h2>
+    </div>
+    <div class="portlet box red col-md-12" style="overflow: hidden!important;">
+        <div class="portlet-title">
+            <div class="caption"></div>
+        </div>
+        <div class="portlet-body change-user-roles" data-url="{{ path('administrator_manage_roles') }}">
+            <form action="{{ path('administrator_parameters_subscription') }}" method="post">
+            {% for parameter in parameters %}
+                <div class="form-group">
+                    <label class="custom-lb" for="{{ parameter.name }}">{{ parameter.label }}</label>
+                    <div>
+                        <input  name="{{ parameter.id }}"  id="{{ parameter.name }}" class="form-control" value="{{ parameter.value }}">
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="text-center">
+                    <button type="submit" class="btn green">Enregistrer</button>
+                    <button type="reset" class="btn red">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+    <input type="hidden" value="" id="menuSelected" data-menu="page-parameters-subscription">
+{% endblock %}

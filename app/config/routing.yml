@@ -1,0 +1,33 @@
+messaging:
+    resource: "@MessagingBundle/Resources/config/routing.yml"
+    prefix:   /{role}/messages
+
+api:
+    resource: "@FrontOfficeBundle/Resources/config/routing.yml"
+    prefix:   /api
+
+main_category:
+    resource: "@MainBundle/Controller/CategoryController.php"
+    type:     annotation
+
+user:
+    resource: "@UserBundle/Resources/config/routing.yml"
+
+main:
+    resource: "@MainBundle/Resources/config/routing.yml"
+    prefix:   /
+
+lib:
+    resource: "@LibBundle/Resources/config/routing.yml"
+    prefix:   /
+
+notification:
+    resource: "@NotificationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+test:
+    path:   /test/{token}
+    defaults: { _controller: MainBundle:Main:getBookPdf}

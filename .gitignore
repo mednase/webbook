@@ -1,0 +1,16 @@
+/build/
+/phpunit.xml
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+/vendor
+/app/logs/*
+/web/bundles/
+!/var/cache/
+/src/Webbook/MainBundle/Resources/views/Front/.idea/
+/src/Webbook/MainBundle/Resources/views/Front/node_modules/

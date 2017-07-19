@@ -1,0 +1,17 @@
+file_manager_load:
+    path:   /load/{token}/{type}
+    defaults: { _controller: MainBundle:Main:fileManager }
+    options:
+        expose: true
+
+file_manager_upload_file:
+    path:   /{version_token}/file/upload
+    defaults: { _controller: MainBundle:Main:fileManagerFileUpload }
+    options:
+        expose: true
+
+file_manager_remove_file:
+    path:   /file/remove
+    defaults: { _controller: MainBundle:Main:fileManagerFileRemove }
+    options:
+        expose: true

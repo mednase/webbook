@@ -1,0 +1,4 @@
+services:
+#    front_office.example:
+#        class: Webbook\FrontOfficeBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

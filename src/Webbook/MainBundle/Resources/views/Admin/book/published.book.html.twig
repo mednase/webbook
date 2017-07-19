@@ -1,0 +1,78 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    Livres publiées
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Livres publiées</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class=" fa fa-check-square-o"></span> &nbsp; Livres publiées </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box red">
+                <div class="portlet-title">
+                    <a href="{{ url('administrator_new_book') }}" style="margin-top: 5px" class="btn btn-sm blue"><i class="fa fa-plus"></i>Nouveau livre</a>
+                    <div class="tools">
+                        <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body ">
+                    <table class="table table-striped table-bordered minimisedDataTable" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Date Publication</th>
+                            <th>Titre</th>
+                            <th class="text-center">Edition publié</th>
+                            <th class="text-center">Numéro d'édition</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for book in books %}
+                            <tr>
+                                <td class="text-center col-md-2">{{ book.publishDate|date('d-m-Y') }}</td>
+                                <td>{{ book.title }}</td>
+                                <td class="text-center col-md-2">{{ book.publishedEdition.title }}</td>
+                                <td class="text-center col-md-2">{{ book.publishedEdition.number }}</td>
+                                <td class="text-center col-md-1">
+                                    <a data-toggle="tooltip" data-title="Détails du livre" href="{{ url('administrator_edit_book',{token:book.token}) }}"
+                                       class="btn green btn-icon-only "><i class="fa fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-book-published">
+{% endblock %}
+{% block stylesheets %}
+    <style>
+        .dataTables_scrollHead {
+            overflow: visible !important;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+        })
+    </script>
+{% endblock %}

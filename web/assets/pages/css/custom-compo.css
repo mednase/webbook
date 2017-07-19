@@ -1,0 +1,41 @@
+.custom-check{
+    margin-right: 10px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    background: url(../../img/checkmarks-sprite-2x.png) no-repeat;
+    background-size: 24px 384px;
+    padding: 0;
+}
+.custom-check-input{
+    cursor: pointer;
+    display: block;
+    margin: 0 !important;
+    opacity: .01;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    background: url(../../img/checkmarks-sprite-2x.png) no-repeat;
+    background-size: 24px 384px;
+}
+.custom-check:focus{
+    background-position: 0 -72px;
+}
+.custom-check:hover{
+    background-position: 0 -24px;
+}
+
+.custom-check.active{
+    background-position: 0 -144px;
+}
+.custom-check.active:hover{
+    background-position: 0 -120px;
+}
+.custom-check.active:focus{
+    background-position: 0 -96px;
+}
+table td .custom-check{
+    display:inline-block
+}

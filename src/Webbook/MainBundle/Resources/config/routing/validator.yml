@@ -1,0 +1,15 @@
+validator_homepage:
+    path:   /
+    defaults: { _controller: MainBundle:Validator/Validator:index}
+
+validator_profile:
+    path:    /profile
+    defaults: { _controller: MainBundle:Main:profile }
+
+validator_validation_requests:
+    path:   /validation-requests
+    defaults: { _controller: MainBundle:Validator/Validator:validationRequests}
+
+validator_verify_version:
+    path:   /validation-requests/{token}/verify
+    defaults: { _controller: MainBundle:Validator/Validator:verifyVersion}

@@ -1,0 +1,122 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    Liste des newsLetter
+{% endblock %}
+
+{% block body %}
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Liste des newsLetter</span>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <a href="{{ url('newsletter_new') }}" style="margin-top: 4px" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter</a>
+                    <div class="tools">
+                        <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12" >
+                    <table class="table table-bordered table-striped table-hover">
+                    	<thead>
+                    		<tr>
+                    			<th class="text-center">Id</th>
+                                <th class="text-center">Date Creation</th>
+                                <th class="text-center">Sujet</th>
+                                <th class="text-center">Attachement</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                    	</thead>
+                    	<tbody class="text-center">
+                        {% for newsletter in newsLetters %}
+                    		<tr>
+                                <td >{{ newsletter.id }}</td>
+                                <td>{{ newsletter.createdAt|date('d-m-Y') }}</td>
+                                <td>{{ newsletter.subject }}</td>
+                                <td>
+                                    {% if newsletter.attachments|length>0  %}
+                                        <span class="label label-success">Oui</span>
+                                    {% else %}
+                                        <span class="label label-success">Nom</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a  href="{{ url('newsletter_edit',{id:newsletter.id}) }}" class="btn bt-sm blue">Edit</a>
+                                    <a href="{{ url('newsletter_preview',{id:newsletter.id}) }}" class="btn btn-default btn-sm">Aperçu</a>
+                                    <button data-id="{{newsletter.id }}" class="btn red btn-sm btn-rm-nl">Effacer</button>
+                                </td>
+                    		</tr>
+                        {% endfor %}
+                    	</tbody>
+                    </table>
+                    <div>
+                        <div class="nb-msg col-md-4 ns-lw">{{ newsLetters|length }} - newsletters</div>
+                        <div class="col-md-8">{{ knp_pagination_render(newsLetters) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input type="hidden" value="" id="menuSelected" data-menu="page-list-newsletter">
+{% endblock %}
+{% block stylesheets %}
+    <style>
+        .ns-lw{
+            font-weight: 600;
+            color: rgba(161, 158, 158, 0.79);
+            text-transform: capitalize;
+            word-spacing: 4px;
+            line-height: 10pt;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.btn-rm-nl').click(function () {
+                var id = $(this).data('id');
+                var line=$(this).closest('tr');
+                swal({
+                    title: "Supression d'author",
+                    text: "Voulez vous vraiment supprimer cette author",
+                    type: "warning",
+                    confirmButtonText: 'Confirmer',
+                    confirmButtonClass:'btn green',
+                    cancelButtonText:'Annuler',
+                    closeOnConfirm: false,
+                    showCancelButton: true,
+                    showLoaderOnConfirm: true
+                }, function () {
+                    $.ajax({
+                        url:Routing.generate('newsletter_remove',{id:id}),
+                        method:"POST",
+                        success:function () {
+                            swal("Suppression","Cette newsletter a été supprimer !","success");
+                            line.remove();
+                        },
+                        error:function () {
+                            swal("Suppression","Echec  ! La suppression na pas été effectuer ","error");
+                        }
+                    })
+
+                });
+
+            })
+        })
+    </script>
+{% endblock %}

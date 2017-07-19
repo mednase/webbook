@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Ahmed Auto Email</title>
+</head>
+
+
+<body style="background-color:rgba(210, 212, 212, 0.16)">
+<div class="x_content" style="display:block; max-width:600px; margin:0 auto; padding:10px">
+    <center>
+        <a href="{{ siteUrl }}">
+            <img width=350 heigth=150  src="{{ asset('assets/img/webbook-logo.png') }}" alt="">
+        </a>
+    </center>
+    <div class="x_header" style="width:100%; margin-bottom:30px; margin-top:15px">
+        <table width="100%" style="width:100%; border-spacing:0; border-collapse:separate!important">
+            <tbody>
+            <tr>
+                <td class="x_align-left" valign="top" align="left"
+                    style="padding:0; font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif; font-size:16px; vertical-align:top; text-align:left">
+                    <center>
+                        <h1 style="text-decoration:none;color: #de5366;font-weight: 700;line-height: 58px;margin: 30px 0 0;padding: 0;">
+                            {{ newsletter.subject }}
+                        </h1>
+                    </center>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="x_block" style="width:100%; margin-bottom:30px; background:#ffffff; border:1px solid #f0f0f0;padding: 10px">
+     {{ newsletter.body|raw }}
+    </div>
+    <div class="x_footer" style="clear:both; width:100%">
+        <table width="100%" style="width:100%; border-spacing:0; font-size:12px; border-collapse:separate!important">
+            <tbody>
+            <tr style="font-size:12px">
+                <td class="x_align-center" valign="top" align="center">
+                    cette email a été envoyé par: Webbook.dev   © {{ date()|date('Y') }} Tous droits réservés.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

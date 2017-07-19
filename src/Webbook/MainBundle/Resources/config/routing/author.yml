@@ -1,0 +1,63 @@
+author_homepage:
+    path:    /
+    defaults: { _controller: MainBundle:Author/Author:index }
+
+author_profile:
+    path:    /profile
+    defaults: { _controller: MainBundle:Main:profile }
+
+author_my_books:
+    path:   /my-books
+    defaults: { _controller: MainBundle:Author/Author:myBooks }
+
+author_all_books:
+    path:   /books
+    defaults: { _controller: MainBundle:Author/Author:allBooks }
+
+author_search_book:
+    path:   /book/search
+    defaults: { _controller: MainBundle:Administrator/Book:searchBook }
+    options:
+        expose: true
+
+author_show_book:
+    path:   /book/{token}/show
+    defaults: { _controller: MainBundle:Author/Author:showBook }
+
+author_show_block:
+    path:   /block/{token}/show
+    defaults: { _controller: MainBundle:Author/Author:showBlock}
+
+author_create_block_version:
+    path:   /block/{token}/version/new
+    defaults: { _controller: MainBundle:Author/Author:createNewBlockVersion }
+    methods: [POST]
+
+author_block_version_edit:
+    path:   /block-version/{token}/edit
+    defaults: { _controller: MainBundle:Author/Author:editBookVersion }
+
+author_block_version_cancel:
+    path:   /block-version/{token}/cancel
+    defaults: { _controller: MainBundle:Author/Author:cancelVersionCreation }
+    methods: [POST]
+
+author_delete_block:
+    path:   /block/{token}/delete
+    defaults: { _controller: MainBundle:Author/Author:deleteBlock }
+
+author_tag_book:
+    path:   /book/{token}/tag
+    defaults: { _controller: MainBundle:Administrator/Book:tagBookVersion }
+
+author_revert_book_tag:
+    path:   /book/tag/{token}/revert
+    defaults: { _controller: MainBundle:Administrator/Book:revertBookTag }
+
+author_display_version_progression:
+    path:   /version/{token}/progression
+    defaults: { _controller: MainBundle:Author/Author:versionProgression }
+
+author_current_edition:
+    path:   /workflow
+    defaults: { _controller: MainBundle:Author/Author:workflow}

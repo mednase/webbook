@@ -1,0 +1,61 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+
+    role_hierarchy:
+        ROLE_USER:                        ROLE_USER
+        ROLE_CLIENT:                      ROLE_CLIENT
+        ROLE_AUTHOR:                      ROLE_AUTHOR
+        ROLE_VALIDATOR:                   ROLE_VALIDATOR
+        ROLE_ADMINISTRATOR:               ROLE_ADMINISTRATOR
+        ROLE_SUPER_ADMINISTRATOR:         [ROLE_ADMINISTRATOR,ROLE_SUPER_ADMINISTRATOR]
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+
+    firewalls:
+        api:
+            pattern:   ^/api
+            stateless: true
+            form_login:
+                provider: fos_userbundle
+                check_path:               api_fos_user_security_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+
+            logout:       true
+            anonymous:    true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+        main:
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                login_path: fos_user_security_login
+                check_path: fos_user_security_check
+                csrf_token_generator: security.csrf.token_manager
+                success_handler: login_success_handler
+            logout:
+                path:   /logout
+                target: /login
+            anonymous:    true
+
+
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/administrator, role: ROLE_ADMINISTRATOR }
+        - { path: ^/author, role: ROLE_AUTHOR }
+        - { path: ^/validator, role: ROLE_VALIDATOR }
+

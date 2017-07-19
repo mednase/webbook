@@ -1,0 +1,624 @@
+{% extends '@Main/layout.html.twig' %}
+{% import _self as macros %}
+
+{% block title %}
+    {{ book.title }} - Édit
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="fa fa-book"></i>
+                <a href="{{ url('administrator_books') }}">Liste des livres</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">{{ book.title }}</span>
+            </li>
+
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-pencil-square-o"></span> &nbsp; {{ book.title }} - Édit</h2>
+    </div>
+    {{ form_start(form,{'attr':{'class':'blockForm','enctype':'multipart/form-data'}} ) }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green-meadow">
+                <div class="portlet-title">
+                    <div class="caption col-md-4">
+                        Information du livre
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12" style="display: block;margin-bottom: 15px">
+                    <div class="row form-group col-md-offset-1">
+                        {{ form_label(form.title, null,{ 'label_attr': {'class': 'col-md-2 custom-lb'}}) }}
+                        <div class="col-md-8">
+                            {{ form_widget(form.title,{"attr":{"class":"form-control"}}) }}
+                        </div>
+                    </div>
+                    <div class="row form-group col-md-offset-1">
+                        {{ form_label(form.category, null,{ 'label_attr': {'class': 'col-md-2 custom-lb'}}) }}
+                        <div class="col-md-8">
+                            {{ form_widget(form.category,{"attr":{"class":"form-control"}}) }}
+                        </div>
+                    </div>
+                    <div class="row form-group col-md-offset-1">
+                        {{ form_label(form.mainAuthors, null,{ 'label_attr': {'class': 'col-md-2 custom-lb '}}) }}
+                        <div class="col-md-8 select2-bootstrap-append">
+                            {{ form_widget(form.mainAuthors,{"attr":{"class":"form-control select2"}}) }}
+                        </div>
+                    </div>
+                    <div class="row form-group col-md-offset-1">
+                        {{ form_label(form.description, null,{ 'label_attr': {'class': 'custom-lb col-md-2 '}}) }}
+                        <div class="col-md-8">
+                            {{ form_widget(form.description,{"attr":{"class":"form-control summernote"}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-12 images" style="padding: 10px">
+                        {% for img in form.vars.value.images %}
+                            <div class="col-lg-3 col-md-4 col-sm-2">
+                                <input value="{{ img.id }}" class="hidden" type="checkbox" name="deleteImages[]">
+                                <button style="position:absolute;z-index: 1 " class="btn red dlt-img"><i
+                                            class="fa fa-trash-o"></i> Supprimer
+                                </button>
+                                <img style="padding: 10px" height="150px"
+                                     src="{{ vich_uploader_asset(img,'mediaFile') }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-12">
+                        <input type="file" name="images[]" class="fileinput" accept="image/*" multiple>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green-meadow">
+                <div class="portlet-title">
+                    <div class="col-md-4 caption">
+                        Structure du livre
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-original-title="plein ecran" title=""> </a>
+                    </div>
+
+
+                    <div style="margin-top: 5px;" class=" pull-right ">
+                        {% if book.tags|length>0 %}
+                            <button type="button" style="margin-right: 10px;overflow: inherit!important;"
+                                    href="#model-revert-version" data-toggle="modal"
+                                    class="btn btn-sm yellow"><span data-toggle="tooltip"
+                                                                    data-title="retablir une version">retablir</span>
+                            </button>
+                        {% endif %}
+                        <button type="button" style="margin-right: 10px;overflow: visible;" href="#model-tag-version"
+                                data-toggle="modal"
+                                class="btn btn-sm default tag-version"><span data-toggle="tooltip"
+                                                                             data-title="marquer cette version">Marquage</span>
+                        </button>
+                        <button type="button" style="margin-right: 10px" id="addBlock"
+                                class="btn btn-sm btn-outline  btn-success">
+                            <i class="fa fa-plus"></i>&nbsp;Ajouter un bloc
+                        </button>
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12" style="display: block;">
+                    <div class=" fakeTable" id="blockTree">
+                        <table class="table table-bordered " style="margin-bottom: 0px">
+                            <thead>
+                            <tr>
+                                <th class="col-md-2 hidden-sm hidden-xs">Date Creation</th>
+                                <th class="col-md-4 col-sm-5 col-xs-6">Titre</th>
+                                <th class="col-md-2 text-center hidden-sm hidden-xs">Dernière version Validée</th>
+                                <th class="col-md-2 text-center col-sm-3 col-xs-3">Version Publiée</th>
+                                <th class="col-md-2  text-center col-sm-4 col-xs-3">Action</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        {% macro displayVersionBlock(blocks) %}
+                            {% import _self as macros %}
+                            {% for block in blocks| sortbyfield('position') %}
+                                <li class="block-branch {% if block.parent is not null %} hidden {% endif %}"
+                                    data-id={{ block.id }}
+                                    data-parent={% if block.parent is not null %}{{ block.parent.id }}{% else %}null{% endif %}
+                                    data-level={{ block.level }}
+                                    data-position={{ block.position }}>
+                                    <div>
+                                        <div class="fake-column col-md-2  hidden-sm hidden-xs">{{ block.createdAt|date('d-m-Y') }}</div>
+                                        <div class="cl-btn fake-column col-md-4 col-sm-5 col-xs-6 padding-left-{{ block.level*30 }}">
+                                            {% if block.childrens|length>0 %}
+                                                <button role="button" class="btn green  btn-show-children"><i
+                                                            class=" fa fa-plus"></i></button>
+                                            {% endif %}
+                                            <input type="text" id="title-{{ block.id }}" class="form-control"
+                                                   value="{{ block.title }}">
+                                        </div>
+                                        <div class="fake-column col-md-2 hidden-sm hidden-xs text-center">
+                                            <div class="label label-success ">
+                                                {% if block.lastValidatedVersion is not null %}
+                                                    {{ block.lastValidatedVersion.number|number_format(1,'.',',') }}
+                                                {% else %}
+                                                    pas de version
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="fake-column col-md-2 col-sm-3 col-xs-3 text-center">
+                                            <div class="label label-success ">
+                                                {% if block.publishedVersion is not null %}
+                                                    {{ block.publishedVersion.number|number_format(1,'.',',') }}
+                                                {% else %}
+                                                    pas de version
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="fake-column col-md-2 col-sm-4 col-xs-3 text-center">
+                                            <div style="display:inline-block" data-toggle="tooltip" data-title="Détails ">
+                                                <a class="btn blue btn-icon-only"
+                                                   href="{{ url('administrator_book_block',{token:block.token}) }}">
+                                                    <i class="fa fa-pencil-square-o"></i></a>
+                                            </div>
+                                            <div style="display:inline-block"  data-toggle="tooltip" data-title="Les Permissions ">
+                                                <a data-toggle="modal" href="#auth-modal-{{ block.id }}"
+                                                   class="btn  btn-sm green">
+                                                    <i class="fa fa-users"></i> </a>
+                                            </div>
+                                            <div style="display:inline-block"  data-toggle="tooltip" data-title="Options ">
+                                                <a href="#option-modal-{{ block.id }}" data-toggle="modal"
+                                                   class="btn blue btn-icon-only"><i class="fa fa-cog"></i></a>
+                                            </div>
+                                            <div style="display:inline-block"  data-toggle="tooltip" data-title="Effacer!">
+                                                <button type="button" class="btn red btn-icon-only btn-delet-block"
+                                                        data-url="{{ url('administrator_delete_block',{token:block.token}) }}">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if block.childrens|length>0 %}
+                                        <ol>
+                                            {{ macros.displayVersionBlock(block.childrens) }}
+                                        </ol>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+
+                        {% endmacro %}
+                        <ol class="sortable ">
+                            {{ macros.displayVersionBlock(book.underBlock) }}
+                        </ol>
+                    </div>
+                    <div class="hiddentForm">
+                        <div id="block-fields-list" style="list-style: none"
+                             data-authorization-prototype="
+                            {% filter escape %}
+                                {{ include('form/form.block.authorization.html.twig', { 'form': form.blocks.vars.prototype.children['authorizations'].vars.prototype }) }}
+                            {% endfilter %}"
+                             data-block-prototype="
+                            {% filter escape %}
+                                {{ include('form/form.book_block.html.twig', { 'form': form.blocks.vars.prototype }) }}
+                            {% endfilter %}">
+
+                            {% for blockField in form.blocks %}
+                                <div class="block-field " id="block_{{ blockField.vars.value.id }}">
+                                    <div style="top:-150px;position:fixed;" class="modal fade"
+                                         id="option-modal-{{ blockField.vars.value.id }}" tabindex="-1" role="basic"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #17C4BB">
+                                                    <h4 class="modal-title font-white bold font col-md-9">Propriété du
+                                                        bloc</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table table-striped table-bordered table-hover  "
+                                                           cellspacing="0" width="100%">
+                                                        <thead>
+                                                        <tr>
+                                                            <td class="text-center">Ajout au table des matières</td>
+                                                            <td class="text-center">Affichage du Titre</td>
+                                                            <td class="text-center">Pagination</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr class="text-center">
+                                                            <td>{{ form_widget(blockField.options.showTitle) }}</td>
+                                                            <td>{{ form_widget(blockField.options.indexed) }}</td>
+                                                            <td>{{ form_widget(blockField.options.paginated) }}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn dark btn-outline"
+                                                            data-dismiss="modal">Fermer
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+
+                                    <div style="top:-150px;position:fixed;" class="modal fade"
+                                         id="auth-modal-{{ blockField.vars.value.id }}" tabindex="-1" role="basic"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #17C4BB">
+                                                    <h4 class="modal-title font-white bold font col-md-8">Gérer Les
+                                                        permission pour ce block</h4>
+                                                    <div style="padding: 0" class=" col-md-4">
+                                                        <button {% if authors|length==0 %} disabled title="Pas de d'auteur" {% endif %}
+                                                                type="button" data-name="{{ blockField.vars.name }}"
+                                                                data-type=0
+                                                                class="btn default btn-sm new-auth ">
+                                                            Auteur
+                                                        </button>
+                                                        <button {% if validators|length==0 %} disabled title="Pas de validateur" {% endif %}
+                                                                type="button" data-name="{{ blockField.vars.name }}"
+                                                                data-type=1
+                                                                class="btn default btn-sm new-auth ">
+                                                            Validateur
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table table-striped table-bordered table-hover auth-tb-author  "
+                                                           cellspacing="0" width="100%">
+                                                        <thead>
+                                                        <tr style="overflow: visible">
+                                                            <td>Auteur</td>
+                                                            <td>Lecture</td>
+                                                            <td>Ecriture</td>
+                                                            <td>Supression</td>
+                                                            <td><span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Limiter l'autorisation seulement a ce bloc">Strict</span>
+                                                            </td>
+                                                            <td>Action</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for authorization in blockField.authorizations %}
+                                                            {% if 'ROLE_AUTHOR' in authorization.vars.value.user.roles %}
+                                                                <tr>
+                                                                    <td>
+                                                                        <select class="form-control"
+                                                                                name="{{ authorization.children.user.vars.full_name }}"
+                                                                                id="{{ authorization.children.user.vars.id }}">
+                                                                            {% for user in authors %}
+                                                                                <option {% if  authorization.vars.value.user.id == user.id %} selected {% endif %}
+                                                                                        value="{{ user.id }}">{{ user.fullName }}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>{{ form_widget(authorization.canRead) }}</td>
+                                                                    <td>{{ form_widget(authorization.canWrite) }}</td>
+                                                                    <td>{{ form_widget(authorization.canDelete) }}</td>
+                                                                    <td>{{ form_widget(authorization.limited) }}</td>
+                                                                    <td class="text-center">
+                                                                        <button data-toggle="tooltip"
+                                                                                data-placement="top" title="Effacer ! "
+                                                                                class="btn btn-circle btn-icon-only red remove-auth">
+                                                                            <i class="fa fa-minus"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    <table class="table table-striped table-bordered table-hover auth-tb-validator  "
+                                                           cellspacing="0" width="100%">
+                                                        <thead>
+                                                        <tr style="overflow: visible">
+                                                            <td>Validateur</td>
+                                                            <td class="text-center">
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Limiter l'autorisation seulement a ce bloc">Strict</span>
+                                                            </td>
+                                                            <td class="text-center">Action</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for authorization in blockField.authorizations %}
+                                                            {% if 'ROLE_VALIDATOR' in authorization.vars.value.user.roles %}
+                                                                <tr>
+                                                                    <td>
+                                                                        <select class="form-control"
+                                                                                name="{{ authorization.children.user.vars.full_name }}"
+                                                                                id="{{ authorization.children.user.vars.id }}">
+                                                                            {% for user in validators %}
+                                                                                <option {% if  authorization.vars.value.user.id == user.id %} selected {% endif %}
+                                                                                        value="{{ user.id }}">{{ user.fullName }}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>{{ form_widget(authorization.limited) }}</td>
+                                                                    <td class="text-center">
+                                                                        <button data-toggle="tooltip"
+                                                                                data-placement="top" title="Effacer ! "
+                                                                                class="btn btn-circle btn-icon-only red remove-auth">
+                                                                            <i class="fa fa-minus"></i></button>
+                                                                    </td>
+                                                                </tr>                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn dark btn-outline"
+                                                            data-dismiss="modal">Fermer
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                    <div class="blockBody  hidden">
+                                        {{ form_row(blockField.title,{"attr":{"class":"block-name-input","data-id":blockField.vars.value.id}}) }}
+                                        {{ form_row(blockField.token) }}
+                                        {{ form_row(blockField.authorizations) }}
+                                        {{ form_row(blockField.position,{'attr':{'class':'blockPositionInput'}}) }}
+                                        {{ form_row(blockField.level,{'attr':{'class':'blockLevelInput'}}) }}
+                                        {{ form_row(blockField.parent,{'attr':{'class':'blockParentInput'}}) }}
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button style="margin-top: 3px" class="btn btn-circle btn-success " id="submitForm"><i
+                                    class="fa fa-download"></i>Enregistrer Modification
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+    <input type="hidden" value="" id="menuSelected" data-menu="page-books">
+    <div style="top:-150px;position:fixed;" class="modal fade"
+         id="model-revert-version" tabindex="-1" role="basic"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #17C4BB">
+                    <h4 class="modal-title font-white bold font col-md-9">Retourner a un
+                        marquage</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <select class="form-control">
+                            {% for tag in book.tags %}
+                                <option data-url="{{ url('administrator_revert_book_tag',{token:tag.token}) }}">{{ tag.description }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline closeModal"
+                            data-dismiss="modal">Fermer
+                    </button>
+                    <button type="button" class="btn blue  btn-outline revertBookTag">
+                        Confirmer
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div style="top:-150px;position:fixed;" class="modal fade" id="model-tag-version" tabindex="-1" role="basic"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #17C4BB">
+                    <h4 class="modal-title font-white bold font col-md-9">Marquage du version </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input id="descriptionTag" class="form-control" placeholder="donner un titre a ce marquage">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="closeModal" type="button" class="btn dark btn-outline" data-dismiss="modal">Fermer
+                    </button>
+                    <button id="execTagBookVersion" data-url="{{ url('administrator_tag_book',{token:book.token}) }}"
+                            type="button" class="btn blue btn-outline">Confirmer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/viewer/viewer.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/slick/slick.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/slick/slick-theme.css') }}">
+    <style>
+        .sortable {
+            width: 100% !important;
+        }
+
+        .fakeTable li:nth-of-type(odd) {
+            background-color: #fbfcfd;
+        }
+
+        .fakeTable ol {
+            padding: 0px;
+            width: 100% !important;
+        }
+
+        .fakeTable ol > li > div {
+            display: -webkit-box;
+        }
+
+        .fakeTable li {
+            width: 100%;
+            vertical-align: inherit;
+            border-color: inherit;
+        }
+
+        .fakeTable .fake-column {
+            padding: 8px;
+            line-height: 1.42857;
+            vertical-align: top;
+            border: 1px solid #e7ecf1;
+        }
+
+        tr.showed {
+            background-color: rgba(34, 255, 201, 0.28) !important;
+        }
+
+        .padding-left-30 {
+            padding-left: 30px !important;;
+        }
+
+        .padding-left-60 {
+            padding-left: 60px !important;;
+        }
+
+        .padding-left-90 {
+            padding-left: 90px !important;;
+        }
+
+        .padding-left-120 {
+            padding-left: 120px !important;
+        }
+
+        a.disabled-link {
+            opacity: 0.5 !important;
+        }
+
+        .cl-btn > button {
+            padding-left: 2px !important;
+            padding-right: 2px !important;
+            margin-bottom: 3px !important;
+            margin-right: -10px !important;
+        }
+
+        .cl-btn > input {
+            width: 80%;
+            display: inline-flex;
+        }
+
+    
+    </style>
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/book.structure.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/jquery.mjs.nestedSortable.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/pages/js/admin_edit_book.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/viewer/viewer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/slick/slick.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.dlt-img').click(function (e) {
+                e.preventDefault();
+                $(this).parent().find('input').prop('checked', true);
+                $(this).parent().hide("slow");
+                $(this).remove();
+            });
+            $('.images').viewer();
+            $(document).ready(function () {
+                $('[data-toggle="popover"]').popover({html: true});
+            });
+            $('.summernote').summernote({
+                height: 300,
+                toolbar: [
+                    // [groupName, [list of button]]
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['view', ['fullscreen']]
+
+                ]
+            });
+
+            $('#execTagBookVersion').click(function () {
+                var elem = $(this);
+                var url = elem.data('url');
+                var description = $('#descriptionTag').val();
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {description: description},
+                    beforeSend: function () {
+                        $('#closeModal').click();
+                    },
+                    success: function () {
+                        $('.tag-version[data-url="' + url + '"]').addClass('disabled').off().attr('href', '');
+                        toastr.success('cette version du livre a été marqué !');
+                        $('#descriptionTag').val("");
+                    }
+                })
+            });
+
+            $('.revertBookTag').click(function () {
+                var elem = $(this);
+                var url = elem.closest('.modal-content').find('select>option:selected').data('url');
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    beforeSend: function () {
+                        $('.closeModal').click();
+                    },
+                    success: function () {
+                        toastr.success('ce marquage a été retabli avec succes!');
+                    }
+                })
+            });
+            $('.images').slick({
+                centerPadding: '80px',
+                slidesToShow: 4,
+                responsive: [
+                    {
+                        breakpoint: 1250,
+                        settings: {
+                            arrows: true,
+                            centerPadding: '80px',
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 900,
+                        settings: {
+                            arrows: false,
+                            centerPadding: '40px',
+                            slidesToShow: 2
+                        }
+                    },
+                    {
+                        breakpoint: 550,
+                        settings: {
+                            arrows: false,
+                            centerPadding: '80px',
+                            slidesToShow: 1
+                        }
+                    }
+                ]
+            });
+        })
+    </script>
+{% endblock %}

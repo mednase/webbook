@@ -1,0 +1,3 @@
+create_menu:
+    path:      /main-menu
+    defaults:  { _controller: LibBundle:Menu:RenderMainMenu}

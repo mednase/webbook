@@ -1,0 +1,763 @@
+{% extends '@Main/layout.html.twig' %}
+{% import _self as macros %}
+{% block title %}
+    {{ block.title }}
+{% endblock %}
+{% block body %}
+    {% if has_permission('w',block) %}
+        <div id="prototypes" data-block="{{ block.id }}"  data-authorization-prototype="
+                {% filter escape %}
+                    {{ include('form/form.block.authorization.html.twig') }}
+                {% endfilter %}">
+        </div>
+    {% endif %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ url('author_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="fa fa-book"></i>
+                <a href="{{ url('author_my_books') }}">Mes livres</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{{ url('author_show_book',{token:block.book.token}) }}">{{ block.book.title }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">
+                    {{ block.title }}
+                </span>
+            </li>
+
+        </ul>
+    </div>
+        <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+            <h2><span class="fa fa-book"></span> &nbsp; {{ block.title }}</h2>
+        </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green-meadow col-md-12">
+                <div class="portlet-title">
+                    <h4 class="pull-left">Structure du bloc</h4>
+                    <div class="tools">
+                        <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                    <div class="pull-right" style="margin-top: 5px;margin-right: 10px">
+                     {% if block.parent is not null %}
+                        <a href="{{ url('author_show_block',{token:block.parent.token} ) }}" class="btn btn-sm yellow" >
+                            <i class="fa fa-arrow-left"></i>
+                            Bloc Précedent
+                        </a>
+                        {% endif %}
+                    {% if has_permission('w',block) %}
+                    <button data-toggle="modal" type="button" href="#new-block-modal" class="btn btn-success btn-sm ">
+                        <i class="fa fa-plus"></i>&nbsp;
+                        Ajouter un bloc
+                    </button>
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12">
+                    <div class="col-md-12 fakeTable" id="blockTree">
+                        <table class="table table-bordered  " cellspacing="0" width="100%" style="margin: 0px;">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-5 col-sm-6 col-xs-6">Titre du block</th>
+                                    <th class="col-md-2 text-center hidden-sm hidden-xs">Dernière version Validée</th>
+                                    <th class="text-center col-md-2 col-sm-2 col-xs-2">Version Puliée</th>
+                                    <th class="text-center col-md-3 col-sm-4 col-xs-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        {% macro displayVersionBlock(blocks,firstBlock) %}
+                                    {% import _self as macros %}
+                                    {% for bl in blocks| sortbyfield('position') %}
+                                        <li class="block-branch {% if bl.parent != firstBlock %} hidden {% endif %}"
+                                            data-id={{ bl.id }}
+                                            data-parent={% if bl.parent is not null %}{{ bl.parent.id }}{% else %}null{% endif %}
+                                            data-level={{ bl.level-firstBlock.level-1 }}
+                                            data-position={{ bl.position }}>
+                                            <div>
+                                                <div class="cl-btn fake-column col-md-5 col-sm-6 col-xs-6 " data-pdl=25>
+                                                    {% if bl.childrens|length>0 %}
+                                                        <button  class="btn green  btn-show-children"><i
+                                                                    class=" fa fa-plus"></i></button>
+                                                    {% endif %}
+                                                    <input  style="pointer-events: none" type="text" id="title-{{ bl.id }}" class="form-control"
+                                                           value="{{ bl.title }}">
+                                                </div>
+                                                 <div class="fake-column col-md-2 hidden-sm hidden-xs text-center">
+                                                    <div class="label label-success ">
+                                                        {% if bl.lastValidatedVersion is not null %}
+                                                            {{ bl.lastValidatedVersion.number|number_format(1,'.',',') }}
+                                                        {% else %}
+                                                            pas de version
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="fake-column col-md-2 col-sm-2 col-xs-2 text-center" >
+                                                    <div class="label label-success ">
+                                                        {% if bl.publishedVersion is not null %}
+                                                            {{ bl.publishedVersion.number|number_format(1,'.',',') }}
+                                                        {% else %}
+                                                            pas de version
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                               <div class="fake-column actions col-md-3 col-sm-4 col-xs-4 text-center">
+                                                    <a  {% if has_permission('r',bl) or bl.childrens|length>0  %} class="btn btn-sm blue"
+                                                            href="{{ url('author_show_block',{token:bl.token} ) }}"
+                                                        {% elseif bl.childrens|length==0 %}
+                                                            class="btn btn-icon-only blue disabled-link " data-toggle="tooltip"
+                                                            data-title="Tu na pas la permission"
+                                                        {% endif %}>
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    {%  set version_edit = version_has_status(0,bl) %}
+                                                    {%  set version_validate = version_has_status(1,bl) %}
+
+                                                    {% if has_permission('w',bl) %}
+                                                        {% if version_edit is not null %}
+                                                            {% if version_edit.createdBy==app.user %}
+                                                            <a class="btn btn-sm green" data-toggle="tooltip" data-title="Continuer l'edition du version"
+                                                                href="{{ url('author_block_version_edit',{token:version_edit.token}) }}">
+                                                                <i class="fa fa-pencil-square-o" ></i>
+                                                            </a>
+                                                            {% else%}
+                                                            <div class="btn-group">
+                                                                <button class="btn btn-sm green disabled"  data-toggle="tooltip"
+                                                                        data-title="Il ya une autre version en cours !">
+                                                                        <i class="fa fa-pencil-square-o" ></i>
+                                                                </button>
+                                                            </div>
+                                                            {% endif %}
+                                                        {% elseif version_validate is not null %}
+                                                        <button data-toggle="tooltip" data-title="Encours de validation" class="btn btn-icon-only yellow disabled">
+                                                            <i class="fa fa-check-square-o"></i>
+                                                        </button>
+                                                        {% else %}
+                                                        <button data-toggle="tooltip" data-title="Crée une nouvelle version"
+                                                            class="btn green btn-icon-only btn-create-new-version"
+                                                            data-url="{{ url('author_create_block_version',{token:bl.token}) }}">
+                                                            <i class="fa fa-pencil-square-o"></i>
+                                                        </button>
+                                                        {% endif %}
+                                                    {% else %}
+                                                    <button class="btn green btn-icon-only disabled" data-toggle="tooltip"
+                                                        data-title="Tu na pas la permission">
+                                                        <i class="fa fa-pencil-square-o"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                    <button {% if has_permission('d',bl) %}class="btn red btn-sm btn-delet-block"
+                                                                data-url="{{ url('author_delete_block',{token:bl.token}) }}"
+                                                            {% else %}
+                                                                class="btn btn-icon-only red disabled "  data-toggle="tooltip"
+                                                                data-title="Tu na pas la permission"
+                                                            {% endif %}>
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {% if bl.childrens|length>0 %}
+                                                <ol>
+                                                    {{ macros.displayVersionBlock(bl.childrens|sortByPosition,firstBlock) }}
+                                                </ol>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+
+                                {% endmacro %}
+                                <ol class="sortable ">
+                                    {{ macros.displayVersionBlock(block.childrens|sortByPosition,block) }}
+                                </ol>
+                        <ol class="sortable ">
+                            {% for bl in block.childrens| sortbyfield('position') %}
+                                <li class="block-branch no-nest" data-id={{ bl.id }} data-position={{ bl.position }}>
+                                    <div>
+                                        <div class="cl-btn fake-column col-xs-6 col-sm-5 col-md-5 col-lg-4 " data-pdl="25">
+                                            <input {% if not has_permission('w',bl) %} disabled {% endif %} type="text" id="title-{{ bl.id }}" class="form-control"
+                                                   value="{{ bl.title }}">
+                                        </div>
+                                        <div class="text-center fake-column hidden-xs col-sm-2 col-md-2">
+                                            <div class="label label-success">
+                                                {% if bl.lastValidatedVersion is not null %}
+                                                    v {{ bl.lastValidatedVersion.number|number_format(1,'.',',') }}
+                                                {% else %}
+                                                    Aucune
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="text-center fake-column col-xs-2 col-sm-2 col-md-2">
+                                            <div class="label label-success">
+                                                {% if bl.publishedVersion is not null %}
+                                                    v {{ bl.publishedVersion.number|number_format(1,'.',',') }}
+                                                {% else %}
+                                                    Aucune
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="fake-column col-xs-4 col-sm-3 col-md-3  text-center">
+                                            <a  {% if has_permission('r',bl) or bl.childrens|length>0  %}class="btn btn-sm blue"
+                                                    href="{{ url('author_show_block',{token:bl.token} ) }}"
+                                                {% elseif bl.childrens|length==0 %}
+                                                    class="btn btn-icon-only blue disabled-link " data-toggle="tooltip"
+                                                    data-title="Tu na pas la permission"
+                                                {% endif %}>
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            {%  set version_edit = version_has_status(0,bl) %}
+                                            {%  set version_validate = version_has_status(1,bl) %}
+
+                                            {% if has_permission('w',bl) %}
+                                                {% if version_edit is not null %}
+                                                    {% if version_edit.createdBy==app.user %}
+                                                    <a class="btn btn-sm green" data-toggle="tooltip" data-title="Continuer l'edition du version"
+                                                        href="{{ url('author_block_version_edit',{token:version_edit.token}) }}">
+                                                        <i class="fa fa-pencil-square-o" ></i>
+                                                    </a>
+                                                    {% else%}
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-sm green disabled"  data-toggle="tooltip"
+                                                                data-title="Il ya une autre version en cours !">
+                                                                <i class="fa fa-pencil-square-o" ></i>
+                                                        </button>
+                                                    </div>
+                                                    {% endif %}
+                                                {% elseif version_validate is not null %}
+                                                <button data-toggle="tooltip" data-title="Encours de validation" class="btn btn-icon-only yellow disabled">
+                                                    <i class="fa fa-check-square-o"></i>
+                                                </button>
+                                                {% else %}
+                                                <button data-toggle="tooltip" data-title="Crée une nouvelle version"
+                                                    class="btn green btn-icon-only btn-create-new-version"
+                                                    data-url="{{ url('author_create_block_version',{token:bl.token}) }}">
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                </button>
+                                                {% endif %}
+                                            {% else %}
+                                            <button class="btn green btn-icon-only disabled" data-toggle="tooltip"
+                                                data-title="Tu na pas la permission">
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </button>
+                                            {% endif %}
+                                            <button {% if has_permission('d',bl) %}class="btn red btn-sm btn-delet-block"
+                                                        data-url="{{ url('author_delete_block',{token:bl.token}) }}"
+                                                    {% else %}
+                                                        class="btn btn-icon-only red disabled "  data-toggle="tooltip"
+                                                        data-title="Tu na pas la permission"
+                                                    {% endif %}>
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                    {% if has_permission('r',block) %}
+                        <div class="hiddenForm col-md-12" style="margin-top: 50px">
+                            <div id="block-fields-list" style="list-style: none">
+                             {% for bl in block.childrens %}
+                                    <div class="block-field " id="block_{{ bl.id }}">
+                                        <div data-book="{{ bl.id }}" class="modal fade fill-in blockModal" id="block_info_{{ bl.id }}" tabindex="-1" aria-hidden="true">
+                                            <a type="button" class="close-modal" data-dismiss="modal" aria-hidden="true">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                            <div class="modal-dialog">
+                                                <form action="{{ url('administrator_update_block',{id:bl.id}) }}" class="updateBlockForm" data-parent="{{ block.id }}">
+                                                    <div class="modal-content row">
+                                                        <div class="modal-header">
+                                                            <h2><i class="fa fa-pencil"></i>&nbsp; Détails du bloc</h2>
+                                                        </div>
+                                                        <div class="modal-body col-md-12">
+                                                            <div class="form-group col-md-12">
+                                                                <label for="blockTitle" class="col-sm-4 control-label">Titre du bloc</label>
+                                                                <div class="col-sm-8">
+                                                                    <input value="{{ bl.title }}" name="blockTitle" required type="text" class="form-control" id="blockTitle"
+                                                                           placeholder="Titre du bloc">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group text-center col-md-12">
+                                                                <label class="col-md-4" style="display: flex" for="showTitle">
+                                                                    <div class="custom-check">
+                                                                        <input  {% if bl.options.showTitle %} checked  {% endif %} id="showTitle" name="showTitle" type="checkbox" role="checkbox"
+                                                                               class="custom-check-input">
+                                                                    </div>
+                                                                    Afficher Titre
+                                                                </label>
+                                                                <label class="col-md-4" style="display: flex" for="indexed">
+                                                                    <div class="custom-check">
+                                                                        <input {% if bl.options.indexed %} checked  {% endif %} id="indexed" name="indexed" type="checkbox" role="checkbox"
+                                                                               class="custom-check-input">
+                                                                    </div>
+                                                                    Table des matières
+                                                                </label>
+                                                                <label class="col-md-4" style="display: flex" for="paginated">
+                                                                    <div class="custom-check">
+                                                                        <input {% if bl.options.paginated %} checked  {% endif %} id="paginated" name="paginated" type="checkbox" role="checkbox"
+                                                                               class="custom-check-input">
+                                                                    </div>
+                                                                    Pagination
+                                                                </label>
+                                                            </div>
+                                                            <div class="auths">
+                                                                <h4>Autorization</h4>
+                                                                    <table class="table table-striped table-bordered table-hover auth-tb-author"
+                                                                           cellspacing="0" width="100%">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th>Auteur</th>
+                                                                            <th>Lecture</th>
+                                                                            <th>Ecriture</th>
+                                                                            <th>Supression</th>
+                                                                            <th><span data-toggle="tooltip" data-placement="bottom"
+                                                                                      title="Limiter l'autorisation seulement a ce bloc">Strict</span></th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for authorization in bl.authorizations %}
+                                                                            {% if 'ROLE_AUTHOR' in authorization.user.roles %}
+                                                                                <tr class="text-center">
+                                                                                    <td>
+                                                                                        <select class="form-control" name="auth_user">
+                                                                                            {% for user in authors %}
+                                                                                                <option {% if  authorization.user.id == user.id %} selected {% endif %}
+                                                                                                        value="{{ user.id }}">{{ user.profile.fullName }}</option>
+                                                                                            {% endfor %}
+                                                                                        </select>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="custom-check">
+                                                                                            <input type="checkbox" class="custom-check-input" name="canRead"
+                                                                                                {% if authorization.canRead %} checked {% endif %} value="{{ authorization.canRead }}">
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="custom-check">
+                                                                                            <input type="checkbox" class="custom-check-input" name="canWrite"
+                                                                                                {% if authorization.canWrite %} checked {% endif %} value="{{ authorization.canWrite }}">
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="custom-check">
+                                                                                            <input type="checkbox" class="custom-check-input" name="canDelete"
+                                                                                                {% if authorization.canDelete %} checked {% endif %} value="{{ authorization.canDelete }}">
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="custom-check">
+                                                                                            <input type="checkbox" class="custom-check-input" name="limited"
+                                                                                                {% if authorization.limited %} checked {% endif %} value="{{ authorization.limited }}">
+                                                                                        </div>
+                                                                                    </td>
+
+                                                                                    <td class="text-center">
+                                                                                        <button data-toggle="tooltip"
+                                                                                                data-placement="top" title="Effacer ! "
+                                                                                                class="btn btn-circle btn-icon-only red remove-auth">
+                                                                                            <i class="fa fa-minus"></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                        {% if authors|length>0 %}
+                                                                        <tfoot>
+                                                                        <tr>
+                                                                            <td colspan="6" class="col-md-12">
+                                                                                <button type="button" id="addAuthor" class="btn green btn-circle btn-icon-only add-auth-btn" ><i
+                                                                                            class="fa fa-plus"></i></button>
+                                                                                ajouter un auteur
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tfoot>
+                                                                        {% endif %}
+                                                                    </table>
+
+                                                                    <table class="table table-striped table-bordered table-hover auth-tb-validator"
+                                                                           cellspacing="0" width="100%">
+                                                                        <thead>
+                                                                        <tr class="text-center">
+                                                                            <th>Validateur</th>
+                                                                            <th>
+                                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                                      title="Limiter l'autorisation seulement a ce bloc">Strict</span>
+                                                                            </th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {% for authorization in bl.authorizations %}
+                                                                            {% if 'ROLE_VALIDATOR' in authorization.user.roles %}
+                                                                                <tr class="text-center">
+                                                                                    <td>
+                                                                                        <select class="form-control" name="auth_user">
+                                                                                            {% for user in validators %}
+                                                                                                <option {% if  authorization.user.id == user.id %} selected {% endif %}
+                                                                                                        value="{{ user.id }}">{{ user.profile.fullName }}</option>
+                                                                                            {% endfor %}
+                                                                                        </select>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="custom-check">
+                                                                                            <input type="checkbox" class="custom-check-input" name="limited"
+                                                                                                {% if authorization.limited %} checked {% endif %}  value="{{ authorization.limited }}">
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td class="text-center">
+                                                                                        <button data-toggle="tooltip"
+                                                                                                data-placement="top" title="Effacer ! "
+                                                                                                class="btn btn-circle btn-icon-only red remove-auth">
+                                                                                            <i class="fa fa-minus"></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                        {% if validators|length>0 %}
+                                                                        <tfoot>
+                                                                        <tr>
+                                                                            <td colspan="3" class="col-md-12">
+                                                                                <button type="button" id="addValidator" class="btn green btn-circle btn-icon-only add-auth-btn" {% if validators|length==0  %} disabled {% endif %}><i
+                                                                                            class="fa fa-plus"></i></button>
+                                                                                ajouter un validateur
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tfoot>
+                                                                        {% endif %}
+                                                                    </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-offset-2 col-sm-10">
+                                                                    <button type="submit" class="btn green">Sauvegarder</button>
+                                                                    <button data-dismiss="modal" role="button" class="btn red">Annuler</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+            </div>
+        </div>
+        {% if has_permission('w',block) %}
+            <div data-book="{{ block.book.id }}" class="modal fade fill-in blockModal" id="new-block-modal" tabindex="-1" aria-hidden="true">
+        <a type="button" class="close-modal" data-dismiss="modal" aria-hidden="true">
+            <i class="fa fa-times"></i>
+        </a>
+        <div class="modal-dialog">
+            <form  id="createBlockForm" action="{{ url('administrator_create_block',{book:block.book.id}) }}" data-parent="{{ block.id }}">
+                <div class="modal-content row">
+                    <div class="modal-header">
+                        <h2><i class="fa fa-pencil"></i>&nbsp; Ajouter un bloc</h2>
+                    </div>
+                    <div class="modal-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label for="blockTitle" class="col-sm-4 control-label">Titre du bloc</label>
+                            <div class="col-sm-8">
+                                <input name="blockTitle" required type="text" class="form-control" id="blockTitle"
+                                       placeholder="Titre du bloc">
+                            </div>
+                        </div>
+                        <div class="form-group text-center col-md-12">
+                            <label class="col-md-4" style="display: flex" for="showTitle">
+                                <div class="custom-check">
+                                    <input id="showTitle" name="showTitle" type="checkbox" role="checkbox"
+                                           class="custom-check-input">
+                                </div>
+                                Afficher Titre
+                            </label>
+                            <label class="col-md-4" style="display: flex" for="indexed">
+                                <div class="custom-check">
+                                    <input id="indexed" name="indexed" type="checkbox" role="checkbox"
+                                           class="custom-check-input">
+                                </div>
+                                Table des matières
+                            </label>
+                            <label class="col-md-4" style="display: flex" for="paginated">
+                                <div class="custom-check">
+                                    <input id="paginated" name="paginated" type="checkbox" role="checkbox"
+                                           class="custom-check-input">
+                                </div>
+                                Pagination
+                            </label>
+                        </div>
+                        <div class="auths">
+                            <h4>Autorization</h4>
+                            {% if authors|length>0 %}
+                            <table class="table table-striped table-bordered table-hover auth-tb-author"
+                                   cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Auteur</th>
+                                        <th>Lecture</th>
+                                        <th>Ecriture</th>
+                                        <th>Supression</th>
+                                        <th><span data-toggle="tooltip" data-placement="bottom"
+                                                  title="Limiter l'autorisation seulement a ce bloc">Strict</span></th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6" class="col-md-12">
+                                            <button type="button" id="addAuthor" class="btn green btn-circle btn-icon-only add-auth-btn" ><i
+                                                        class="fa fa-plus"></i></button>
+                                            ajouter un auteur
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            {% endif %}
+                            {% if validators|length>0 %}
+                            <table class="table table-striped table-bordered table-hover auth-tb-validator"
+                                   cellspacing="0" width="100%">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Validateur</th>
+                                        <th>
+                                            <span data-toggle="tooltip" data-placement="bottom"
+                                                  title="Limiter l'autorisation seulement a ce bloc">Strict</span>
+                                        </th>
+                                        <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="col-md-12">
+                                            <button type="button" id="addValidator" class="btn green btn-circle btn-icon-only add-auth-btn" {% if validators|length==0  %} disabled {% endif %}><i
+                                                        class="fa fa-plus"></i></button>
+                                            ajouter un validateur
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer col-md-12">
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn green">Crée</button>
+                                <button type="reset" data-dismiss="modal" role="button" class="btn red">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+        {% endif %}
+
+        {% if has_permission('r',block) %}
+            <div class="portlet box green-meadow col-md-12" style="margin-bottom: 15px">
+                <div class="portlet-title">
+                    <h4 class="pull-left">Contenu du bloc</h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="reduire" data-placement="bottom" title=""> </a>
+                        <a href="" class="fullscreen" data-original-title="plein ecran" data-placement="bottom" title=""> </a>
+                    </div>
+                        {%  set version_edit = version_has_status(0,block) %}
+                        {%  set version_validate = version_has_status(1,block) %}
+                        <div class="pull-right" style="margin-top: 5px;margin-right: 10px">
+                        {% if has_permission('w',block) %}
+                            {% if version_edit is not null %}
+                                {% if version_edit.createdBy==app.user %}
+                                    <a class="btn btn-sm green" data-toggle="tooltip" data-title="Continuer l'edition du version" href="{{ url('author_block_version_edit',{token:version_edit.token}) }}"><i class="fa fa-pencil-square-o" ></i><span class="hidden-sm">edition</span></a>
+                                {% else%}
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm green disabled"  data-toggle="tooltip" data-title="Il ya une autre version en cours !"><i class="fa fa-pencil-square-o"></i> Édition</button>
+                                    </div>
+                                {% endif %}
+                            {% elseif version_validate is not null %}
+                                <button data-toggle="tooltip" data-title="Encours de validation" class="btn btn-sm yellow disabled">Validation ..</button>
+                            {% else %}
+                                <button class="btn green btn-sm btn-create-new-version" data-url="{{ url('author_create_block_version',{token:block.token}) }}"><i class="fa fa-pencil-square-o"></i> Édition</button>
+                            {% endif %}
+                        {% else %}
+                            <button class="btn green btn-sm disabled" data-toggle="tooltip" data-title="Tu na pas la permission"><i class="fa fa-pencil-square-o"></i> Édition</button>
+                        {% endif %}
+                        </div>
+
+                </div>
+                {% if block.publishedVersion is not null %}
+                    <div class="portlet-body col-md-12">
+                        <div class="col-md-12" style="display: block;">
+                            <textarea class="tinyMince" >{{ block.publishedVersion.content}}</textarea>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="portlet box green-meadow col-md-12">
+                    <div class="portlet-title">
+                        <h4 class="pull-left">Historique du bloc</h4>
+                        <div class="tools">
+                            <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                            <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body col-md-12">
+                        <table class="table table-hover table-bordered">
+                        	<thead>
+                        		<tr>
+                        			<th class="col-md-2 text-center"> Date </th>
+                                    <th class="text-center"> Information </th>
+                        		</tr>
+                        	</thead>
+                        	<tbody>
+                        	{% for historic in block.historics %}
+                        	    <tr>
+                        		    <td class="text-center">{{ historic.date|date('d-m-Y H:i') }}</td>
+                        		    <td>{{ historic.message }} </td>
+                                </tr>
+                        	{% endfor %}
+                        	</tbody>
+                        </table>
+
+                    </div>
+                </div>
+        {% endif %}
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-my-books">
+    <div data-book="{{ block.book.id }}" class="modal fade fill-in blockModal" id="new-block-modal" tabindex="-1" aria-hidden="true">
+        <a type="button" class="close-modal" data-dismiss="modal" aria-hidden="true">
+            <i class="fa fa-times"></i>
+        </a>
+        <div class="modal-dialog">
+            <form  id="createBlockForm" action="{{ url('administrator_create_block',{book:block.book.id}) }}" data-parent="{{ block.id }}">
+                <div class="modal-content row">
+                    <div class="modal-header">
+                        <h2><i class="fa fa-pencil"></i>&nbsp; Ajouter un bloc</h2>
+                    </div>
+                    <div class="modal-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label for="blockTitle" class="col-sm-4 control-label">Titre du bloc</label>
+                            <div class="col-sm-8">
+                                <input name="blockTitle" required type="text" class="form-control" id="blockTitle"
+                                       placeholder="Titre du bloc">
+                            </div>
+                        </div>
+                        <div class="form-group text-center col-md-12">
+                            <label class="col-md-4" style="display: flex" for="showTitle">
+                                <div class="custom-check">
+                                    <input id="showTitle" name="showTitle" type="checkbox" role="checkbox"
+                                           class="custom-check-input">
+                                </div>
+                                Afficher Titre
+                            </label>
+                            <label class="col-md-4" style="display: flex" for="indexed">
+                                <div class="custom-check">
+                                    <input id="indexed" name="indexed" type="checkbox" role="checkbox"
+                                           class="custom-check-input">
+                                </div>
+                                Table des matières
+                            </label>
+                            <label class="col-md-4" style="display: flex" for="paginated">
+                                <div class="custom-check">
+                                    <input id="paginated" name="paginated" type="checkbox" role="checkbox"
+                                           class="custom-check-input">
+                                </div>
+                                Pagination
+                            </label>
+                        </div>
+                        <div class="auths">
+                            <h4>Autorization</h4>
+                            {% if authors|length>0 %}
+                            <table class="table table-striped table-bordered table-hover auth-tb-author"
+                                   cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Auteur</th>
+                                        <th>Lecture</th>
+                                        <th>Ecriture</th>
+                                        <th>Supression</th>
+                                        <th><span data-toggle="tooltip" data-placement="bottom"
+                                                  title="Limiter l'autorisation seulement a ce bloc">Strict</span></th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6" class="col-md-12">
+                                            <button type="button" id="addAuthor" class="btn green btn-circle btn-icon-only add-auth-btn" ><i
+                                                        class="fa fa-plus"></i></button>
+                                            ajouter un auteur
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            {% endif %}
+                            {% if validators|length>0 %}
+                            <table class="table table-striped table-bordered table-hover auth-tb-validator"
+                                   cellspacing="0" width="100%">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Validateur</th>
+                                        <th>
+                                            <span data-toggle="tooltip" data-placement="bottom"
+                                                  title="Limiter l'autorisation seulement a ce bloc">Strict</span>
+                                        </th>
+                                        <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="col-md-12">
+                                            <button type="button" id="addValidator" class="btn green btn-circle btn-icon-only add-auth-btn" {% if validators|length==0  %} disabled {% endif %}><i
+                                                        class="fa fa-plus"></i></button>
+                                            ajouter un validateur
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer col-md-12">
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn green">Crée</button>
+                                <button type="reset" data-dismiss="modal" role="button" class="btn red">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/custom-compo.css') }}" >
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/book.structure.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/jquery.mjs.nestedSortable.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/pages/js/author.block.version.js') }}"></script>
+    <script src="{{ asset('assets/pages/js/book/edit_block_structure.js') }}"></script>
+{% endblock %}

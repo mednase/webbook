@@ -1,0 +1,36 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    Aperçu des newsLetter
+{% endblock %}
+
+{% block body %}
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Aperçu des newsLetter</span>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="portlet box green">
+                <div class="portlet-body col-md-12" >
+                    <iframe srcdoc="{{ template }}" style="width: 100%;min-height: 500px;overflow: inherit">
+
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input type="hidden" value="" id="menuSelected" data-menu="page-newsletter">
+{% endblock %}

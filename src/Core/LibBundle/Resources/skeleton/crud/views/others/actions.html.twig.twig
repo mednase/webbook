@@ -1,0 +1,8 @@
+{# {%- for action in record_actions %} #}
+    	<a title="Modifier" class="btn-sm btn-success" href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'token': entity.token }) }}" }}">
+            <i class="fa fa-pencil"></i>
+        </a>
+        <a title="Supprimer" data-toggle="modal" data-target="#modalDeleteEntity" class="btn-sm btn-danger" href="{{ "{{ path('"~ route_name_prefix ~"_deleteModal', { 'token': entity.token }) }}" }}">
+            <i class="fa fa-trash-o"></i>
+        </a>
+{# {%- endfor %} #}

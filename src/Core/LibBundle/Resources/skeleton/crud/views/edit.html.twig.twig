@@ -1,0 +1,44 @@
+{{ "{% extends '::base.html.twig' %}" }}
+
+{{ "{% block title %}" }}
+{{ "{{ parent() }} | Administration - Fiche " ~ entity|title }}
+{{ "{% endblock %}" }}
+
+{{ "{% block body %}" }}
+	<div class="page-container">
+        <h1 class="title-page">Administration</h1>
+        <div class="container-lvl2">
+        	<h2 class="subtitle">Fiche {{ entity|title }}</h2>
+            <form action="{{ "{{ action }}" }}" method="POST" {{ "{{ form_enctype(form) }}" }}>
+            	<div class="form-type-1">
+	                <div class="col-md-6 col-md-offset-2">
+	                	<input type="hidden" name="_method" value="PUT" />
+	                	{{ "{% for item in form %}
+	                        {{ form_row(item) }}
+	                    {% endfor %}" }}
+	                    <span><span class="star-required"> *</span> Champs obligatoires</span>
+					</div>
+	            </div>
+	            <div class="col-md-6 col-md-offset-2">
+	                <div class="form-footer">
+	                    <div class="form-group">
+	                        <a class="btn reversed" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}" title="Annuler">Annuler</a>
+	                        <button type="submit"id="submitForm"class="btn" title="Enregistrer">Enregistrer</button>
+	                    </div>
+	                </div>
+	            </div>
+            </form>
+	    </div>
+    </div>
+{{ "{% endblock %}" }}
+
+
+{{ "{% block javascripts %}
+{% if find_help('"~ entity ~"') %}
+    {% set message =  find_help('"~ entity ~"') %}
+{% else %}
+    {% set message =  'Message d\\'aide de la fiche des "~ entity ~"' %}
+{% endif %}
+
+{% include 'LibBundle:modal:help.html.twig' with {'message': message  , 'id' : 'modalHelp'} %}
+{% endblock %}" }}

@@ -1,0 +1,116 @@
+.form-control{
+    color: #3a3a3a!important;
+    min-height: 52px;
+    font-size: 17px;
+    line-height: 20px!important;
+    padding: 0 15px;
+    background-color: #ffffff;
+    border: 2px solid #c9c9c9!important;
+    margin: 0 0 24px 0!important;
+}
+.form-control:hover{
+    border-color: #a6a6a6;
+}
+.form-control:focus{
+    border: 2px solid #52bad5!important;
+    outline: none;
+}
+#form-register>div{
+    margin-top: 5px;
+}
+label {
+    color: #484848;
+    font-weight: 600;
+    display: block;
+    max-width: 635px;
+    padding-bottom: .8em;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+h1{
+    font-weight: 600;
+    color: #484848;
+    font-family: "Open Sans","Helvetica Neue",Arial,Helvetica,Verdana,sans-serif;
+    outline: 0;
+}
+.c-showPassword {
+    font-size: 18px;
+    color: #237a91;
+    padding-left: 30px;
+}
+.c-showPassword .fa{
+    font-size: 20px;
+    margin-right: 5px;
+}
+.c-showPassword:hover {
+    cursor: pointer;
+    color: #2c9ab7;
+}
+
+.form-control-feedback{
+    margin-top: -63px;
+    margin-right: 5px;
+    top: inherit!important;
+    font-size: 24px;
+}
+
+.has-error .form-control {
+    border-color: #a94442!important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+
+.message-error {
+    color: #a94442;
+    font-family: inherit;
+    text-align: center;
+    z-index: 5;
+    font-size: 16px;
+    float: right;
+    font-weight: 700;
+}
+.disabled {
+    cursor: not-allowed!important;
+    filter: alpha(opacity=50);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: 0.5;
+}
+form .tooltip-inner{
+    font-size: 12px;
+    padding: 5px;
+    border-color: #d12d22;
+    background-color: #a33c3a;
+}
+form .tooltip.top .tooltip-arrow {
+    border-top-color: #b13e3c;
+}
+form .tooltip.bottom .tooltip-arrow {
+    border-bottom-color: #b13e3c;
+}
+form .tooltip.right .tooltip-arrow {
+    border-right-color: #b13e3c;
+}
+form .tooltip.left .tooltip-arrow {
+    border-left-color: #b13e3c;
+}
+.message-label{
+    font-size: 16px;
+    text-align: left;
+    line-height: 1.5;
+}
+.loader {
+    border: 7px solid #f3f3f3;
+    border-top: 7px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

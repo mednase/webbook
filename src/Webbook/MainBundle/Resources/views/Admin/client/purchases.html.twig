@@ -1,0 +1,71 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    Les Achats
+{% endblock %}
+
+{% block classBody %}
+    page-container-bg-solid page-header-fixed
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Les Achats</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2>     <span class="fa fa-cart-arrow-down"></span>    &nbsp; Les Achats </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box red">
+                <div class="portlet-title">
+                    <div class="caption"></div>
+                </div>
+                <div class="portlet-body ">
+                    <table  class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Nom d'utilisateur</th>
+                            <th>Nom complet</th>
+                            <th>Livre achetés</th>
+                            <th>Prix Total</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for purchase in purchases %}
+                            <tr>
+                                <td>{{ purchase.client.username }}</td>
+                                <td>{{ purchase.client.profile.fullName }}</td>
+                                <td>
+                                    {% for book in purchase.books %}
+                                        -{{ book.title}}<br>
+                                    {% endfor %}
+                                </td>
+                                <td>{{ purchase.price }}</td>
+                                <td><button class="btn btn-circle btn-blue"><i class="fa fa-print"></i> Imprimer </button></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-purchases">
+{% endblock %}
+
+    {% block javascripts %}
+        <script>
+        </script>
+    {% endblock %}

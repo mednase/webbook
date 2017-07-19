@@ -1,0 +1,229 @@
+{% import _self as macros %}
+
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        counter-reset: chapternum figurenum;
+        font: 14pt Georgia, "Times New Roman", Times, serif;
+        line-height: 1.5;
+    }
+    figure.image {
+        text-align: center;
+    }
+
+    ol {
+        list-style: none;
+        counter-reset: item;
+        padding-left: 0;
+        display: block;
+    }
+
+    OL li {
+        text-transform: capitalize;
+    }
+
+    ol.contentTable > li.numerated>:first-child{
+        border-bottom: 1px solid ;
+        width: 92%!important;
+        display: inline-block;
+        float: right;
+        margin: 0;
+        max-height: 38px;
+    }
+
+    ol > li.numerated:before {
+        counter-increment: item;
+        content: counters(item, ".") ". ";
+    }
+
+    ol li[class*="book-header"]:before,
+    ol li[class*="book-header"] > h1, li[class*="book-header"] > h2, li[class*="book-header"] > h3,
+    ol li[class*="book-header"] > h4, li[class*="book-header"] > h5, li[class*="book-header"] > h6 {
+        font-weight: bold;
+        font-family: 'Times New Roman', "sans-serif";
+        display: inline;
+        line-height: 1.5;
+    }
+
+    li[class*="book-header"] > h1, li.book-header-1:before {
+        font-size: 24pt;
+        margin-top: 25px;
+    }
+
+    li[class*="book-header"] > h2, li.book-header-2:before {
+        font-size: 20pt;
+    }
+
+    li[class*="book-header"] > h3, li.book-header-3:before {
+        font-size: 18pt;
+    }
+
+    li[class*="book-header"] > h4, li.book-header-4:before {
+        font-size: 16pt;
+    }
+
+    li[class*="book-header"] > h5, li.book-header-5:before {
+        font-size: 14pt;
+    }
+
+    table td {
+        border: 1px solid grey;
+    }
+    table, tr, td, th, tbody, thead, tfoot, img {
+        page-break-inside: avoid !important;
+    }
+    ol li a {
+        text-decoration: none;  color: inherit;
+    }
+    .book-title {
+        padding-left: 20%;
+        padding-bottom: 50px;
+        padding-top: 40%;
+        font-size: 50px;
+    }
+
+    .dots {
+        word-spacing: 2px;
+    }
+
+    span.number {
+        font-size: 25px !important;  font-weight: normal !important;  position: relative;  float: right;
+    }
+
+    #figureList,#tableList{
+        list-style: none;
+    }
+    #figureList li,#tableList li{
+        width: 100%;  border-bottom: 1px solid ;
+    }
+    #figureList h3,#tableList h3{
+        height: 30px;margin: 0;
+    }
+    #figureList a ,#tableList a{
+        text-decoration: none;  color: inherit;
+    }
+    .break-page{
+        page-break-after: always;
+    }
+    #author{
+        font-size: 24px;
+        margin-top: 0;
+        text-decoration: none;
+        list-style: none;
+    }
+</style>
+<body onload="">
+<div>
+    <div>
+        <h1 class="book-title">{{ book.title }}</h1>
+        <div style="text-align: right;margin-top: 200px">
+            <b style="font-size: 26px;margin-right: 180px">Par : </b>
+            <ul id="author">
+                {% for author in book.mainAuthors %}
+                    <li>{{ author.fullName }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+    <div class="break-page"></div>
+</div>
+<div>
+    <h1>Table Des Matiéres</h1>
+    <div id="test"></div>
+    <ol class="contentTable numerated">
+        {% macro displayBookContentTable(blocks,level) %}
+            {% import _self as macros %}
+            {% for block in blocks %}
+                {% if block.options.indexed %}
+                    <li class="numerated book-header-{{ level }}">
+                        <h{{ level }}>
+                            <a href="#section-{{ block.id }}" style="text-align: left">{{ block.title }}</a>
+                            <span class="dots"></span>
+                            <span id="section-{{ block.id }}-number" class="number">1</span>
+                        </h{{ level }}>
+                        {% if block.childrens|length>0 %}
+                            <ol class="contentTable numerated">
+                                {{ macros.displayBookContentTable(block.childrens,level+1) }}
+                            </ol>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        {% endmacro %}
+        {{ macros.displayBookContentTable(book.underBlock,1) }}
+    </ol>
+    <div class="break-page"></div>
+</div>
+<div>
+    <h1>Liste Des Figures</h1>
+    <ul id="figureList">
+    </ul>
+    <div class="break-page"></div>
+</div>
+<div>
+    <h1>Liste Des Tableaux</h1>
+    <ul id="tableList">
+    </ul>
+    <div class="break-page"></div>
+</div>
+<div class="pdfContent">
+    {{ content|raw }}
+</div>
+<div class="test">
+
+</div>
+</body>
+<script src="{{ siteUrl~asset('assets/global/plugins/jquery.min.js') }}"></script>
+<script type="text/javascript">
+
+    // setting page number for the table of content
+    const MAXPRINTEDPAGEHEIGHT = 14075;
+    $('li[name*="section-"].numerated').each(function () {
+        var initialOffset=$(".pdfContent").offset().top;
+        var elem=$(this);
+        var pageNumber=Math.ceil((elem.offset().top+1-initialOffset)/MAXPRINTEDPAGEHEIGHT);
+        $("#"+elem.attr('name')+"-number").text(pageNumber);
+    });
+    // setting page number for the list of figure
+    var figureNumber=1;
+    $('.pdfContent figcaption:contains("&&figureNumber&&")').each(function () {
+        var elem=$(this);
+        var content=elem.text();
+        content=content.replace("&&figureNumber&&",figureNumber);
+        elem.html(content);
+        elem.parent().find('img').attr('id','figure-'+figureNumber);
+        //now determine the page number
+        var initialOffset=$(".pdfContent").offset().top;
+        var pageNumber=Math.ceil((elem.offset().top+1+($(this).parent().height()*10)-initialOffset)/MAXPRINTEDPAGEHEIGHT);
+
+
+        $('#figureList').append('<li> <h3  class="figureName"><a href="#figure-'+figureNumber+'">'+content+'</a> <span class="number">'+pageNumber+'</span> </h3> </li>');
+        figureNumber++;
+    });
+    // setting page number for the list of table
+    var tableNumber=1;
+    $('.pdfContent table>caption:contains("&&tableNumber&&")').each(function () {
+        var elem=$(this);
+        var content=elem.text();
+        content=content.replace("&&tableNumber&&",tableNumber);
+        elem.html(content);
+        elem.attr('id','table-'+tableNumber);
+        //now determine the page number
+        var initialOffset=$(".pdfContent").offset().top;
+        var pageNumber=Math.ceil((elem.offset().top+1+($(this).parent().height()*10)-initialOffset)/MAXPRINTEDPAGEHEIGHT);
+
+        $('#tableList').append('<li> <h3  class="figureName"><a href="#table-'+tableNumber+'">'+content+' </a><span class="number">'+pageNumber+'</span></h3> </li>');
+        tableNumber++;
+    });
+
+</script>
+</html>

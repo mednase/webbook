@@ -1,0 +1,199 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    {{ version.bookBlock.book.title }} - {{ version.bookBlock.title }} - v {{ version.number }}
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('author_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{{ url('author_show_book',{token:version.bookBlock.book.token}) }}">{{ version.bookBlock.book.title }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">progression </span>
+            </li>
+        </ul>
+    </div>
+    <div class="profile-sidebar col-md-3">
+        <div class="portlet light profile-sidebar-portlet ">
+            <div class="profile-userpic">
+                <img src="{% if  version.createdBy.picture is not null %}
+                         {{ vich_uploader_asset(version.createdBy.picture,'mediaFile') }}
+                    {% else %}
+                        {{ asset('assets/img/avatar/no-avatar.png') }}
+                    {% endif %}" class="img-responsive" alt="">
+            </div>
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name"> {{ version.createdBy.profile.fullName }} </div>
+                <div class="profile-usertitle-job">  {{ version.createdBy.jobTitle }} </div>
+                <div class="profile-last-login" >Derinére Activité <br>
+                    {{ version.createdBy.lastLogin|date('Y-m-d h:i') }}
+                    <i class="fa fa-clock-o"></i>  </div>
+            </div>
+            <div class="profile-userbuttons">
+                <button type="button" class="btn btn-circle green btn-sm">Envoyer message</button>
+            </div>
+        </div>
+        <!-- END PORTLET MAIN -->
+    </div>
+    <div class="container-fluid col-md-9">
+        <div class="col-md-12" style="display: block;">
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                     aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                     style="width:{{ version_activity_progress(version) }}%">
+                    {{ version_activity_progress(version) }}%
+                </div>
+            </div>
+            <textarea class="tinyMince">{{ version.content }}</textarea>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    <style>
+        .progress {
+            height: 20px;
+        }
+
+        .container-fluid {
+            background-color: white;
+            padding: 9px;
+            border-radius: 4px;
+            box-shadow: 0 0 16px 1px #f0f0f0;
+        }
+
+        .profile-sidebar {
+            float: right;
+        }
+
+        .profile-userpic img {
+            float: none;
+            margin: 0 auto;
+            width: 50%;
+            height: 50%;
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important
+        }
+
+        .profile-usertitle {
+            text-align: center;
+            margin-top: 20px
+        }
+
+        .profile-usertitle-name {
+            color: #5a7391;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 7px
+        }
+
+        .profile-last-login{
+            color: #73879C;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .profile-usertitle-job {
+            text-transform: uppercase;
+            color: #5b9bd1;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 7px
+        }
+
+        .profile-userbuttons {
+            text-align: center;
+            margin-top: 10px
+        }
+
+        .profile-userbuttons .btn {
+            margin-left: 5px
+        }
+
+        .profile-userbuttons .btn:last-child {
+            margin-left: 0
+        }
+
+        .profile-userbuttons button {
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 15px
+        }
+        .profile-usermenu ul li {
+            border-bottom: 1px solid #f0f4f7
+        }
+
+        .profile-usermenu ul li:last-child {
+            border-bottom: none
+        }
+
+        .profile-usermenu ul li a {
+            color: #93a3b5;
+            font-size: 16px;
+            font-weight: 400
+        }
+
+        .profile-usermenu ul li a i {
+            margin-left: 8px;
+            font-size: 16px
+        }
+
+        .profile-usermenu ul li a:hover {
+            background-color: #fafcfd;
+            color: #5b9bd1
+        }
+
+        .profile-usermenu ul li.active a {
+            color: #5b9bd1;
+            background-color: #f6f9fb;
+            border-right: 2px solid #5b9bd1;
+            margin-right: -2px
+        }
+
+        .profile-desc-link i {
+            width: 22px;
+            font-size: 19px;
+            color: #abb6c4;
+            margin-left: 5px
+        }
+
+        .profile-desc-link a {
+            font-size: 14px;
+            font-weight: 600;
+            color: #5b9bd1
+        }
+
+        @media (max-width: 991px) {
+            .profile-sidebar {
+                float: none;
+                width: 100% !important;
+                margin: 0
+            }
+
+            .profile-sidebar > .portlet {
+                margin-bottom: 20px
+            }
+
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            tinymce.init({
+                selector: '.tinyMince',  // change this value according to your HTML
+                theme: 'modern',
+                height: 400,
+                readonly: 1
+            });
+        })
+    </script>
+
+{% endblock %}

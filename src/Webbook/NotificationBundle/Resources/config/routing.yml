@@ -1,0 +1,5 @@
+get_user_notifications:
+    path:     /notifications
+    defaults: { _controller: NotificationBundle:Default:getNotifications }
+    options:
+        expose:  true

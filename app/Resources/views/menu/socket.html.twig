@@ -1,0 +1,37 @@
+{% spaceless %}
+<script>
+    jQuery(document).ready(function ($) {
+        var websocket = WS.connect("ws://lavoiser.marzouk-med.loc:8080");
+        websocket.on("socket/connect", function(session){
+            session.subscribe("notification/{{ app.user.username }}", function(uri, payload){
+                var notif=JSON.parse(payload.msg);
+                console.log(notif);
+                $('#notificatin-list').prepend(
+                    '<li class="notif unseen">' +
+                    '<a href="'+notif.url+'" style="text-decoration: none!important;padding-right: 5px!important;">' +
+                    '<div class="time margin-top-0">'+notif.date+'<span class="fa fa-clock-o"></span></div>' +
+                    '<span class="label label-sm label-icon label-warning col-md-1" style="padding-left: 4px!important;">'+
+                    '<i class="fa '+notif.icon+' "></i>'+
+                    '</span>'+
+                    '<p class="details">' + notif.message+'</p>' +
+                    '</div>' +
+                    '</a>' +
+                    '</li>'
+                );
+                if($("#bade-notification").length){
+                    var num_not=parseInt($("#bade-notification").text());
+                    console.log(num_not);
+                    $("#newNotif").text(num_not+1+'nouveau');
+                    $("#bade-notification").text(num_not+1);
+                }else{
+                    $('#bell-notif').append('<span class="badge badge-default" id="bade-notification"> 1 </span>')
+                }
+
+            });
+        });
+        websocket.on("socket/disconnect", function(error){
+            console.log("Disconnected for " + error.reason + " with code " + error.code);
+        });
+    })
+</script>
+{% endspaceless %}

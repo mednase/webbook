@@ -1,0 +1,787 @@
+/* mobelite book */
+
+@font-face {
+  font-family: 'Stempel-Garamond-W01-Roman';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../fonts/Stempel-Garamond-W01-Roman.woff') format('woff');
+}
+
+body, ul, table, form{
+	margin:0;
+	padding:0;
+}
+
+.animated{
+	-webkit-transition:margin-left 0.2s ease-in-out;
+	-moz-transition:margin-left 0.2s ease-in-out;
+	-o-transition:margin-left 0.2s ease-in-out;
+	-ms-transition:margin-left 0.2s ease-in-out;
+	transition:margin-left 0.2s ease-in-out;
+}
+
+.lasPage{
+	background: url(../pics/bookLastPageBg.png) no-repeat  !important;
+}
+.blastPage{
+	background: url(../pics/boolLastPageInner.png)no-repeat !important;
+}
+.coverInnerSide{
+	background: url(../pics/bookCoverInner.png)  no-repeat !important;
+}
+
+.lasPage .copyright{
+	text-align: center;
+	position: absolute;
+	bottom: 150px;
+	left: 80px;
+	font-size: 16px;
+}
+#book-zoom{
+	-webkit-transition: -webkit-transform 1s;
+	-moz-transition: -moz-transform 1s;
+	-ms-transition: -ms-transform 1s;
+	-o-transition: -o-transform 1s;
+	transition: transform 1s;
+}
+
+#flipbook{
+	width:960px;
+	height:600px;
+	left: 70px!important;
+}
+
+#flipbook .book-content{
+	font-family: "Stempel-Garamond-W01-Roman";
+	font-size: 16px;
+	margin: 10px 30px;
+}
+
+#flipbook blockquote{
+	color:#586078;
+	margin:10px 0;
+	font-style:italic;
+}
+
+#flipbook blockquote:before{
+	content: "\201C";
+	color:#333D53;
+	font-size:20px;
+}
+
+#flipbook blockquote:after{
+	content: "\201D";
+	color:#333D53;
+	font-size:20px;
+}
+
+#flipbook cite{
+	font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:13px;
+	font-weight:200;
+	font-style:normal;
+	color:#666;
+}
+
+#flipbook .book-content .center-pic{
+	margin:0;
+	text-indent:0;
+	text-align:center;
+}
+
+#flipbook .zoom-this:hover{
+	opacity:0.9;
+	cursor:pointer;
+}
+
+#flipbook .book-content p{
+	text-indent: 18px;
+	margin: 20px 0;
+	line-height: 22px;
+}
+
+#flipbook .left-pic{
+	float:left;
+	margin-top:15px;
+	margin-right:15px;
+	margin-bottom:15px;
+}
+
+#flipbook .even{
+	background-image:url(../pics/gradient-page-left.jpg);
+	background-position:right top;
+	background-repeat:repeat-y;
+}
+
+#flipbook .odd{
+	background-image:url(../pics/gradient-page-right.jpg);
+	background-position:left top;
+	background-repeat:repeat-y;
+}
+
+
+.animated{
+	-webkit-transition:margin-left 0.2s ease-in-out;
+	-moz-transition:margin-left 0.2s ease-in-out;
+	-o-transition:margin-left 0.2s ease-in-out;
+	-ms-transition:margin-left 0.2s ease-in-out;
+	transition:margin-left 0.2s ease-in-out;
+}
+#flipbook .shadow{
+	-webkit-transition: -webkit-box-shadow 0.5s;
+	-moz-transition: -moz-box-shadow 0.5s;
+	-o-transition: -webkit-box-shadow 0.5s;
+	-ms-transition: -ms-box-shadow 0.5s;
+
+	-webkit-box-shadow:0 0 10px #999;
+	-moz-box-shadow:0 0 10px #999;
+	-ms-box-shadow:0 0 10px #999;
+	-o-box-shadow:0 0 10px #999;
+	box-shadow:0 0 10px #999;
+}
+
+#flipbook.page{
+	-webkit-box-shadow:0 0 20px rgba(0,0,0,0.2);
+	-moz-box-shadow:0 0 20px rgba(0,0,0,0.2);
+	-ms-box-shadow:0 0 20px rgba(0,0,0,0.2);
+	-o-box-shadow:0 0 20px rgba(0,0,0,0.2);
+	box-shadow:0 0 20px rgba(0,0,0,0.2);
+}
+
+.zoom-pic{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:rgba(0,0,0,0.2);
+	z-index:999;
+}
+
+.zoom-pic img{
+	-webkit-box-shadow:0 0 20px #999;
+	-moz-box-shadow:0 0 20px #999;
+	-o-box-shadow:0 0 20px #999;
+	-ms-box-shadow:0 0 20px #999;
+	box-shadow:0 0 20px #999;
+}
+
+
+
+#flipbook .p1 .side{
+	width:5px;
+	height:600px;
+	position:absolute;
+	top:0;
+	left:475px;
+
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #bbb), color-stop(0.5,  #ddd), color-stop(1,  #bbb));
+	background-image:-webkit-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image:-moz-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image:-ms-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image:-o-linear-gradient(left, #bbb, #ddd, #bbb);
+	background-image:linear-gradient(left, #bbb, #ddd, #bbb);
+	
+	-webkit-transform:rotateY(-90deg);
+	-moz-transform:rotateY(-90deg);
+	-o-transform:rotateY(-90deg);
+	-ms-transform:rotateY(-90deg);
+	transform:rotateY(-90deg);
+
+	-webkit-transform-origin:top right;
+	-moz-transform-origin:top right;
+	-o-transform-origin:top right;
+	-ms-transform-origin:top right;
+	transform-origin:top right;
+	z-index:100000;
+
+}
+
+.sj-book-transform div[page="1"] > div, .sj-book-transform div[page="2"] > div{
+	overflow:visible !important;
+}
+
+#flipbook .depth{
+	background-image:url(../pics/pages-depth.png);
+	position:absolute;
+	top:7px;
+	width:16px;
+	height:590px;
+}
+
+#flipbook .coverInnerSide .depth{
+	left:4px;
+	background-position:0 0;
+}
+
+#flipbook .blastPage .depth{
+	right:4px;
+	background-position:right 0;
+}
+
+#flipbook .hard{
+	width:480px;
+	height:600px;
+	background-color:white;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	-ms-box-shadow:none;
+	box-shadow:none;
+}
+
+#flipbook .page-wrapper{
+	-webkit-perspective:2000px;
+	-moz-perspective: 2000px;
+	-ms-perspective: 2000px;
+	perspective: 2000px;
+}
+
+#flipbook .own-size{
+	width: 460px;
+	height: 582px;
+	overflow: hidden;
+	background-image: url(../pics/pages.png);
+}
+#flipbook .own-size.even {
+	background-position: 0 0;
+}
+#flipbook .own-size.odd{
+	background-position:460px 0;
+}
+#flipbook .even{
+	background:-webkit-gradient(linear, left top, right top, color-stop(0.95, #fff), color-stop(1, #dadada));
+	background-image:-webkit-linear-gradient(left, #fff 95%, #dadada 100%);
+	background-image:-moz-linear-gradient(left, #fff 95%, #dadada 100%);
+	background-image:-ms-linear-gradient(left, #fff 95%, #dadada 100%);
+	background-image:-o-linear-gradient(left, #fff 95%, #dadada 100%);
+	background-image:linear-gradient(left, #fff 95%, #dadada 100%);
+}
+
+#flipbook .odd{
+	background:-webkit-gradient(linear, right top, left top, color-stop(0.95, #fff), color-stop(1, #cacaca));
+	background-image:-webkit-linear-gradient(right, #fff 95%, #cacaca 100%);
+	background-image:-moz-linear-gradient(right, #fff 95%, #cacaca 100%);
+	background-image:-ms-linear-gradient(right, #fff 95%, #cacaca 100%);
+	background-image:-o-linear-gradient(right, #fff 95%, #cacaca 100%);
+	background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
+}
+
+#flipbook .page-number{
+	color:#999;
+	width:100%;
+	bottom:25px;
+	position:absolute;
+	display:block;
+	text-align: center;
+	line-height:30px;
+	font-size:11px;
+}
+
+#flipbook.table-contents{
+	font-size:16px;
+	width:300px;
+	margin:80px auto;
+	color:#ccc;
+}
+
+#flipbook .table-contents li{
+	list-style:none;
+	line-height:25px;
+}
+
+#flipbook .table-contents span{
+	float:right;
+}
+
+#flipbook .table-contents a{
+	float:left;
+	width:100%;
+	clear:both;
+	text-decoration:none;
+	color:#333;
+	margin:2px 0;
+	padding:0 10px;
+}
+
+#flipbook .table-contents a:hover{
+	background:#CAD1EE;
+	float:left;
+	width:100%;
+	clear:both;
+	text-decoration:none;
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	-o-border-radius:10px;
+	-ms-border-radius:10px;
+	border-radius:10px;
+}
+
+#flipbook .book-content .capital,
+#flipbook .book-content .no-indent{
+	text-indent: 0;
+}
+
+#flipbook .capital:first-letter {
+    display:block;
+    float:left;
+    font-size: 300%;
+    line-height: 70%;
+	margin-right: 6px;
+	margin-top: 7px;
+	margin-left:18px;
+}
+
+.ie8 #flipbook .even,
+.ie9 #flipbook .even{
+	background-image:url(../pics/gradient-page-left.jpg);
+	background-position:right top;
+	background-repeat:repeat-y;
+}
+
+.ie8 #flipbook .odd,
+.ie9 #flipbook .odd{
+	background-image:url(../pics/gradient-page-right.jpg);
+	background-position:left top;
+	background-repeat:repeat-y;
+}
+
+/**            **/
+.book-background{
+	margin-left: -20px;
+	margin-bottom: -20px;
+	padding: 34px;
+	width: 105%;
+	margin-top: -24px;
+	color: black;
+	background: #ffffff url(../../../../../img/wood.jpg);
+	background-position: 50% top;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.book-background.fullscreen{
+	top: 0;
+	left: 0;
+	padding-left: 100px;
+	position: fixed!important;
+	height: 100%!important;
+	width: 100%!important;
+	z-index: 999999999!important;
+	margin: 0;
+
+}
+.book-background.fullscreen #flipbook{
+	top: -72px;
+	left: 165px!important;
+}
+#container {
+	-webkit-box-sizing: border-box;
+	/* Safari/Chrome, other WebKit */
+
+	-moz-box-sizing: border-box;
+	/* Firefox, other Gecko */
+
+	box-sizing: border-box;
+	/* Opera/IE 8+ */
+
+	height: 100%;
+	max-width: 900px;
+	margin: auto;
+	padding-top: 86px;
+	padding-bottom: 20px;
+}
+h1,
+h2 {
+	font-size: 32px;
+	font-weight: normal;
+	font-family: 'News Cycle', sans-serif;
+	text-shadow: 0 1px 0 rgba(10, 10, 10, 0.5);
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+}
+h2 {
+	font-size: 24px;
+	margin-bottom: 0.5em;
+}
+.action-nav {
+	text-align: center;
+	margin-bottom: 20px;
+	height: 46px;
+	position: relative;
+	z-index: 9;
+	zoom: 1;
+}
+.action-nav li{
+	margin: -2px;
+	display: inline-table;
+}
+.action-nav a {
+	display: block;
+	height: 46px;
+	width: 48px;
+	padding: 0;
+	background: #000000 no-repeat;
+	background-position: 8px 7px;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.action-nav #zoomin {
+	background-image: url(../../../../../img/zoom_in.png);
+}
+.action-nav #zoomout {
+	background-image: url(../../../../../img/zoom_out.png);
+}
+.action-nav #first {
+	background-image: url(../../../../../img/arrow_double_left.png);
+}
+.action-nav #last {
+	background-image: url(../../../../../img/arrow_double_right.png);
+}
+.action-nav #next {
+	background-image: url(../../../../../img/arrow_right.png);
+}
+.action-nav #back {
+	background-image: url(../../../../../img/arrow_left.png);
+}
+.action-nav #slideshow {
+	background-image: url(../../img/slideshow_play.png);
+}
+.action-nav #slideshow.wowbook-disabled {
+	background-image: url(../../../../../img/slideshow_pause.png);
+}
+.action-nav #flipsound {
+	background-image: url(../../../../../img/sound_on.png);
+}
+.action-nav #flipsound.wowbook-disabled {
+	background-image: url(../../../../../img/sound_off.png);
+}
+
+.action-nav #fullscreen {
+	background-image: url(../../../../../img/fullscreen_on.png);
+}
+.action-nav #fullscreen.wowbook-disabled {
+	background-image: url(../../../../../img/fullscreen_off.png);
+}
+.action-nav a:hover {
+	background-color: #2C2C2C;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fcfcfc), color-stop(100%, #f0f0f0));
+	background-image: -webkit-linear-gradient(top, #555555, #222222);
+	background-image: -moz-linear-gradient(top, #555555, #222222);
+	background-image: -ms-linear-gradient(top, #555555, #222222);
+	background-image: -o-linear-gradient(top, #555555, #222222);
+	background-image: linear-gradient(top, #555555, #222222);
+}
+.action-nav a:active,
+.action-nav a:hover,
+.action-nav a {
+	outline: none;
+}
+@media screen and (max-width: 568px), screen and (max-height: 380px) {
+	#container {
+		padding-top: 35px;
+		padding-bottom: 5px;
+	}
+	.action-nav {
+		margin: auto;
+		top: 0px;
+	}
+	.action-nav li {
+		height: 32px;
+	}
+	.action-nav li a {
+		background-size: 50% 50%;
+		height: 32px;
+		width: 32px;
+	}
+	html {
+		-webkit-text-size-adjust: none;
+	}
+	#click_to_open {
+		display: none;
+	}
+}
+.wowbook-page-content {
+	padding: 1em;
+}
+#main {
+	position: relative;
+}
+#click_to_open {
+	position: absolute;
+	left: 25%;
+	margin-left: -180px;
+	top: 50%;
+	margin-top: -50px;
+}
+.js #features {
+	mmargin-left: -12000px;
+}
+.wowbook-page {
+	mmargin: auto;
+}
+.wowbook-page h1 {
+	font-family: 'BebasNeueRegular', sans-serif;
+	font-size: 32px;
+	color: white;
+	background: #aa2b2b;
+	line-height: 1.5;
+	padding: 5px 5px 0px;
+	margin: 0;
+}
+.wowbook-page .subtitle {
+	font-family: 'BebasNeueRegular', sans-serif;
+	font-size: 18px;
+	color: black;
+	line-height: 1.5;
+	padding: 5px 5px 0px;
+	font-style: italic;
+}
+.wowbook-page p,
+.wowbook-page ul {
+	font-family: 'News Cycle', sans-serif;
+	font-size: 24px;
+	margin-top: 0.5em;
+}
+.wowbook-page li {
+	list-style: none;
+}
+#cover {
+	background: #ffffff url("../images/cover.jpg") no-repeat;
+	background-size: 100% 100%;
+}
+.feature {
+	padding: 1em 1em;
+	font-family: 'BebasNeueRegular', sans-serif;
+	height: 500px;
+	width: 400px;
+	background: white;
+}
+.feature h1,
+.feature h2 {
+	font-family: 'BebasNeueRegular', sans-serif;
+	font-size: 38px;
+	color: black;
+}
+.wowbook-page .feature.pagefx p {
+	font-size: 22px;
+}
+.wowbook-page .feature.pagefx .subtitle {
+	margin-top: 0;
+	font-size: 18px;
+}
+.wowbook-page .feature.pagefx h1 {
+	font-size: 48px;
+	color: #aa2b2b;
+	background: none;
+	line-height: 0.7;
+	padding: 5px 0px 0px;
+	margin: 0;
+}
+.easy {
+	background: #ffffff url("../images/easy.png") no-repeat left top;
+	background-size: 200% 100%;
+	zoom: 1;
+	ffont-size: 1.5em;
+	ffont-family: lato;
+}
+.easy h1,
+.easy p,
+.easy .subtitle {
+	display: none;
+}
+.wowbook-right .easy {
+	background-position: right top;
+}
+.design {
+	background: #ffffff url("../images/design.png") no-repeat;
+	background-size: 200% 100%;
+}
+.design h1 {
+	background: none;
+	text-indent: -10000px;
+	color: #88bfbf;
+	text-shadow: 1px 1px 0px #447f7f;
+	font-size: 144px;
+	line-height: 0.8;
+	bborder-bottom: 2px solid #88bfbf;
+}
+.design .subtitle {
+	font-family: 'News Cycle', sans-serif;
+	font-style: normal;
+	font-size: 30px;
+	color: #333;
+	position: absolute;
+	top: 27%;
+}
+.wowbook-right .design {
+	background-position: right top;
+}
+.wowbook-right .design p {
+	text-align: right;
+	position: absolute;
+	bottom: 1.5em;
+	font-size: 30px;
+	padding-right: 1em;
+}
+.responsive pp {
+	font-size: 16px;
+}
+.responsive hh2 {
+	font-size: 20px;
+}
+.responsive h1 {
+	color: white;
+}
+.thumbnails p {
+	font-size: 16px;
+}
+.thumbnails h2 {
+	font-size: 20px;
+}
+.thumbnails h1 {
+	color: white;
+}
+#thumbs_holder {
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	height: auto;
+	left: 0;
+	z-index: 10000;
+}
+#thumbs_holder .wowbook-thumbnails {
+	background: none repeat scroll 0 0 #222;
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.8);
+	border-top: 1px solid white;
+	border-top-color: rgba(255, 255, 255, 0.5);
+	border-bottom: 1px solid gray;
+	border-bottom-color: rgba(64, 64, 64, 0.5);
+	box-shadow: 0 0 20px #aa2b2b;
+	padding: 10px 0;
+	position: relative;
+}
+#thumbs_holder .wowbook-button {
+	background-color: #AA2B2B;
+}
+.wowbook-thumbnails {
+	background: none repeat scroll 0 0 #888;
+	background: none repeat scroll 0 0 rgba(128, 128, 128, 0.48);
+	border-top: 1px solid white;
+	border-top-color: rgba(255, 255, 255, 0.5);
+	border-bottom: 1px solid gray;
+	border-bottom-color: rgba(64, 64, 64, 0.5);
+	box-shadow: 0 0 15px rgba(128, 128, 128, 0.48);
+}
+.wowbook-horizontal.wowbook-thumbnails {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.wowbook-vertical .wowbook-thumbnail {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+#thumbs_type,
+#thumbs_position,
+#thumbs_size {
+	text-align: center;
+}
+#thumbs_position button {
+	width: 49%;
+}
+#zoom-feature {
+	background: #ffffff url("../images/zoom.jpg") no-repeat;
+	background-size: 200% 100%;
+}
+#zoom-feature h1 {
+	font-size: 100px;
+	color: #333;
+	background: none;
+	line-height: 1.1;
+	padding: 5px 0px 0px;
+	text-align: right;
+}
+#zoom-feature2 {
+	background-color: white;
+	background-image: url("../images/zoom.jpg");
+	background-size: 200% 100%;
+	background-position: right top;
+	background-repeat: no-repeat;
+}
+.deeplinking {
+	color: white;
+	background: url("../images/chain.jpg") no-repeat;
+	background-size: 200% 100%;
+}
+.deeplinking h1 {
+	color: white;
+	background: #3d567d !important;
+}
+.deeplinking a,
+.deeplinking a:active,
+.deeplinking a:visited {
+	color: #f8f8f8;
+	text-decoration: underline;
+}
+.wowbook-right .deeplinking {
+	background-position: top right;
+}
+.wowbook-page .feature.numbering {
+	background: url("../images/numbering.png") #ffffff no-repeat;
+	background-size: 100% 100%;
+}
+.wowbook-page .feature.numbering h1 {
+	color: #AA2B2B;
+	background: none;
+	font-size: 40px;
+	padding-left: 0;
+	padding-right: 0;
+}
+.wowbook-page .feature.numbering p {
+	font-size: 23px;
+}
+.wowbook-page .feature.numbering .wowbook-page-number {
+	text-indent: 100%;
+	overflow: hidden;
+}
+.wowbook-page .feature.slideshow h1 {
+	color: #AA2B2B;
+	background: none;
+	font-size: 40px;
+	padding-left: 0;
+	padding-right: 0;
+}
+.wowbook-page .feature.slideshow a {
+	display: block;
+	text-align: center;
+}
+.wowbook-page .feature.flash {
+	background: url("../images/flash.png") #ffffff no-repeat;
+	background-size: 200% 100%;
+	padding-top: 42%;
+	/* 170px/400px */
+
+}
+.wowbook-page .feature.flash p {
+	font-size: 20px;
+	padding: 0.7em;
+}
+.wowbook-page .feature.flash h1 {
+	display: none;
+}
+
+.more h1 {
+	display: none;
+}
+.more ul {
+	margin-left: 1em;
+}
+.more li {
+	margin-bottom: 0.7em;
+}
+.last_cover {
+	padding: 0;
+}
+.wowbook-right .more {
+	background-position: top right;
+}

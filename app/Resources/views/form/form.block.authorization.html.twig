@@ -1,0 +1,39 @@
+<tr class="text-center ">
+    <td>
+        <select class="form-control" name="auth_user">
+            {% for user in authors %}
+                <option class="auth-attr" value="{{ user.id }}">{{ user.profile.fullName }}</option>
+            {% endfor %}
+            {% for user in validators %}
+                <option class="val-attr" value="{{ user.id }}">{{ user.profile.fullName }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td class="auth-attr">
+        <div class="custom-check">
+            <input type="checkbox"  name="canRead" class="custom-check-input">
+        </div>
+    </td>
+    <td class="auth-attr">
+        <div class="custom-check">
+            <input type="checkbox"  name="canWrite" class="custom-check-input">
+        </div>
+    </td>
+    <td class="auth-attr">
+        <div class="custom-check">
+            <input type="checkbox"  name="canDelete" class="custom-check-input">
+        </div>
+    </td>
+    <td>
+        <div class="custom-check">
+            <input type="checkbox"  name="limited" class="custom-check-input">
+        </div>
+    </td>
+
+    <td class="text-center">
+        <button data-toggle="tooltip" data-placement="top" title="Effacer !"
+                class="btn btn-sm btn-circle red remove-auth">
+            <i class="fa fa-minus"></i>
+        </button>
+    </td>
+</tr>

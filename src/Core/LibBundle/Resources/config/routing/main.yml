@@ -1,0 +1,19 @@
+export_csv_ajax:
+    path:      /get-csv-file
+    defaults:  { _controller: LibBundle:Main:exportCsvAjax}
+custom_list_file_manager:
+    path:      /intranet/list/{dir_path}
+    defaults:  { _controller: LibBundle:Main:listFiles, dir_path: null}
+    options:
+        expose: true
+
+file_manager_associate:
+    path:      /intranet/associate
+    defaults:  { _controller: LibBundle:Main:chooseEntityFile}
+    options:
+        expose: true
+
+rse_check_session:
+    path:       /api/check-session-exist
+    defaults:  { _controller: LibBundle:Main:_sessionExist}
+    requirements: { _method: post|rse_check_user_session }

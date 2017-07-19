@@ -1,0 +1,31 @@
+newsletter_new:
+    path:   /new
+    defaults: { _controller: MainBundle:Administrator/Newsletter:new }
+
+newsletter_list:
+    path:   /list
+    defaults: { _controller: MainBundle:Administrator/Newsletter:list }
+
+newsletter_send:
+    path:   /send
+    defaults: { _controller: MainBundle:Administrator/Newsletter:send }
+
+newsletter_preview:
+    path:   /{id}/preview
+    defaults: { _controller: MainBundle:Administrator/Newsletter:preview }
+
+newsletter_edit:
+    path:   /{id}/edit
+    defaults: { _controller: MainBundle:Administrator/Newsletter:edit }
+
+newsletter_remove:
+    path:   /{id}/remove
+    defaults: { _controller: MainBundle:Administrator/Newsletter:remove }
+    options:
+        expose:   true
+
+newsletter_remove_attachment:
+    path:   /attachement/{id}/remove
+    defaults: { _controller: MainBundle:Administrator/Newsletter:removeAttachment}
+    options:
+        expose:   true

@@ -1,0 +1,16 @@
+{% spaceless %}
+	<div class="modal-header">
+		Suppression de {{ entity }}
+	</div>
+	<form action="{{ action }}" method="post" accept-charset="utf-8">
+		<div class="modal-body">
+			<input type="hidden" name="_method" value="delete">
+			<p class="text-danger">Confirmer la suppression de {{ entity }}?</p>
+			{{ form_widget(form) }}
+		</div>
+		<div class="modal-footer">
+		    <button title="Confirmer" class="btn btn-sm btn-danger" type="submit" value="Delete" style="margin: 0 10px;">Confirmer</button>
+		    <button title="Annuler" class="btn reversed" type="button" data-dismiss="modal" aria-label="Close" style="margin: 0 10px;">Annuler</button>
+		</div>
+	</form>
+{% endspaceless %}

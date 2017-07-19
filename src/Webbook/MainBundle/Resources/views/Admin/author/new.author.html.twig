@@ -1,0 +1,159 @@
+{% extends '@Main/layout.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    Ajouter un auteur
+{% endblock %}
+
+{% block classBody %}
+    page-container-bg-solid page-header-fixed
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Ajouter un auteur</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-user-plus"></span> &nbsp; Ajouter un auteur </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box red">
+                <div class="portlet-title">
+                    <div class="caption"></div>
+                </div>
+                <div class="portlet-body ">
+                    {{ form_start(form, {'method': 'post', 'attr': {'class': 'fos_user_registration_register'}}) }}
+                    <div class="row" style="padding: 20px">
+                        <h2 style="margin-top: 0px;margin-bottom: 15px" class="font-green-jungle bold" >Information Personnel :</h2>
+                        <div class="row form-group margin-top-10">
+                            {{ form_label(form.profile.lastName, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1'}}) }}
+                            <div class="col-md-6">
+                                {{ form_widget(form.profile.lastName,{'attr':{'class':'form-control'}}) }}
+                                <div class="font-red" style="list-style: none">
+                                    {{ form_errors(form.profile.lastName) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group margin-top-10">
+                            {{ form_label(form.profile.firstName, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1'}}) }}
+                            <div class="col-md-6">
+                                {{ form_widget(form.profile.firstName,{'attr':{'class':'form-control'}}) }}
+                                <div class="font-red" style="list-style: none">
+                                    {{ form_errors(form.profile.firstName) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group margin-top-10">
+                            {{ form_label(form.profile.phone, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                            <div class="col-md-6">
+                                {{ form_widget(form.profile.phone,{'attr':{'class':'form-control'}}) }}
+                                <div class="font-red" style="list-style: none">
+                                    {{ form_errors(form.profile.phone) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group margin-top-10">
+                            {{ form_label(form.profile.address, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                            <div class="col-md-6">
+                                {{ form_widget(form.profile.address,{'attr':{'class':'form-control'}}) }}
+                                <div class="font-red" style="list-style: none">
+                                    {{ form_errors(form.profile.address) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group margin-top-10">
+                            {{ form_label(form.profile.birthday, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                            <div class="col-md-6">
+                                {{ form_widget(form.profile.birthday,{'attr':{'class':'form-control datepicker'}}) }}
+                                <div class="font-red" style="list-style: none">
+                                    {{ form_errors(form.profile.birthday) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group margin-top-10">
+                            {{ form_label(form.bibliography, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                            <div class="col-md-6">
+                                {{ form_widget(form.bibliography,{'attr':{'class':'form-control','rows':10}}) }}
+                                <div class="font-red" style="list-style: none">
+                                    {{ form_errors(form.bibliography) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding: 20px">
+                            <h2 style="margin-top: 0px;margin-bottom: 15px" class="font-green-jungle bold">Information du compte :</h2>
+                            <div class="row form-group margin-top-10">
+                                {{ form_label(form.username, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1'}}) }}
+                                <div class="col-md-6">
+                                    {{ form_widget(form.username,{'attr':{'class':'form-control'}}) }}
+                                    <div class="font-red" style="list-style: none">
+                                        {{ form_errors(form.username) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row form-group margin-top-10">
+                                {{ form_label(form.email,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1'}}) }}
+                                <div class="col-md-6">
+                                    {{ form_widget(form.email,{'attr':{'class':'form-control'}}) }}
+                                    <div class="font-red" style="list-style: none">
+                                        {{ form_errors(form.email) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row form-group margin-top-10">
+                                {{ form_label(form.plainPassword.first,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1'}}) }}
+                                <div class="col-md-6">
+                                    {{ form_widget(form.plainPassword.first,{'attr':{'class':'form-control'}}) }}
+                                    <div class="font-red" style="list-style: none">
+                                        {{ form_errors(form.plainPassword.first) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group margin-top-10">
+                                {{ form_label(form.plainPassword.second,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1'}}) }}
+                                <div class="col-md-6">
+                                    {{ form_widget(form.plainPassword.second,{'attr':{'class':'form-control'}}) }}
+                                    <div class="font-red" style="list-style: none">
+                                        {{ form_errors(form.plainPassword.second) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center margin-top-10">
+                            <input class="btn blue" type="submit" value="{{ 'registration.submit'|trans }}"/>
+                            <input class="btn red" type="reset" value="Rénitialiser">
+                        </div>
+                    </div>
+                    {{ form_end(form,{'render_rest':false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-new-author">
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        label{
+            font-family: "Helvetica Neue",Roboto,Arial,"Droid Sans",sans-serif;
+            font-size: 17px;
+            color: #73879C!important;
+            font-weight: 600!important;
+            line-height: 1.471;
+            padding: 0!important;
+        }
+    </style>
+{% endblock %}

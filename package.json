@@ -1,0 +1,14 @@
+{
+  "name": "webbook",
+  "version": "1.0.0",
+  "description": ".checkout =========",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mednaceur",
+  "license": "ISC"
+}

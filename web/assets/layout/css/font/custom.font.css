@@ -1,0 +1,83 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "untitled-font-1";
+  src:url("fonts/untitled-font-1.eot");
+  src:url("fonts/untitled-font-1.eot?#iefix") format("embedded-opentype"),
+  url("fonts/untitled-font-1.woff") format("woff"),
+  url("fonts/untitled-font-1.ttf") format("truetype"),
+  url("fonts/untitled-font-1.svg#untitled-font-1") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+
+[data-icon]:before {
+  font-family: "untitled-font-1" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-c"]:before,
+[class*=" icon-c"]:before {
+  font-family: "untitled-font-1" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-c-search-book:before {
+  content: "\64";
+}
+.icon-c-unpublished:before {
+  content: "\70";
+}
+.icon-c-published:before {
+  content: "\6d";
+}
+.icon-c-book-bookmark:before {
+  content: "\6a";
+}
+.icon-c-books:before {
+  content: "\65";
+}
+.icon-c-book-open:before {
+  content: "\66";
+}
+.icon-c-align-left:before {
+  content: "\67";
+}
+.icon-c-book-plus:before {
+  content: "\6f";
+}
+.icon-c-align-left:before {
+  content: "\61";
+}
+.icon-c-thumbs-up:before {
+  content: "\62";
+}
+.icon-c-book-alt2:before {
+  content: "\63";
+}
+.icon-c-books-icon:before {
+  font-size: 30px;
+  content: "\65";
+}
+.icon-c-book-text-add:before {
+  content: "\66";
+}
+.icon-c-content-7:before {
+  content: "\68";
+}

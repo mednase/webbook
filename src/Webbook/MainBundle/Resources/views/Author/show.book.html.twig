@@ -1,0 +1,208 @@
+{% extends '@Main/layout.html.twig' %}
+{% import _self as macros %}
+{% block title %}
+    {{ book.title }}
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="fa fa-book"></i>
+                <a href="{{ url('author_my_books') }}">Mes livres</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">{{ book.title }}</span>
+            </li>
+
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-book"></span> &nbsp; {{ book.title }} - Détails</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green-meadow">
+                <div class="portlet-title">
+                    <div class="caption col-md-4">
+                        Information du livre
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12" style="display: block;margin-bottom: 15px">
+                    <table class="table table-bordered table-hover">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-2"><label class="custom-lb">Titre </label></td>
+                            <td>{{ book.title }}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2"><label class="custom-lb" >Catégorie</label></td>
+                            <td>{{ book.category.name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2"><label class="custom-lb">Auteurs</label> </td>
+                            <td>
+                                {% for autheur in book.mainAuthors %}
+                                    - {{ autheur.fullName }}<br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2"><label class="custom-lb" >ISBN</label></td>
+                            <td>{{ book.iSBN }}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2"><label class="custom-lb" >Langue</label></td>
+                            <td>{{ book.language }}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2"><label class="custom-lb" >Prix</label></td>
+                            <td>{{ book.price }}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-2"><label class="custom-lb">Résumé</label></td>
+                            <td>{{ book.description|raw }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-12 images center" >
+                        {% for img in book.images %}
+                            <img style="padding: 10px" src="{{ vich_uploader_asset(img,'mediaFile') }}">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green-meadow">
+                <div class="portlet-title">
+                    <h4 class="pull-left">Structure  du livre : {{ book.title }}</h4>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body ">
+                    <table class="table table-striped table-bordered  " cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="col-md-5 col-sm-6 col-xs-6">Titre</th>
+                            <th class="col-md-2 text-center hidden-sm hidden-xs">Dernière version Validée</th>
+                            <th class="col-md-2 text-center col-sm-2 col-xs-2">Version Publiée</th>
+                            <th class="col-md-3  text-center col-sm-4 col-xs-4">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% macro displayVersionBlock(blocks) %}
+                            {% import _self as macros %}
+                            {% for block in blocks| sortbyfield('position') %}
+                                <tr {% if block.parent %}data-parent="{{ block.parent.id }}" {% endif %} class=" {% if block.level>0%} hidden{% endif %}">
+                                    <td  style="overflow-x: hidden" class="col-md-5 col-sm-6 col-xs-6" data-pdl="25" data-level="{{ block.level }}">
+                                        {% if block.childrens|length>0 %}
+                                            <button class="btn green btn-xs btn-show-children" data-id="{{ block.id }}"><i class=" fa fa-plus"></i></button>
+                                        {% endif %}
+                                        {{ block.title }}
+                                    </td>
+                                    <td class="text-center col-md-2 hidden-sm hidden-xs">
+                                        <div class="label label-success">
+                                            {% if block.lastValidatedVersion is not null %}
+                                                v {{ block.lastValidatedVersion.number|number_format(1,'.',',') }}
+                                            {% else %}
+                                                Aucune
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="col-md-2 col-sm-2 col-xs-2 text-center">
+                                        <div class="label label-success">
+                                            {% if block.publishedVersion is not null %}
+                                                v {{ block.publishedVersion.number|number_format(1,'.',',') }}
+                                            {% else %}
+                                                Aucune
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="text-center col-md-3 col-sm-4 col-xs-4 text-center">
+                                        <div class="">
+                                            <a  {% if has_permission('r',block) or block.childrens|length>0  %}class="btn btn-icon-only blue" href="{{ url('author_show_block',{token:block.token} ) }}"  {% elseif block.childrens|length==0 %}class="btn btn-icon-only blue disabled-link " data-toggle="tooltip" data-title="Tu na pas la permission"{% endif %}><i class="fa fa-eye"></i> </a>
+                                            {%  set version_edit = version_has_status(0,block) %}
+                                            {%  set version_validate = version_has_status(1,block) %}
+
+                                        {% if has_permission('w',block) %}
+                                            {% if version_edit is not null %}
+                                                {% if version_edit.createdBy==app.user %}
+                                                <a class="btn btn-icon-only blue-hoki" data-toggle="tooltip" data-title="Continuer l'edition du version" href="{{ url('author_block_version_edit',{token:version_edit.token}) }}"><i class="fa fa-pencil-square-o" ></i></a>
+                                                {% else%}
+                                                <div class="btn-group">
+                                                    <button class="btn btn-icon-only green disabled"  data-toggle="tooltip"
+                                                            data-title="Il ya une autre version en cours !">
+                                                            <i class="fa fa-pencil-square-o" ></i>
+                                                    </button>
+                                                </div>
+                                                {% endif %}
+                                                {% elseif version_validate is not null %}
+                                                        <button data-toggle="tooltip" data-title="Encours de validation" class="btn btn-icon-only yellow disabled">
+                                                            <i class="fa fa-check-square-o"></i>
+                                                        </button>
+                                                {% else %}
+                                                    <button data-toggle="tooltip" data-title="Crée une nouvelle version"
+                                                            class="btn green btn-icon-only btn-create-new-version"
+                                                            data-url="{{ url('author_create_block_version',{token:block.token}) }}">
+                                                        <i class="fa fa-pencil-square-o"></i>
+                                                    </button>
+                                                {% endif %}
+                                            {% else %}
+                                                <button class="btn green btn-icon-only disabled" data-toggle="tooltip"
+                                                        data-title="Tu na pas la permission">
+                                                    <i class="fa fa-pencil-square-o"></i>
+                                                </button>
+                                            {% endif %}
+                                            <button {% if has_permission('d',block) %}class="btn red btn-icon-only btn-delet-block"
+                                                        data-url="{{ url('author_delete_block',{token:block.token}) }}"
+                                                    {% else %}
+                                                        class="btn btn-icon-only red disabled "  data-toggle="tooltip"
+                                                        data-title="Tu na pas la permission"
+                                                    {% endif %}>
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    {% if block.childrens|length>0 %}
+                                        {{ macros.displayVersionBlock(block.childrens|sortByPosition) }}
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        {% endmacro %}
+                        {{ macros.displayVersionBlock(book.underBlock|sortByPosition) }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-my-books">
+
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/viewer/viewer.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/slick/slick.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/slick/slick-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/book.structure.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/slick/slick.min.js') }}"></script>
+    <script src="{{ asset('assets/global/plugins/viewer/viewer.min.js') }}"></script>
+   <script type="text/javascript" src="{{ asset('assets/pages/js/author_show_book.js') }}"></script>
+{% endblock %}

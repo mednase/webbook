@@ -1,0 +1,234 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    {{ block.title }} - v {{ validationRequest.version.number }} - verification
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('validator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="fa fa-check-square-o"></i>
+                <a href="{{ url('validator_validation_requests') }}">Demandes de validation</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">{{ block.title }} - v {{ validationRequest.version.number }} - verification </span>
+            </li>
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><i class="fa fa-check-square-o"></i> &nbsp; {{ block.title }} - version {{ validationRequest.version.number|number_format(1,'.',',') }} -
+            verification </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="pull-left" style="padding-top: 5px">
+                        <button href="#animatedModal" type="button"  class="btn btn-sm blue btn-cmp-version" ><i class="fa fa-exchange"></i> Modification</button>
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12">
+
+                    {{ form_start(form) }}
+                    <div class="col-md-12">
+                        <div class="slidershell">
+                            <div class="sliderfill progress-bar progress-bar-striped active"></div>
+                            <div class="slidertrack text-center"><strong id="ps-txt"> Progression </strong></div>
+                            <div class="sliderthumb"></div>
+                            <div class="slidervalue">0</div>
+                            {{ form_widget(form.progress,{"attr":{"class":"progress-slider","data-min":validationRequest.progress}}) }}
+                        </div>
+                        {{ form_widget(form.version.content,{"attr":{"class":"tinyMince"}}) }}
+                    </div>
+
+                    <div class="col-md-12 text-center" style="margin-top: 10px">
+                            <button class="btn blue " id="saveModification">
+                                <i class="fa fa-download"></i>Enregistrer Modification
+                            </button>
+                    </div>
+                    {{ form_widget(form._token) }}
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--DEMO01-->
+    <div id="animatedModal" style="z-index: 99999">
+        <div id="closebt-container" class="close-animatedModal">
+            <img class="closebt" src="{{ asset('assets/img/closebt.svg') }}">
+        </div>
+        <div  id="animatedModal-content" class="modal-content">
+            <h2 class="text-center bold font-green"> Comparaison de version </h2>
+            <div class="col-md-12">
+                <h4 class="col-md-6 text-center" style="color: grey">
+                    <span class="col-md-5">Numéro version : <strong>{% if block.publishedVersion is not null  %}{{ block.publishedVersion.number|number_format(1,'.',',')  }}{% endif %}</strong></span>
+                    <span class="col-md-7">&nbsp;&nbsp;- &nbsp; Crée par : <strong>{% if block.publishedVersion is not null  %} {{ block.publishedVersion.createdBy.fullName }} {% endif %}</strong></span>
+                </h4>
+                <h4 class="col-md-6 text-center" style="color: grey">
+                    <span class="col-md-5">Numéro version : <strong>{{  validationRequest.version.number|number_format(1,'.',',')  }}</strong></span>
+                    <span class="col-md-7">&nbsp;&nbsp;- &nbsp; Crée par : <strong>{{  validationRequest.version.createdBy.fullName }}</strong></span>
+                </h4>
+            </div>
+            <div class="col-md-12" id="compare">
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="currentVersion" class="hidden">{% if block.publishedVersion is not null  %}{% spaceless %}{{ block.publishedVersion.content|convert_encoding('UTF-8', 'HTML-ENTITIES')}}{% endspaceless %}{% endif %}</div>
+    <div id="newVersion" class="hidden">{% spaceless %}{{ validationRequest.version.content|convert_encoding('UTF-8', 'HTML-ENTITIES')}}{% endspaceless %}</div>
+    <div id="fm-token" data-token="{{ validationRequest.version.token }}"></div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-books">
+
+{% endblock %}
+{% block stylesheets %}
+    <style>
+        .toastr-list{
+            list-style: decimal;
+            padding-left: 15px;
+        }
+        #animatedModal-content{
+            min-height:100px;
+            margin-top: 50px;
+            margin-bottom: 50px
+        }
+        #closebt-container {
+            position: relative;
+            width: 100%;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .closebt{
+            webkit-transition: all 0.2s;
+            -moz-transition: all 0.2s;
+            -ms-transition: all 0.2s;
+            -o-transition: all 0.2s;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .closebt:hover{
+            transform: rotate(90deg);
+        }
+        .mergely-canvas ,.mergely-margin{
+            display: none;!important;
+        }
+        .CodeMirror-scroll{
+            height: 400px!important;
+        }
+        .CodeMirror{
+            height: auto!important;
+        }
+        .mergely.a.rhs {
+            background-color: #cfc!important;
+            color: #399839!important;
+            border-color:  #399839!important;
+            border-radius: 4px 0 0 4px!important;;
+        }
+        .mergely.c.lhs.start, .mergely.c.rhs.start,
+        .mergely.c.lhs.end, .mergely.c.rhs.end{
+            border: none!important;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/author.block.version.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/book.structure.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/mergely-3.4.4/lib/mergely.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/mergely-3.4.4/lib/codemirror.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/jquery.mjs.nestedSortable.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('assets/global/plugins/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('assets/global/plugins/tinymce/js/tinymce/langs/fr_FR.js') }}"></script>
+    <script src="{{ asset('assets/global/plugins/annimatedModal/animatedModal.js-master/animatedModal.min.js') }}"></script>
+    <script src="{{ asset('assets/global/plugins/mergely-3.4.4/lib/codemirror.js') }}"></script>
+    <script src="{{ asset('assets/global/plugins/mergely-3.4.4/lib/mergely.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            tinymce.init({
+                selector: '.tinyMince',  // change this value according to your HTML
+                theme: 'modern',
+                height: 400,
+                table_default_attributes: {
+                    cellspacing: '0',
+                    width:200
+                },
+                setup:function (editor) {
+                    editor.addButton('markF', {
+                        tooltip: 'Marqueur de figures ( cliquer pour numéroté la figure) ',
+                        image: '/assets/img/mark1.png',
+                        onclick: function () {
+                            editor.insertContent("Figure <small class='figureCaption' style='pointer-events: none'>&&figureNumber&&</small>&nbsp;:&nbsp;");
+                        }
+                    });
+                    editor.addButton('markT', {
+                        tooltip: 'Marqueur de tableaux ( cliquer pour numéroté le tableau)',
+                        image: '/assets/img/mark2.png',
+                        onclick: function () {
+                            editor.insertContent("Tableau <small class='tableCaption' style='pointer-events: none'>&&tableNumber&&</small>&nbsp;:&nbsp;");
+                        }
+                    });
+                },
+                image_caption: true,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                    'searchreplace wordcount visualblocks visualchars code fullscreen',
+                    'insertdatetime media nonbreaking save table contextmenu directionality',
+                    'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+                ],
+                image_advtab: true,
+                file_browser_callback_types: 'file image media',
+                file_browser_callback: function (field_name, url, type, win) {
+                    var token = $('#fm-token').data('token');
+                    tinymce.activeEditor.windowManager.open({
+                        title: "Selectionneur du fichier",
+                        url: Routing.generate('file_manager_load', {token: token, type: type}),
+                        width: 320,
+                        height: 240
+                    }, {
+                        window: win,
+                        input: field_name,
+                    });
+                    return false;
+                },
+                toolbar1: "insertfile undo redo | styleselect | forecolor backcolor | | bold italic | alignleft aligncenter alignright alignjustify | " +
+                "bullist numlist outdent indent | link image | print preview fullscreen | markT markF"
+            });
+            $('.btn-cmp-version').animatedModal({afterOpen:function() {
+                $('#compare').mergely({
+                    editor_width: 'calc(50% - 25px)',
+                    editor_height: '100%',
+                    sidebar:false,
+                    ignorews:true,
+                    cmsettings: {
+                        readOnly: true,
+                        lineNumbers: true ,
+                        lineWrapping: true
+                    },
+                    lhs: function(setValue) {
+                        setValue($('#currentVersion').text());
+                    },
+                    rhs: function(setValue) {
+                        setValue($('#newVersion').text());
+                    },
+                    loaded:function () {
+                        $('#animatedModal-content').css('height',$('.CodeMirror-scroll').height()+150)
+                    }
+
+                });
+            }});
+        })
+    </script>
+{% endblock %}

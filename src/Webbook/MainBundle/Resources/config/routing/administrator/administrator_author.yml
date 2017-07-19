@@ -1,0 +1,11 @@
+administrator_new_author:
+    path:    /new
+    defaults: { _controller: MainBundle:Administrator/User:newAuthor }
+
+administrator_authors:
+    path:    /all
+    defaults: { _controller: MainBundle:Administrator/User:authors }
+
+administrator_edit_author:
+    path:    /{id}/edit
+    defaults: { _controller: MainBundle:Administrator/User:editAuthor }

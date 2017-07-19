@@ -1,0 +1,9 @@
+cueillettes_intranet_menu:
+    resource: "@LibBundle/Resources/config/routing/menu.yml"
+    prefix:   /
+cueillettes_intranet_main:
+    resource: "@LibBundle/Resources/config/routing/main.yml"
+    prefix:   /
+mobelite_translator_modify:
+    path:     /intranet/traductions
+    defaults:   { _controller: LibBundle:Translator:index}

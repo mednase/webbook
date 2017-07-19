@@ -1,0 +1,58 @@
+.userpic {
+    border: 1px dashed #b8b8b8;
+    width: 202px;
+    height: 202px;
+    position: relative;
+    cursor: pointer;
+}
+.userpic:hover i,.userpic:hover .change-userpic{
+    display: block;
+}
+.userpic i {
+    display: none;
+    position: absolute;
+    font-size: 35px;
+    cursor: pointer;
+    color: #209e91;
+    top: -9px;
+    right: -11px;
+    height: 26px;
+    border-radius: 50%;
+}
+.userpic i:hover {
+    color: #e85656;
+}
+.userpic .userpic-wrapper {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.userpic .change-userpic {
+    display: none;
+    width: 202px;
+    background: rgba(0, 0, 0, 0.7);
+    -webkit-transition: all 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
+    color: #ffffff;
+    text-decoration: none;
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    line-height: 32px;
+    text-align: center;
+}
+img#avatar{
+    width: 75%;
+}

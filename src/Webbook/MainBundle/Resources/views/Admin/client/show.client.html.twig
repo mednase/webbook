@@ -1,0 +1,305 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    Client - {{ client.fullName }}
+{% endblock %}
+
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Client - {{ client.fullName }}</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="col-md-12 light-box">
+        <div class="col-md-3">
+            <img src="{% if client.picture %}
+                        {{ vich_uploader_asset(client.picture,'mediaFile') }}
+                       {% else %}
+                        {{ asset('assets/img/default-client.png') }}
+                        {% endif %}" alt="{{ client.fullName }}">
+        </div>
+        <div class="col-md-9">
+            <div class="page-subtitle margin-bottom-0">
+                <h3>Détails de compte</h3>
+                <p>Les information du compte</p>
+            </div>
+            <div class="form-group-one-unit margin-bottom-40">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label>Nom d'utilisateur</label>
+                            <input readonly type="text" class="form-control" value="johnny">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label>Date d'inscription:</label>
+                            <input readonly type="text" class="form-control"
+                                   value="{{ client.joinedAt|date('d-m-Y') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label>Dérnier activité:</label>
+                            <input readonly type="text" class="form-control"
+                                   value="{{ client.lastLogin|date('d-m-Y') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label>Numéro de téléphone</label>
+                            <input readonly type="text" class="form-control"
+                                   value="{{ client.lastLogin|date('d-m-Y') }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-group-custom">
+                            <label>Adresse Email</label>
+                            <input readonly type="text" class="form-control" value="{{ client.email }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label> Nom</label>
+                            <input readonly type="text" class="form-control" value="{{ client.profile.lastName }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label> Prénom</label>
+                            <input readonly type="text" class="form-control" value="{{ client.profile.firstName }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="page-subtitle margin-bottom-0">
+                <h3>Personal information</h3>
+                <p>Les informations personnel</p>
+            </div>
+            <div class="form-group-one-unit margin-bottom-40">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label>Pays</label>
+                            <input readonly type="text" class="form-control" value="{{ client.profile.country }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-custom">
+                            <label>Ville</label>
+                            <input readonly type="text" class="form-control" value="{{ client.profile.city }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-group-custom">
+                            <label>Adresse</label>
+                            <input readonly type="text" class="form-control" value="{{ client.profile.address }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group form-group-custom">
+                            <label>Code Postal</label>
+                            <input readonly type="text" class="form-control" value="{{ client.profile.zipCode }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group form-group-custom">
+                            <label>Date naisance</label>
+                            <div class="form-select-wrapper">
+                                <select class="form-control">
+                                    <option>01</option>
+                                    <option>02</option>
+                                    <option>03</option>
+                                    <option>04</option>
+                                    <option>05</option>
+                                    <option>06</option>
+                                    <option>07</option>
+                                    <option>08</option>
+                                    <option>09</option>
+                                    <option>10</option>
+                                    <option>11</option>
+                                    <option>12</option>
+                                    <option>13</option>
+                                    <option selected="selected">14</option>
+                                    <option>15</option>
+                                    <option>16</option>
+                                    <option>17</option>
+                                    <option>18</option>
+                                    <option>19</option>
+                                    <option>20</option>
+                                    <option>21</option>
+                                    <option>22</option>
+                                    <option>23</option>
+                                    <option>24</option>
+                                    <option>25</option>
+                                    <option>26</option>
+                                    <option>27</option>
+                                    <option>28</option>
+                                    <option>29</option>
+                                    <option>30</option>
+                                    <option>31</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-group-custom">
+                            <label>Mois</label>
+                            <div class="form-select-wrapper">
+                                <select class="form-control">
+                                    <option>01</option>
+                                    <option selected="selected">02</option>
+                                    <option>03</option>
+                                    <option>04</option>
+                                    <option>05</option>
+                                    <option>06</option>
+                                    <option>07</option>
+                                    <option>08</option>
+                                    <option>09</option>
+                                    <option>10</option>
+                                    <option>11</option>
+                                    <option>12</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group form-group-custom">
+                            <label>Année</label>
+                            <div class="form-select-wrapper">
+                                <select class="form-control">
+                                    <option>2000</option>
+                                    <option>1999</option>
+                                    <option>1998</option>
+                                    <option>1997</option>
+                                    <option>1996</option>
+                                    <option>1995</option>
+                                    <option>1994</option>
+                                    <option>1993</option>
+                                    <option>1992</option>
+                                    <option>1991</option>
+                                    <option>1990</option>
+                                    <option selected="selected">1989</option>
+                                    <option>1988</option>
+                                    <option>1987</option>
+                                    <option>1986</option>
+                                    <option>1985</option>
+                                    <option>1984</option>
+                                    <option>1983</option>
+                                    <option>1982</option>
+                                    <option>1981</option>
+                                    <option>1980</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="page-subtitle margin-bottom-0">
+                <h3>Les Achats</h3>
+                <p>Les livres achetés par ce client</p>
+            </div>
+            <table class="table  table-hover">
+                <thead>
+                <tr>
+                    <th>Date d'achat</th>
+                    <th>Titre du livre</th>
+                    <th>Prix</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if client.purchases|length==0 %}
+                    <tr class="text-center">
+                        <td colspan="3"><h2>Pas d'achats effectuer</h2></td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    <style>
+        table tr th {
+            background-color: #01b070;
+            color: white;
+        }
+
+        .light-box {
+            background-color: white;
+            padding: 20px 10px;
+        }
+
+        .page-subtitle h3, label {
+            color: #49bdbc;
+            font-weight: 600;
+        }
+
+        .page-subtitle p {
+            color: #86889a
+        }
+
+        /* ./form group states */
+        /* form group one unit */
+        .form-group-one-unit {
+            float: left;
+            width: 100%;
+            margin-bottom: 15px;
+            background: #fafafa;
+            border: 1px solid #e7ebf1;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+        }
+
+        .form-group-one-unit .row {
+            margin: 0px;
+        }
+
+        .form-group-one-unit .row div[class^="col-"] {
+            padding: 0px;
+        }
+
+        .form-group-one-unit .row div[class^="col-"] .form-group.form-group-custom {
+            margin-bottom: 0px;
+            border: 0px;
+            padding: 10px;
+            border-bottom: 1px solid #e7ebf1;
+            border-right: 1px solid #e7ebf1;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+            -moz-border-radius: 0px;
+            -webkit-border-radius: 0px;
+            border-radius: 0px;
+        }
+
+        /* ./form group one unit */
+        .input-group-addon {
+            background: #fafafa;
+            border-color: #e7ebf1;
+            color: #454545;
+        }
+    </style>
+{% endblock %}

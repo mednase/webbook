@@ -1,0 +1,75 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    Paramètres généraux
+{% endblock %}
+
+{% block classBody %}
+{% endblock %}
+{% block body %}
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">paramètres généraux</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-cog"></span> Paramètres généraux</h2>
+    </div>
+    <div class="portlet box red col-md-12" style="overflow: hidden!important;">
+        <div class="portlet-title">
+            <div class="caption"></div>
+        </div>
+        <div class="portlet-body change-user-roles">
+            <div class="header-info row">
+                <h3 class="col-md-8">Les images d'accueil</h3>
+                <div class="col-md-4">
+                    <button class="btn blue pull-right"><i class="fa fa-plus"></i>Ajouter une image</button>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Active</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-md-8"></td>
+                        <td class="col-md-2"></td>
+                        <td class="col-md-2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- END EXAMPLE TABLE PORTLET-->
+    <input type="hidden" value="" id="menuSelected" data-menu="page-parameters-general">
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/jquery-fileupload/jquery.fileupload.css') }}">
+    <style>
+        .header-info{
+            margin: 20px 0;
+        }
+        .header-info h3{
+            margin: 0;
+            color: #ed362f;
+            font-weight: 600;
+        }
+        .header-info .fa{
+            margin-right: 7px!important;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('assets/global/plugins/jquery-fileupload/jquery.fileupload.js') }}"></script>
+{% endblock %}

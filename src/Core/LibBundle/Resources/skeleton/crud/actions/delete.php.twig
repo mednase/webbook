@@ -1,0 +1,67 @@
+
+    /**
+     * Deletes a {{ entity }} entity.
+     *
+{% if 'annotation' == format %}
+     * @Route("/{token}", name="{{ route_name_prefix }}_delete")
+     * @Method("DELETE")
+{% endif %}
+     */
+    public function deleteAction(Request $request, $token)
+    {
+        $form = $this->createDeleteForm($token);
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->findOneBy(array(
+                'token' => $token
+            ));
+
+            if (!$entity) {
+                $this->get('session')->getFlashBag()->add('warning', 'Impossible de trouver {{ entity }} souhaité(e).');
+                return $this->redirect($this->generateUrl('dashboard'));
+            }
+
+            $em->remove($entity);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success', '{{ entity|title }} '.$entity.' a été supprimée'.$entity);
+        } else {
+            $this->get('session')->getFlashBag()->add('warning', 'Une erreur est survenue lors de la suppression du {{ entity|title }}.');
+        }
+
+        return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
+    }
+
+    public function deleteModalAction($token){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->findOneBy(array(
+            'token' => $token
+        ));
+
+        if (!$entity) {
+            $this->get('session')->getFlashBag()->add('warning', 'Unable to find {{ entity }} entity.');
+            return $this->redirect($this->generateUrl('dashboard'));
+        }
+
+        return $this->render('LibBundle:modal:modalDeleteBody.html.twig', array(
+            'form'      => $this->createDeleteForm($token)->createView(),
+            'entity'    => $entity,
+            'action'    => $this->generateUrl('{{ route_name_prefix }}_delete', array('token' => $token)),
+        ));
+    }
+
+    /**
+     * Creates a form to delete a {{ entity }} entity by token.
+     *
+     * @param mixed $token The entity token
+     *
+     * @return Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($token)
+    {
+        return $this->createFormBuilder(array('token' => $token))
+            ->add('token', 'hidden')
+            ->getForm()
+        ;
+    }

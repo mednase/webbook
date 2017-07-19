@@ -1,0 +1,229 @@
+<!-- BEGIN SIDEBAR -->
+<div class="page-sidebar-wrapper">
+    <div class="page-sidebar navbar-collapse collapse">
+        <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu  "
+            data-keep-expanded="false"
+            data-auto-scroll="true" data-slide-speed="200">
+            <li class="nav-item nav-profile">
+                <div class="profile">
+                    <div class="profile-image">
+                        <img src="{% if app.user.picture is not null %}
+                        {{ vich_uploader_asset(app.user.picture,'mediaFile') }}
+                        {% else %}
+                        {{ asset('assets/img/avatar/no-avatar.png') }}
+                        {% endif %}" alt="{{ app.user.profile.fullName }}">
+                    </div>
+                    <div class="profile-data">
+                        <div class="profile-data-name">{{ app.user.profile.fullName }}</div>
+                        <div class="profile-data-title">{{ app.user.jobTitle }}</div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item start page-index">
+                <a href="{{ path('administrator_homepage') }}" class="nav-link nav-toggle">
+                    <i class="fa fa-area-chart" style="font-size: 32px" aria-hidden="true"></i>
+                    <span class="title">Tableau de bord</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+            <li class="nav-item start page-inbox">
+                <a href="{{ path('messaging_inbox',{role:'administrator'}) }}" class="nav-link nav-toggle">
+                    <i class="fa fa-comments" style="font-size: 32px"></i>
+                    <span class="title">Messages</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+            <li class="nav-item  page-book-search">
+                <a href="{{ url('administrator_search_book') }}" class="nav-link nav-toggle">
+                    <i class="icon-c-search-book"></i>
+                    <span class="title">Chercher un livre</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+            {% if is_granted('ROLE_SUPER_ADMINISTRATOR') %}
+            <li class="nav-item start page-users page-new-user page-switch-role">
+                <a class="nav-link nav-toggle">
+                    <i class="fa fa-users"></i>
+                    <span class="title">Gestion des utilisateurs</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item page-users page-user">
+                        <a href="{{ url('administrator_users') }}" class="nav-link ">
+                            <i class="fa fa-list"></i>
+                            <span class="title">Liste des utilisateurs</span>
+                        </a>
+                    </li>
+                    <li class="nav-item page-new-user">
+                        <a href="{{ url('administrator_new_user') }}" class="nav-link ">
+                            <i class="fa fa-user-plus"></i>
+                            <span class="title">Ajouter un utilisateur</span>
+                        </a>
+                    </li>
+                    <li class="nav-item page-switch-role">
+                        <a href="{{ url('administrator_manage_roles') }}" class="nav-link ">
+                            <i class="fa fa-wrench"></i>
+                            <span class="title">Gérer les roles</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <li class="nav-item start page-authors page-new-author page-author">
+                <a class="nav-link nav-toggle">
+                    <i class="fa fa-pencil-square-o "></i>
+                    <span class="title">Gestion des auteurs</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item page-authors ">
+                        <a href="{{ url('administrator_authors') }}" class="nav-link ">
+                            <i class="fa fa-list"></i>
+                            <span class="title">Liste des auteurs</span>
+                        </a>
+                    </li>
+                    <li class="nav-item page-new-author">
+                        <a href="{{ url('administrator_new_author') }}" class="nav-link ">
+                            <i class="fa fa-user-plus"></i>
+                            <span class="title">Ajouter un auteur</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item page-book page-new-book page-books page-book-published page-book-unpublished">
+                <a class="nav-link nav-toggle">
+                    <i class="icon-c-books"></i>
+                    <span class="title">Gestion des Livres</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  page-books">
+                        <a href="{{ url('administrator_books') }}" class="nav-link ">
+                            <i class="fa fa-list"></i>
+                            <span class="title">Liste des livres</span>
+                        </a>
+                    </li>
+                    <li class="nav-item page-new-book">
+                        <a href="{{ url('administrator_new_book') }}" class="nav-link ">
+                            <i class="fa fa-edit"></i>
+                            <span class="title">Creation d'un nouveau livre</span>
+                        </a>
+                    </li>
+                    <li class="nav-item page-book-unpublished">
+                        <a href="{{ url('administrator_unpublished_books') }}" class="nav-link ">
+                            <i class="fa fa-clock-o"></i>
+                            <span class="title">Livres en cours de préparation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item page-book-published">
+                        <a href="{{ url('administrator_published_books') }}" class="nav-link ">
+                            <i class="fa fa-check-square-o"></i>
+                            <span class="title">Livres publiés</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% if is_granted('ROLE_SUPER_ADMINISTRATOR') %}
+            <li class="nav-item start page-clients page-subscriptions page-purchases">
+                <a class="nav-link nav-toggle">
+                    <i class="fa fa-briefcase"></i>
+                    <span class="title">Gestion des Clients</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  page-clients">
+                        <a href="{{ url('administrator_clients') }}" class="nav-link ">
+                            <i class="fa fa-users"></i>
+                            <span class="title">Liste des clients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  page-subscriptions">
+                        <a href="{{ url('administrator_subscriptions') }}" class="nav-link ">
+                            <i class="fa fa-id-card-o"></i>
+                            <span class="title">Les abonnements</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  page-purchases">
+                        <a href="{{ url('administrator_purchases') }}" class="nav-link ">
+                            <i class="fa fa-cart-arrow-down"></i>
+                            <span class="title">Les Achats</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item start page-newsletter  page-list-newsletter page-send-newsletter page-add-newsletter">
+                <a class="nav-link nav-toggle">
+                    <i class="fa fa-envelope-o" style="font-size: 32px"></i>
+                    <span class="title">NewsLetters</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  page-add-newsletter">
+                        <a href="{{ url('newsletter_new') }}" class="nav-link ">
+                            <i class="fa fa-file-text-o"></i>
+                            <span class="title">Composer newsletter</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  page-send-newsletter">
+                        <a href="{{ url('newsletter_send') }}" class="nav-link ">
+                            <i class="fa fa-send-o"></i>
+                            <span class="title">Envoyer newsletter</span>
+                        </a>
+                    </li>
+                    <li class="nav-item  page-list-newsletter">
+                        <a href="{{ url('newsletter_list') }}" class="nav-link ">
+                            <i class="fa fa-files-o"></i>
+                            <span class="title">Liste des newsletter</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+                <li class="nav-item start page-categories page-new-category">
+                    <a  class="nav-link nav-toggle">
+                        <i class="fa fa-tags" style="font-size: 32px"></i>
+                        <span class="title">Catégories</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item  page-new-category">
+                            <a href="{{ path('administrator_new_category') }}" class="nav-link ">
+                                <i class="fa fa-plus"></i>
+                                <span class="title">Ajouter une catégorie</span>
+                            </a>
+                        </li>
+                        <li class="nav-item start page-categories">
+                            <a href="{{ path('administrator_category_list') }}" class="nav-link ">
+                                <i class="fa fa-tags"></i>
+                                <span class="title">Liste des catégories</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            <li class="nav-item start page-parameters-subscription page-parameters-general">
+                <a  class="nav-link nav-toggle">
+                    <i class="fa fa-cogs" style="font-size: 32px"></i>
+                    <span class="title">Paramètres</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  page-parameters-general">
+                        <a href="{{ path('administrator_parameters_general') }}" class="nav-link ">
+                            <i class="fa fa-cog"></i>
+                            <span class="title">Paramètres généraux</span>
+                        </a>
+                    </li>
+                    <li class="nav-item page-parameters-subscription">
+                        <a href="{{ path('administrator_parameters_subscription') }}" class="nav-link ">
+                            <i class="fa fa-id-card"></i>
+                            <span class="title">Paramètres d'abonnement</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+        </ul>
+        <!-- END SIDEBAR MENU -->
+    </div>
+    <!-- END SIDEBAR -->
+</div>

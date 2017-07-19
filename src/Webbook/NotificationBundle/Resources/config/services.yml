@@ -1,0 +1,18 @@
+services:
+    count_notification.twig_extension:
+        class: Webbook\NotificationBundle\Extension\CountNotificationExtension
+        public: false
+        arguments: ["@service_container"]
+        tags:
+            - { name: twig.extension }
+    notification_sync:
+        class:  Webbook\NotificationBundle\Listener\NotificationSync
+        arguments: ["@service_container"]
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    syn_notification.topic_service:
+        class:  Webbook\NotificationBundle\Topic\NotificationTopic
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: gos_web_socket.topic }

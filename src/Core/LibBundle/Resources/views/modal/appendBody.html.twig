@@ -1,0 +1,54 @@
+{% spaceless %}
+	{% form_theme form '::widget/form_div_layout.html.twig' %}
+	<div class="modal-header">
+		{{ title }}
+	</div>
+	<form data-selector="{{ selector }}" class="form_modal" action="{{ action }}" method="post" accept-charset="utf-8">
+		<div class="modal-body form-type-1">
+			<input type="hidden" name="_method" value="post">
+			{% form_theme form '::/widget/form_div_layout.html.twig' %}
+			{% for item in form %}
+				{{ form_row(item) }}
+			{% endfor %}
+		</div>
+		<div class="modal-footer">
+		    <button title="Confirmer" class="btn btn-sm btn-danger" type="submit" value="Confirmer" style="margin: 0 10px;">Confirmer</button>
+		    <button title="Annuler" class="btn reversed" type="button" data-dismiss="modal" aria-label="Close" style="margin: 0 10px;">Annuler</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+		    $('.form_modal').submit(function(event) {
+		    	event.preventDefault();
+		    	var action = $(this).attr('action');
+		    	var method = $(this).attr('method');
+		    	var data = $(this).serializeArray();
+		    	$.ajax({
+		    		url: action,
+		    		type: method,
+		    		dataType: 'json',
+		    		data: data,
+		    		beforeSend: function(){
+		    			ajaxPending();
+		    		}
+		    	})
+		    	.done(function(response) {
+		    		if(response.success === 'append'){
+		    			$('#central_purchasing_cataloguesyears_'+response.selector).append('<option value="'+response.data[0]+'" selected>'+response.data[1]+'</option>');
+		    			$('#modalAppend').modal('hide');
+		    		}else{
+		    			$.each(response.errors, function(index, val) {
+		    				$('#'+index).append('<span class="error-msg">'+response.val+'</span>');
+		    			});
+		    		}
+		    		$('#central_purchasing_cataloguesyears_'+response.selector).selectpicker('refresh');
+		    	})
+		    	.fail(function() {
+		    	})
+		    	.always(function() {
+		    		ajaxStop();
+		    	});
+		    });
+		});
+	</script>
+{% endspaceless %}

@@ -1,0 +1,43 @@
+{%- set first = null -%}
+{%- for field, metadata in fields -%}
+{%- if loop.first -%}{%- set first = field -%}{%- endif -%}
+{%- endfor -%}
+{% if 'index' in actions %}
+{{ route_name_prefix }}:
+    pattern:  /index
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
+{% endif %}
+
+{% if 'new' in actions %}
+{{ route_name_prefix }}_new:
+    pattern:  /nouveau
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:new" }
+
+{{ route_name_prefix }}_create:
+    pattern:  /creation
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:create" }
+    requirements: { _method: post|put }
+{% endif %}
+
+{% if 'edit' in actions %}
+{{ route_name_prefix }}_edit:
+    pattern:  /{token}/modifier
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:edit" }
+
+{{ route_name_prefix }}_update:
+    pattern:  /{token}/mettre-a-jours
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:update" }
+    requirements: { _method: post|put }
+{% endif %}
+
+{% if 'delete' in actions %}
+{{ route_name_prefix }}_delete:
+    pattern:  /{token}/supprimer
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
+    requirements: { _method: post|delete }
+
+{{ route_name_prefix }}_deleteModal:
+    pattern:  /{token}/render/modal
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:deleteModal" }
+    requirements: { _method: get }
+{% endif %}

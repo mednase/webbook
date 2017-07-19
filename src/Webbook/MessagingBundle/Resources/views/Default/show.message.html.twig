@@ -1,0 +1,126 @@
+{% extends '@Messaging/message.layout.html.twig' %}
+{% block message_body %}
+    <div class="col-md-9">
+        <div class="inbox-body">
+            <div class="panel panel-default">
+                <div class="panel-heading ui-draggable-handle row" style="margin: 0">
+                    <div class="pull-left">
+                        <img src="{{ asset('assets/img/avatar/avatar.jpg') }}" class="panel-title-image" alt="John Doe">
+                        <h3 class="panel-title">{{ hasMessage.message.sender.profile.fullName }}
+                            <small>{{ hasMessage.message.sender.email }}</small>
+                        </h3>
+                    </div>
+                    <div class="pull-right">
+
+                        <form action="{{ path('messaging_delete_inbox_messages',{role:getRole()}) }}" method="post">
+                            <button type="button" class="btn btn-default no-effect imp-btn" data-toggle="tooltip" title="message important">
+                                <label for="important">
+                                    <input data-msgt=0 data-msg="{{ hasMessage.id }}"  class="hidden important-btn" type="checkbox" {% if  hasMessage.important %} checked {% endif %}id="important" value="{{ hasMessage.important }}">
+                                    {% if hasMessage.important %}<i class="fa fa-star"></i>{% else %}<i class="fa fa-star-o"></i>{% endif %}
+                                </label>
+                            </button>
+                            <input type="hidden" name="messages[]" value="{{ hasMessage.id }}">
+                            <button type="submit" class="btn btn-default no-effect" data-toggle="tooltip" data-placement="bottom" title="supprimer le message">
+                                <span class="fa fa-trash-o"></span>
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <h3>{{ hasMessage.message.subject }}
+                        <small class="pull-right text-muted"><span class="fa fa-clock-o"></span> {{ hasMessage.message.dateSend|date() }}
+                        </small>
+                    </h3>
+                    <div>
+                        {{ hasMessage.message.body|raw }}
+                    </div>
+                    {{ form_start(messageForm,{attr:{class:'messageForm'}}) }}
+                    <div class="form-group push-up-20">
+                            <label style="font-weight: 600">Repondre</label>
+                            {{ form_widget(messageForm.body,{attr:{class:'summernote'}}) }}
+                        <div class="help-block with-errors">Le contenu de message ne peut pas etre vide (3 caractéres minimum)</div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="attachments" class="sbold">Pièces jointes :</label>
+                        <input id="attachments" type="file" name="attachments[]" multiple>
+                    </div>
+                    {{ form_widget(messageForm._token) }}
+                    {{ form_end(messageForm,{render_rest:false}) }}
+
+                </div>
+                <div class="panel-body panel-body-table">
+                    <h5 style="font-weight: 600">Attachaments</h5>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th width="50">type</th>
+                                <th>nom</th>
+                                <th width="100">taille</th>
+                                <th class="col-md-1">Télécharger</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for attachment in hasMessage.message.attachments %}
+                            <tr>
+                                <td><span class="label label-success">{{ attachment.media.mimeType }} </span></td>
+                                <td><a href="#">{{ attachment.media.originalName }}</a></td>
+                                <td>{{ getFormattedSize(attachment.media.size ) }}</td>
+                                <td class="text-center"><a download="{{ attachment.media.originalName }}" href="{{ asset(vich_uploader_asset(attachment,'mediaFile')) }}"  class="btn blue no-effect" style="padding: 3px 13px;"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer col-md-12">
+                    <button class="btn btn-success pull-right btn-send" ><i class="fa fa-envelope"></i>Repondre</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block under_js %}
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote(
+                {
+                    height: 150,
+                    language: 'fr',
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']]
+                    ],
+                }).trigger('summernote.change');
+            $(".summernote").on("summernote.change", function (e) {   // callback as jquery custom event
+                $(this).val().length >= 3?$(this).closest('.form-group').removeClass('has-error').addClass('has-success'):
+                    $(this).closest('.form-group').addClass('has-error').removeClass('has-success');            });
+
+            $('.note-editor [data-event="insertUnorderedList"]').tooltip('disable');
+            $('.note-btn.btn.btn-default.btn-sm').attr('data-original-title','');
+            $('input[type=file]').fileinput();
+            $('#messageFor').select2({
+                placeholder: "Selectionner un ou plusieurs utilisateurs"
+            });
+
+            $('.messageForm').on('submit',function ($event) {
+                var content=$('#webbook_messagingbundle_message_body');
+                var error=false;
+                if(!content.val() || $.trim(content.val()).length===0){
+                    error=true;
+                    content.closest('.form-group').addClass('has-error');
+                }
+                if(error)
+                    $event.preventDefault();
+            })
+
+        });
+        $('.btn-send').click(function () {
+            $('.messageForm').submit();
+        })
+
+    </script>
+{% endblock %}

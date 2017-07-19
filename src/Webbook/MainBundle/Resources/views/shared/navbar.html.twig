@@ -1,0 +1,158 @@
+<div class="page-header navbar navbar-fixed-top" style="z-index: 10">
+    <div class="page-header-inner">
+        <!-- BEGIN LOGO -->
+        <div class="page-logo">
+            <a>
+                <img class="hidden-minimized" src="{{ asset('assets/img/webbook-logo.png') }}" alt="">
+                <img class="hidden-maximized" src="{{ asset('assets/img/mini-logo.png') }}" alt="">
+            </a>
+
+            <div class="menu-toggler sidebar-toggler">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+
+        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+
+        <!-- END LOGO -->
+        <!-- BEGIN PAGE TOP -->
+        <div class="page-top">
+            <!-- BEGIN TOP NAVIGATION MENU -->
+            <div class="top-menu">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                        <a href="javascript:;" class="dropdown-toggle msg-list unseen" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="icon-envelope-open"></i>
+                            {% if  countNewMessages()>0 %}
+                            <span class="badge badge-default msg-nb"> {{ countNewMessages() }} </span>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="external">
+                                <h3>Vous avez
+                                    <span class="bold">{{ countNewMessages() }} Nouveau</span> Messages</h3>
+                                <a href="{{ url('messaging_inbox',{'role':getRole()}) }}">voir tous</a>
+                            </li>
+                            <li>
+                                <ul id="message-list" class="dropdown-menu-list scroller" style="height: 275px" >
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- BEGIN NOTIFICATION DROPDOWN -->
+                    <!-- DOC: Apply "dropdown-dark" class below "dropdown-extended" to change the dropdown styte -->
+                    <!-- DOC: Apply "dropdown-hoverable" class after below "dropdown" and remove data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to enable hover dropdown mode -->
+                    <!-- DOC: Remove "dropdown-hoverable" and add data-toggle="dropdown" data-hover="dropdown" data-close-others="true" attributes to the below A element with dropdown-toggle class -->
+                    <li class="dropdown dropdown-extended dropdown-notification " id="header_notification_bar">
+                        <a href="javascript:;" class="dropdown-toggle notif unseen" data-toggle="dropdown"
+                           data-hover="dropdown" style="padding: 28px 16px 19px;height: 100%;"
+                           data-close-others="true" id="bell-notif">
+                            <i class="icon-bell"  ></i>
+                            {% if count_notification()>0 %}
+                                <span class="badge badge-default" id="bade-notification"> {{ count_notification() }} </span>
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu" >
+                            <li class="external">
+                                <h3>Vous avez
+                                    <span class="bold">{{ countNewMessages() }} Nouveau</span> Notification</h3>
+                            </li>
+                            <li>
+                                <ul id="notificatin-list" class="dropdown-menu-list scroller" style="height: 275px">
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END TODO DROPDOWN -->
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                    <li class="dropdown dropdown-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
+                           data-hover="dropdown" data-close-others="true">
+                            <img alt="" class="img-circle"
+                                 src="{% if app.user.picture is not null %}
+                        {{ vich_uploader_asset(app.user.picture,'mediaFile') }}
+                        {% else %}
+                        {{ asset('assets/img/avatar/no-avatar.png') }}
+                        {% endif %}"/>
+                            <span class="username username-hide-on-mobile">
+                                        {{ app.user.profile.fullName }}
+                            </span>
+
+                            <i  class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="{% if is_granted('ROLE_ADMINISTRATOR') %}
+                                            {{ url('administrator_profile') }}
+                                         {% elseif is_granted('ROLE_AUTHOR') %}
+                                            {{ url('author_profile') }}
+                                            {% else %}
+                                            {{ url('validator_profile') }}
+                                            {% endif %}
+                                    ">
+                                    <i class="icon-user"></i>Mon profil </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('messaging_inbox',{role:getRole()}) }}">
+                                    <i class="fa fa-envelope-o"></i>Mes messages</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{{ url('fos_user_security_logout') }}">
+                                    <i class="icon-key"></i>{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            {% if is_granted('ROLE_ADMINISTRATOR') %}
+                <div class="page-actions">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-circle btn-outline red dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-plus"></i>&nbsp;
+                        <span class="hidden-sm hidden-xs">Nouveau&nbsp;</span>&nbsp;
+                        <i class="fa fa-angle-down"></i>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="{{ path('administrator_new_book') }}">
+                                <i class="icon-c-book-plus"></i> Nouveau Livre</a>
+                        </li>
+                        {% if is_granted('ROLE_SUPER_ADMINISTRATOR') %}
+                        <li>
+                            <a href="{{ path('administrator_new_user') }}">
+                                <i class="fa fa-user-plus"></i> Nouveau Utilisateur</a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <a href="{{ path('administrator_new_author') }}">
+                                <i class="fa fa-user-plus"></i> Nouveau Auteur </a>
+                        </li>
+                        <li class="divider"> </li>
+                        <li>
+                            <a href="{{ path('messaging_compose',{role:getRole()}) }}">
+                                <i class="fa fa-comment"></i> Nouveau Message
+                            </a>
+                        </li>
+                        {% if is_granted('ROLE_SUPER_ADMINISTRATOR') %}
+                        <li>
+                            <a href="{{ path('newsletter_new') }}">
+                                <i class="fa fa-envelope-o"></i> Nouveau Newsletter
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+            <!-- END TOP NAVIGATION MENU -->
+            <!-- END TOP NAVIGATION MENU -->
+        </div>
+
+        <!-- END PAGE TOP -->
+    </div>
+</div>

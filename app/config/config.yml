@@ -1,0 +1,204 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: mobilite_book_parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: "@UserBundle/Resources/config/services.yml" }
+    - { resource: "@MainBundle/Resources/config/services.yml" }
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: fr
+
+framework:
+    profiler:
+        collect: false
+
+    translator: ~
+    #esi:             ~
+    #translator:      { fallbacks: ["%locale%"] }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    serializer:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        cookie_lifetime:       3600000
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  null
+        # name: "rse_session"
+        # save_path: '%kernel.root_dir%/sessions/save_path'
+        # cookie_path: '%kernel.root_dir%/sessions/cookie_path'
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'form/form.book_block.html.twig'
+    globals:
+        siteUrl:  "%site_url%"
+
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #     path:     "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+
+
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: "%kernel.debug%"
+    bundles:        [MainBundle,FrontOfficeBundle,MessagingBundle]
+    filters:
+        cssrewrite: ~
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+
+
+# FosUserBundle
+fos_user:
+    db_driver: orm # other valid values are 'mongodb' and 'couchdb'
+    firewall_name: main
+    user_class: Core\UserBundle\Entity\User
+    from_email:
+        address: "test@gamil.com"
+        sender_name: "test@gamil.com"
+
+    registration:
+        form:
+            type: Core\UserBundle\Form\RegistrationFormType
+
+gos_web_socket:
+    server:
+        port: 8080        #The port the socket server will listen on
+        host: "%site_url%"   #The host ip to bind to
+        router:
+            resources:
+                - '@MainBundle/Resources/config/routing/socket.yml'
+    pushers:
+        wamp:
+            host: "%site_url%"
+            port: 8080
+
+parameters:
+    knp.doctrine_behaviors.blameable_subscriber.user_entity: Core\UserBundle\Entity\User
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        media_file:
+            uri_prefix:         /uploads
+            upload_destination:  "%upload_dir%"
+            namer: media_namer.file_namer
+            inject_on_load:     false
+            delete_on_update:   true
+            delete_on_remove:   true
+
+jms_serializer:
+    metadata:
+        auto_detection: true
+        directories:
+            FOSUserBundle:
+                namespace_prefix: "FOS\\UserBundle"
+                path: "%kernel.root_dir%/serializer/FOSUB"
+
+fos_rest:
+    body_listener: true
+    format_listener:
+        rules:
+            - { path: '^/api', priorities: ['json'], fallback_format: json, prefer_extension: false }
+            - { path: ^/, priorities: ['html', '*/*'], fallback_format: html, prefer_extension: true }
+
+    param_fetcher_listener: true
+    view:
+        view_response_listener: 'force'
+        formats:
+            json: true
+
+lexik_jwt_authentication:
+    private_key_path: '%jwt_private_key_path%'
+    public_key_path:  '%jwt_public_key_path%'
+    pass_phrase:      '%jwt_key_pass_phrase%'
+    token_ttl:        '%jwt_token_ttl%'
+
+nelmio_cors:
+      defaults:
+          allow_credentials: false
+          allow_origin: []
+          allow_headers: []
+          allow_methods: []
+          expose_headers: []
+          max_age: 0
+          hosts: []
+          origin_regex: false
+          forced_allow_origin_value: ~
+      paths:
+          '^/api/':
+              allow_origin: ['*']
+              allow_headers: ['X-Custom-Auth']
+              allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+              max_age: 3600
+          '^/':
+              origin_regex: true
+              allow_origin: ['^http://localhost:[0-9]+']
+              allow_headers: ['X-Custom-Auth']
+              allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+              max_age: 3600
+              hosts: ['^api\.']
+
+knp_paginator:
+    page_range: 1                      # default page range used in pagination control
+    default_options:
+        page_name: page                # page query parameter name
+        sort_field_name: sort          # sort field query parameter name
+        sort_direction_name: direction # sort direction query parameter name
+        distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
+    template:
+        pagination: 'KnpPaginatorBundle/Pagination/custom_pagination.html.twig'     # sliding pagination controls template
+        sortable: 'KnpPaginatorBundle:Pagination:sortable_link.html.twig' # sort link template
+
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     wkhtmltopdf
+        options:
+            no-stop-slow-scripts: ~
+            enable-javascript: ~
+            use-xserver: ~
+            page-size: A4
+            dpi: 300

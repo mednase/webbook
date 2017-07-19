@@ -1,0 +1,30 @@
+{% extends "MainBundle::layout.html.twig" %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12 page-404">
+            <div style="top: 0" class="number font-green"> 404 </div>
+            <div class="details">
+                <h2 class="bold font-red">Oops! Tu es perdu.</h2>
+                <h4>Nous ne pouvons pas trouver la page que vous recherchez.
+                    <br/>
+                     Essayez la barre de recherche ci-dessous. </h4>
+                <form action="#">
+                    <div class="input-group input-medium">
+                        <input type="text" class="form-control" placeholder="rechercher...">
+                        <span class="input-group-btn">
+                                            <button type="submit" class="btn green">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                    </div>
+                    <!-- /input-group -->
+                </form>
+                <a style="margin-top: 20px" class="btn btn-outline red" href="/{{ getRole() }}/">Aller a Acceuil </a><br>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/pages/css/error.css') }}">
+{% endblock %}

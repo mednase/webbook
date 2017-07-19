@@ -1,0 +1,71 @@
+{% extends '@Main/layout.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    Liste des categories
+{% endblock %}
+
+{% block classBody %}
+    page-container-bg-solid page-header-fixed
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Liste des categories</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-tags"></span> &nbsp; Liste des categories </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <a href="{{ url('administrator_new_category') }}" style="margin-top: 5px" class="btn btn-sm blue"><i class="fa fa-plus"></i>Nouvelle category</a>
+                    <div class="tools">
+                        <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire" title=""> </a>
+                        <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran" title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body ">
+                    <table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th class="text-center">Livres</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td>{{ category.name }}</td>
+                                <td class="text-center">{{ category.books|length}}</td>
+                                <td  class="text-center">
+                                    <form method="post" action="{{ path('administrator_delete_category',{'id':category.id }) }}">
+                                        <button class="btn red">
+                                            Supprimer
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-categories">
+
+{% endblock %}

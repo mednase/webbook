@@ -1,0 +1,101 @@
+administrator_books:
+    path:   /all
+    defaults: { _controller: MainBundle:Administrator/Book:index }
+
+administrator_new_book:
+    path:   /new
+    defaults: { _controller: MainBundle:Administrator/Book:newBook }
+    methods: [POST|GET]
+
+administrator_search_book:
+    path:   /search
+    defaults: { _controller: MainBundle:Administrator/Book:searchBook }
+    options:
+        expose: true
+
+administrator_published_books:
+    path:   /published
+    defaults: { _controller: MainBundle:Administrator/Book:published}
+
+administrator_unpublished_books:
+    path:   /unpublished
+    defaults: { _controller: MainBundle:Administrator/Book:unpublished}
+
+administrator_switch_book_upcoming_state:
+    path:   /{id}/switch_upcoming_state
+    defaults: { _controller: MainBundle:Administrator/Book:switchUpcomingState}
+    options:
+        expose: true
+
+administrator_edit_book:
+    path:   /{token}/edit
+    defaults: { _controller: MainBundle:Administrator/Book:editBook}
+    methods: [POST|GET]
+
+administrator_show_book:
+    path:   /{token}/show
+    defaults: { _controller: MainBundle:Administrator/Book:showBook}
+
+administrator_book_finish_preparation:
+    path:   /{token}/finish-preparation
+    defaults: { _controller: MainBundle:Administrator/Book:finishPreparation }
+    methods: [POST]
+
+administrator_publish_book_edition:
+    path:   /{id}/edition/publish
+    defaults: { _controller: MainBundle:Administrator/Book:publishBookEdition }
+    methods: [POST]
+    options:
+        expose: true
+
+administrator_book_delete:
+    path:   /{token}/delete
+    defaults: { _controller: MainBundle:Administrator/Book:deleteBook }
+    methods: [POST]
+
+administrator_add_book_edition:
+    path:   /{token}/new/edition
+    defaults: { _controller: MainBundle:Administrator/Book:addBookEdition }
+    options:
+        expose: true
+
+administrator_delete_book_edition:
+    path:   /edition/{token}/delete
+    defaults: { _controller: MainBundle:Administrator/Book:deleteBookEdition}
+    options:
+        expose: true
+
+administrator_activate_book_edition:
+    path:   /edition/{token}/activate
+    defaults: { _controller: MainBundle:Administrator/Book:activateBookEdition }
+    options:
+        expose: true
+
+administrator_book_block:
+    path:   /block/{token}/edit
+    defaults: { _controller: MainBundle:Administrator/Book:editBookBlock }
+
+administrator_create_block:
+    path:   /{book}/block/create
+    defaults: { _controller: MainBundle:Administrator/Book:createBookBlock}
+    options:
+        expose: true
+
+administrator_update_block:
+    path:   /block/{id}/update
+    defaults: { _controller: MainBundle:Administrator/Book:updateBookBlock}
+    options:
+        expose: true
+
+administrator_delete_block:
+    path:   /block/{id}/delete
+    defaults: { _controller: MainBundle:Administrator/Book:deleteBookBlock }
+    methods: [POST]
+    options:
+        expose: true
+
+administrator_update_block_level_position:
+    path:   /block/{id}/level_position/update
+    defaults: { _controller: MainBundle:Administrator/Book:updateBlockParentAndPosition}
+    options:
+        expose: true

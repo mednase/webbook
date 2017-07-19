@@ -1,0 +1,413 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    Recherche de livre
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Recherche de livre</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="icon-c-search-book"></span> &nbsp; Recherche de livre </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="tools">
+                        <a href="javascript:;" data-placement="bottom" class="collapse" data-original-title="reduire"
+                           title=""> </a>
+                        <a href="" class="fullscreen" data-placement="bottom" data-original-title="plein ecran"
+                           title=""> </a>
+                    </div>
+                </div>
+                <div class="portlet-body col-md-12">
+                    <form>
+                        <div class="clearfix mgb-5">
+                            <div class="bloc-select blc-alphabet clearfix">
+                                <a class="select-All" href="{{ path('administrator_search_book') }}">Tous</a>
+                                <ul class="letter-select">
+                                    {% for letter in ['A','B','C','D','E','F','G','H','I','J','K',
+                                    'L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'] %}
+                                    <li value="{{ letter }}"
+                                            {% if pagination.params['letter'] is defined %}
+                                                {% if pagination.params['letter']== letter%}
+                                                    class="active"
+                                                {% endif %}
+                                            {% endif %}>{{ letter }}</li>
+                                   {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="clearfix mgb-5" style="display: flex;">
+                            <div class="bloc-select col-md-4">
+                                <input type="text" class="form-control" name="title" placeholder="Titre"
+                                        {% if pagination.params['title'] is defined %} value="{{ pagination.params['title'] }}" {% endif %}>
+                            </div>
+                            <div class=" bloc-select col-md-4">
+                                <input type="text" class="form-control" placeholder="Auteur" name="author"
+                                        {% if pagination.params['author'] is defined %} value="{{ pagination.params['author'] }}" {% endif %}>
+                            </div>
+                            <div class=" bloc-select col-md-4">
+                                <select name="category" class="form-control">
+                                    <option value="" {% if pagination.params['category'] is not defined %}selected{% endif %}>Categorie</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}"
+                                        {% if pagination.params['category'] is defined %}
+                                            {% if pagination.params['category']==category.id %}
+                                                selected
+                                            {% endif %}
+                                        {% endif %}>{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="clearfix mgb-5" style="display: flex;">
+                            <div class="bloc-select blc-tri col-md-4">
+                                <select class="form-control" name="sort">
+                                    <option value="" {% if pagination.params['sort'] is not defined %} selected {% endif %}>Trier par <span class="ft-semi">ordre alphabétique</span>
+                                    </option>
+                                    <option value="ASC"
+                                            {% if pagination.params['sort'] is defined %}
+                                                {% if pagination.params['sort']=="ASC" %}
+                                                    selected
+                                                {% endif %}
+                                            {% endif %}>Croissant</option>
+                                    <option value="DESC"
+                                            {% if pagination.params['sort'] is defined %}
+                                        {% if pagination.params['sort']=="DESC" %}
+                                            selected
+                                        {% endif %}
+                                            {% endif %}>Décroissant</option>
+                                </select>
+                            </div>
+                            <div class="bloc-select col-md-5">
+                                <div id="publicationDate" class="pull-right">
+                                    <i style="float: left" class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    <span class="dateRangePlaceHolder"> Date de publication </span>
+                                    <span></span> <b class="caret"></b>
+                                </div>
+                            </div>
+                            <div class="bloc-select col-md-3">
+                                <input type="text" class="form-control" placeholder="ISBN" name="isbn">
+                            </div>
+                        </div>
+                        <div class="clearfix mgb-5" style="display: flex;">
+
+                            <div class="bloc-select blc-result col-md-4">
+                                <div>
+                                    {% if pagination|length>0 %}1{% else %}0{% endif %}-{{ pagination|length }}
+                                    sur {{ pagination.getTotalItemCount }}
+                                    résultats
+                                </div>
+                            </div>
+                            <div class="bloc-select blc-nav col-md-1">
+                                <i class="fa fa-chevron-left"></i>
+                            </div>
+                            <div class="bloc-select blc-pages col-md-2">
+                                <div>
+                                    page {% if pagination|length>0 %}{{ pagination.currentPageNumber }}{% else %}0{% endif %}/{{ pagination.pageCount }}
+                                </div>
+                            </div>
+                            <div class="bloc-select blc-nav col-md-1">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                            <div class="bloc-select col-md-4">
+                                <input type="submit" class="btn btn-block btn-primary" value="Chercher">
+                            </div>
+                        </div>
+                        <input type="hidden" name="publicationFrom">
+                        <input type="hidden" name="publicationTo">
+                    </form>
+                    <div class="col-md-12 clearfix" style="padding: 0">
+                        <ul class=" found-books">
+                            {% for book in pagination %}
+                                <li class="col-md-12 book-item">
+                                    <div class="col-md-3 text-center">
+                                        <img class="img-responsive" src="{% if book.images|length>0 %}
+                                                {{ vich_uploader_asset(book.images.first,'mediaFile') }}
+                                              {% else %}
+                                                {{ asset('assets/img/no-book-image.png') }}
+                                                {% endif %}" alt="{{ book.title }}">
+                                    </div>
+                                    <div class="col-md-9 row">
+                                        <div class="infos-book col-md-12">
+                                            <a href="{{ path('administrator_edit_book', {'token': book.token}) }}" class="book-title">
+                                                {{ book.title }}
+                                            </a>
+                                            <p class="col-md-12">
+                                                {% for author in book.mainAuthors %}
+                                                - <a href="{{ path('administrator_show_user', {'id': author.id}) }}" class="author">{{ author.fullName }}</a><br>
+                                                {% endfor %}
+                                            </p>
+                                            <p class="col-md-12">
+                                                {{ book.description|slice(1,600) }} {% if book.description|length>600 %}....{% endif %}
+                                            </p>
+                                            <p class="col-md-12" style="color:#bfbdbe;">
+                                                <span class="col-md-6">Category : {{ book.category.name }}</span>
+                                                <span class="col-md-6">Date Publication : {% if book.published %} {{ book.publishDate|date('d-m-Y') }}{% else %}Pas encore{% endif %}</span>
+                                            </p>
+                                            <div class="col-md-12">
+                                                <a style="font-size: 18px" href="{{ path('administrator_edit_book', {'token': book.token}) }}" class="btn green btn-outline pull-right">
+                                                    <i class="fa fa-eye"></i>&nbsp;&nbsp; Voir</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="navigation col-md-12 text-center">
+                        {{ knp_pagination_render(pagination, ':KnpPaginatorBundle/Pagination:site_defaut_pagination.html.twig') }}
+                    </div>
+                    {% if pagination|length==0 %}
+                    <div class="col-md-12 text-center">
+                        <h1 style="color: grey">Aucun livre trouvée</h1>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-book-search">
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/bootstrap-daterange/daterangepicker.css') }}">
+    <style>
+
+        .found-books{
+            padding:0px;
+            list-style: none;
+        }
+        .found-books .book-item{
+            margin: 5px;
+            padding:10px;
+            background-color: whitesmoke;
+        }
+        .infos-book .book-title{
+            font-size: 25px;
+            color: #3a3a3a;
+            font-family: "Bree Serif",sans-serif;
+            text-decoration: none;
+        }
+        .infos-book .author{
+            font-size: 18px;
+            color: #32c5d2;
+            font-family: "Bree Serif",sans-serif;
+            text-decoration: none;
+        }
+        .bloc-select {
+            background: #f2f2f2;
+            border: 1px solid #dbdbdb;
+            padding: 5px;
+            text-align: center;
+        }
+        .btn{
+            padding: 7px 30px!important;
+        }
+        .mgb-5 {
+            margin-bottom: 5px;
+        }
+
+        .bloc-select a {
+            text-decoration: none;
+            background: white;
+            font-weight: 600;
+            color: #0a0f19;
+            display: block;
+            border: 1px solid white;
+            line-height: 1em;
+            height: 32px;
+            padding: 0 10px 0 6px;
+            cursor: pointer;
+            width: 100%;
+            vertical-align: middle;
+        }
+
+        .bloc-select.blc-alphabet {
+            padding: 5px !important;
+        }
+
+        .bloc-select.blc-alphabet ul {
+            margin: 0;
+            list-style: none;
+            display: block;
+            float: left;
+            position: relative;
+            top: auto;
+            left: auto;
+            right: auto;
+            background: none;
+            border: none;
+            width: 90%;
+            padding-left: 10px;
+        }
+
+        .bloc-select.blc-alphabet ul li {
+            display: inline-block;
+            position: relative;
+            padding: 8px 6px;
+            cursor: pointer;
+            line-height: normal;
+            float: left;
+            background: none;
+            width: 3.8461538462%;
+            text-align: center;
+            border-left: 2px solid #f2f2f2;
+            border-right: 2px solid #f2f2f2;
+            -webkit-transition: color 0.5s, font-size 0.5s;
+            -moz-transition: color 0.5s, font-size 0.5s;
+            -o-transition: color 0.5s, font-size 0.5s;
+            transition: color 0.5s, font-size 0.5s;
+        }
+
+        .bloc-select.blc-alphabet ul li:hover,.bloc-select.blc-alphabet ul li.active {
+            background-color: white;
+            font-weight: bold;
+            /* Adjust for font-weight bold so that the text will still align */
+            letter-spacing: -1px;
+            color: #01b070;
+        }
+
+        .bloc-select.blc-alphabet .select-All {
+            float: left;
+            width: 10%;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .bloc-select.blc-alphabet .select-All:hover {
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .bloc-select.blc-result {
+            padding-top: 13px;
+            background-color: white;
+        }
+
+        .bloc-select.blc-nav {
+            color: rgba(182, 180, 180, 0.33);
+            font-size: 18px;
+            padding-top: 13px;
+            background-color: white;
+        }
+
+        .bloc-select.blc-nav.nvl, .bloc-select.blc-nav.nvr {
+            cursor: pointer;
+            color: #0a0a0a;
+        }
+
+        .bloc-select.blc-pages {
+            padding-top: 13px;
+            background-color: white;
+        }
+
+        #loading-icon {
+            color: #17c4bb;
+            right: 90px;
+            position: absolute;
+            top: 10px;
+            font-size: 25px;
+            z-index: 5;
+        }
+
+        .mt-comment {
+            text-decoration: none;
+        }
+
+        *:before, *:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            position: relative;
+            -webkit-touch-callout: none;
+        }
+
+        .bloc-select .container {
+            display: table;
+            width: 100%;
+        }
+
+        .dateRangePlaceHolder {
+            padding: 2px 5px;
+            color: grey;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        #publicationDate {
+            background: #fff;
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('assets/global/plugins/bootstrap-daterange/daterangepicker.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            var start = moment().subtract(29, 'days');
+            var end = moment();
+
+            function cb(start, end) {
+                $('#publicationDate span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+
+            $('#publicationDate').daterangepicker({
+                startDate: start,
+                endDate: end,
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: ' - ',
+                    applyLabel: 'Appliquer',
+                    cancelLabel: 'Annuler',
+                    customRangeLabel: 'Personnalisée'
+                },
+                ranges: {
+                    'Aujourdhui': [moment(), moment()],
+                    'Hier': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Les 7 derniers jours': [moment().subtract(6, 'days'), moment()],
+                    'Les 30 derniers jours': [moment().subtract(29, 'days'), moment()],
+                    'Ce mois-ci': [moment().startOf('month'), moment().endOf('month')],
+                    'Le mois dernier': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb).on('apply.daterangepicker', function () {
+                $('.dateRangePlaceHolder').addClass('hidden');
+                $('input[name="publicationFrom"]').val($('input[name="daterangepicker_start"]').val());
+                $('input[name="publicationTo"]').val($('input[name="daterangepicker_end"]').val());
+
+            });
+            $(document).on('click','.letter-select>li',function () {
+                var letter =$(this).attr('value');
+                window.location=Routing.generate('administrator_search_book')+'?letter='+letter;
+            });
+            $('form').submit(function(e){
+                $(this).find('input').filter(function(){
+                    return !$.trim(this.value).length;  // get all empty fields
+                }).prop('disabled',true);
+                $(this).find('select').filter(function(){
+                    return !$.trim(this.value).length;  // get all empty fields
+                }).prop('disabled',true);
+            });
+        });
+    </script>
+{% endblock %}

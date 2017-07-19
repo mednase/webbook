@@ -1,0 +1,60 @@
+messaging_inbox:
+    path:     /inbox/{date}
+    defaults: { _controller: MessagingBundle:Default:inbox , date: null}
+    options:
+        expose: true
+
+messaging_sent:
+    path:     /sent/{date}
+    defaults: { _controller: MessagingBundle:Default:sent , date: null}
+
+messaging_show_msg:
+    path:     /{token}/show
+    defaults: { _controller: MessagingBundle:Default:showMessage }
+    options:
+        expose: true
+
+messaging_show_my_msg:
+    path:     /sent_message/{token}/show
+    defaults: { _controller: MessagingBundle:Default:showSentMessage }
+    options:
+        expose: true
+
+messaging_delete_sent_messages:
+    path:   /sent_message/delete
+    defaults: { _controller: MessagingBundle:Default:deleteSenTMessage }
+    methods: [POST]
+    options:
+        expose: true
+
+messaging_mark_as_read:
+    path:   /mark_as_read
+    defaults: { _controller: MessagingBundle:Default:markAsRead }
+    methods: [POST]
+    options:
+        expose: true
+
+messaging_delete_inbox_messages:
+    path:   /inbox_message/delete
+    defaults: { _controller: MessagingBundle:Default:deleteInboxMessage }
+    methods: [POST]
+    options:
+        expose: true
+
+messaging_important:
+    path:     /important
+    defaults: { _controller: MessagingBundle:Default:important}
+
+set_important_msg:
+    path:     /setImportant
+    defaults: { _controller: MessagingBundle:Default:setMsgImportant }
+    options:
+        expose: true
+
+messaging_compose:
+    path:     /compose
+    defaults: { _controller: MessagingBundle:Default:compose }
+
+messaging_search:
+    path:     /search
+    defaults: { _controller: MessagingBundle:Default:search }

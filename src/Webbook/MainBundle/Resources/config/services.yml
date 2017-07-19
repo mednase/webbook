@@ -1,0 +1,23 @@
+services:
+    user_block_permission.twig_extension:
+        class: Webbook\MainBundle\Twig\Extension\BlockOptions
+        public: false
+        arguments: ["@service_container"]
+        tags:
+            - { name: twig.extension }
+
+    datetime_normalizer:
+        class: Webbook\MainBundle\Services\DateTimeNormalizer
+        tags:
+            - { name: serializer.normalizer }
+
+    media_namer.file_namer:
+        class: Webbook\MainBundle\Services\MediaFileNamer
+        tags:
+            - { name: namer }
+
+    block_historic.listener:
+        class: Webbook\MainBundle\Listener\blockHistoricListener
+        arguments: ["@service_container"]
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

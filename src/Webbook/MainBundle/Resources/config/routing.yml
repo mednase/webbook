@@ -1,0 +1,33 @@
+redirect_site:
+    path:   /
+    defaults: { _controller: MainBundle:Main:index}
+
+administrator:
+    resource: "routing/administrator.yml"
+    prefix:    /administrator
+
+validator:
+    resource: "routing/validator.yml"
+    prefix:    /validator
+
+author:
+    resource: "routing/author.yml"
+    prefix:    /author
+
+file_manager:
+    resource: "routing/file-manager.yml"
+    prefix:   /file_manager
+
+not_found:
+    path:   /error
+    defaults: { _controller: MainBundle:Main:pageNotFound}
+
+book_api_search:
+    path:   /book/api/search
+    defaults: { _controller: MainBundle:Administrator/Book:findBookAjax }
+
+navbar_search:
+    path:   /search
+    defaults: { _controller: MainBundle:Main:navbarSearch }
+    options:
+        expose: true

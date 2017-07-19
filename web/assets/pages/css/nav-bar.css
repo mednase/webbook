@@ -1,0 +1,87 @@
+/* PROFILE */
+.page-header.navbar .menu-toggler.sidebar-toggler {
+    position: absolute;
+    background: transparent;
+    left: 215px;
+    top: -6px;
+    font-size: 25px;
+}
+
+.page-sidebar-closed .menu-toggler.sidebar-toggler{
+    left: 70px!important;
+}
+
+.page-sidebar-closed .nav-profile .profile .profile-image img{
+    width: 40px;
+    margin-left: -2px;
+}
+.page-sidebar-closed .nav-profile .profile .profile-data{
+    display: none;
+}
+.page-sidebar-closed .nav-profile:hover{
+    pointer-events: none!important;
+    height: 120px!important;
+    width: 50px!important;
+}
+.page-sidebar-closed .nav-profile:hover .profile .profile-data{
+    display: block;!important;
+}
+.page-logo>a img{
+    width: 140px;
+    margin-top: 4px;
+}
+.hidden-maximized{
+    display: none;
+}
+
+.page-sidebar-closed .hidden-maximized{
+    display: block;
+    width:50px!important;
+}
+.page-sidebar-closed .hidden-minimized{
+    display: none;
+}
+
+.nav-profile{
+    pointer-events:none;
+    height: auto;
+    display: -webkit-box!important;
+}
+.profile {
+    height: 100%;
+    padding: 10px;
+    width: 100%;
+    background: #2A3F54;
+}
+.profile .profile-image {
+    float: left;
+    width: 100%;
+    margin: 0px 0px 10px;
+    text-align: center;
+}
+.profile .profile-image img {
+    width: 100px;
+    border: 2px solid #FFF;
+    -moz-border-radius: 20%;
+    -webkit-border-radius: 20%;
+    border-radius: 20%;
+}
+.profile .profile-data {
+    width: 100%;
+    float: left;
+    text-align: center;
+}
+.profile .profile-data .profile-data-name {
+    width: 100%;
+    float: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFF;
+}
+.profile .profile-data .profile-data-title {
+    width: 100%;
+    float: left;
+    font-size: 11px;
+    font-weight: 400;
+    color: #999;
+}

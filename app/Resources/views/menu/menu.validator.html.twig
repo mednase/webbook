@@ -1,0 +1,47 @@
+<!-- BEGIN SIDEBAR -->
+<div class="page-sidebar-wrapper" >
+    <div class="page-sidebar navbar-collapse collapse">
+        <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu  "
+            data-keep-expanded="false"
+            data-auto-scroll="true" data-slide-speed="200">
+            <li class="nav-item nav-profile">
+                <div class="profile">
+                    <div class="profile-image">
+                        <img src="{% if app.user.picture is not null %}
+                        {{ vich_uploader_asset(app.user.picture,'mediaFile') }}
+                        {% else %}
+                        {{ asset('assets/img/avatar/no-avatar.png') }}
+                        {% endif %}" alt="John Doe">
+                    </div>
+                    <div class="profile-data">
+                        <div class="profile-data-name">{{ app.user.fullName }}</div>
+                        <div class="profile-data-title">{{ app.user.jobTitle }}</div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item start page-index">
+                <a href="{{ path('validator_homepage') }}" class="nav-link nav-toggle">
+                    <i class="fa fa-home" style="font-size: 32px"></i>
+                    <span class="title">Tableau de bord</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+            <li class="nav-item start page-inbox">
+                <a href="{{ path('messaging_inbox',{role:'validator'}) }}" class="nav-link nav-toggle">
+                    <i class="fa fa-comments" style="font-size: 32px"></i>
+                    <span class="title">Messages</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+            <li class="nav-item start page-validation-requests">
+                <a href="{{ path('validator_validation_requests') }}" class="nav-link nav-toggle">
+                    <i class="fa fa-check-square-o" style="font-size: 32px"></i>
+                    <span class="title">Demandes de validation</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+        </ul>
+        <!-- END SIDEBAR MENU -->
+    </div>
+    <!-- END SIDEBAR -->
+</div>

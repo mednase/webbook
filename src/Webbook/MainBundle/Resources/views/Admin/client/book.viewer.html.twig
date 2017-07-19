@@ -1,0 +1,140 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    {{ block.book.title }} - {{ block.title }}
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/turnjs4/book-viewer/css/jquery.ui.html4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/turnjs4/book-viewer/css/jquery.ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/turnjs4/book-viewer/css/book-viewer.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="book-background">
+        <nav class="action-nav">
+            <ul>
+                <li><a id="first" href="#" title="goto first page" class="">First page</a></li>
+                <li><a id="back" href="#" title="go back one page" class="">Back</a></li>
+                <li><a id="next" href="#" title="go foward one page" class="">Next</a></li>
+                <li><a id="last" href="#" title="goto last page" class="">last page</a></li>
+                <li><a id="flipsound" href="#" title="flip sound on/off" class="wowbook-disabled">Flip sound</a></li>
+                <li><a id="fullscreen" href="#" title="fullscreen on/off" class="">Fullscreen</a></li>
+            </ul>
+        </nav>
+                    <div id="flipbook">
+                        <div depth="5" class="hard cover" style="background-image:url({{ asset('assets/img/no-cover.jpg') }})
+                                ;background-size: 480px 600px"></div>
+                        <div depth="5" class="hard  coverInnerSide ">
+                            <div class="depth"></div>
+                        </div>
+                        <div class="own-size">
+                            <div class="book-content">
+                                {{ block.content|raw }}
+                                <span class="page-number">1</span>
+                            </div>
+                        </div>
+                        <div class="own-size">
+                        </div>
+                        <div class="hard blastPage fixed">
+                            <div class="depth"></div>
+                        </div>
+                        <div class="hard lasPage">
+                            <div class="copyright"> {{ date()|date('Y') }} © Tous les droits sont reservé Mobilite.fr
+                            </div>
+                        </div>
+                    </div>
+    </div>
+    <audio id="pageFlip" src="{{ asset('assets/global/plugins/turnjs4/book-viewer/sound/page-flip.mp3') }}" ></audio>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/turnjs4/lib/turn.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('assets/global/plugins/turnjs4/extras/jquery-ui-1.8.20.custom.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('assets/global/plugins/turnjs4/extras/jquery.mousewheel.min.js') }} "></script>
+    <script type="text/javascript"
+            src="{{ asset('assets/global/plugins/turnjs4/extras/modernizr.2.5.3.min.js') }} "></script>
+    <script>
+        $(document).ready(function () {
+            $('#fullscreen').click(function () {
+                $('.book-background').toggleClass('fullscreen');
+            })
+
+            $("#flipbook").turn({
+                duration: 1000,
+                autoCenter: true,
+                when: {
+                    turned: function (e, page, view) {
+                        var book = $(this);
+
+                        if (page >= 2)
+                            $('#flipbook .coverInnerSide').addClass('fixed');
+                        else
+                            $('#flipbook .coverInnerSide').removeClass('fixed');
+
+                        if (page < book.turn('pages'))
+                            $('#flipbook .blastPage').addClass('fixed');
+                        else
+                            $('#flipbook .blastPage').removeClass('fixed');
+
+                        updateDepth(book, page)
+                    },
+                    turning:function (event, page, view) {
+                        console.log(page)
+                        if(page>2)
+                            document.getElementById('pageFlip').play();
+                    }
+                }
+            });
+            function updateDepth(book, newPage) {
+
+                var page = book.turn('page'),
+                    pages = book.turn('pages'),
+                    depthWidth = 16 * Math.min(1, page * 2 / pages);
+
+                newPage = newPage || page;
+
+                if (newPage > 3)
+                    $('#flipbook .coverInnerSide .depth').css({
+                        width: depthWidth,
+                        left: 20 - depthWidth
+                    });
+                else
+                    $('#flipbook .coverInnerSide .depth').css({width: 0});
+
+                depthWidth = 16 * Math.min(1, (pages - page) * 2 / pages);
+
+                console.log(newPage < pages - 3);
+                if (newPage < pages - 3)
+                    $('#flipbook .blastPage .depth').css({
+                        width: depthWidth,
+                        right: 20 - depthWidth
+                    });
+                else
+                    $('#flipbook .blastPage .depth').css({width: 0});
+
+            }
+
+            $(document).keydown(function (e) {
+                var previous = 37, next = 39;
+                switch (e.keyCode) {
+                    case previous:
+                        $('#flipbook').turn('previous');
+                        break;
+                    case next:
+                        $('#flipbook').turn('next');
+                        break;
+                }
+            });
+            $('#next').click(function () {
+                $('#flipbook').turn('next');
+            })
+            $('#back').click(function () {
+                $('#flipbook').turn('previous');
+            })
+
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+
+    /**
+     * Lists all {{ entity }} entities.
+     *
+{% if 'annotation' == format %}
+     * @Route("/", name="{{ route_name_prefix }}")
+     * @Method("GET")
+     * @Template()
+{% endif %}
+     */
+    public function indexAction($field, $method)
+    {
+        
+        $entities = $this->filter();
+
+
+{% if 'annotation' == format %}
+        return array(
+            'entities'  => $entities,
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'})|lower }}:index.html.twig', array(
+            'entities'  => $entities,
+        ));
+{% endif %}
+    }
+
+    /**
+    * Create filter form and process filter request.
+    *
+    */
+    protected function filter()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('{{ bundle }}:{{ entity }}')->createQueryBuilder('e')->getQuery()->getResult();
+
+        return $entities;
+    }

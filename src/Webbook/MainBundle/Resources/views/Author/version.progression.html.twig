@@ -1,0 +1,25 @@
+{% extends '@Main/layout.html.twig' %}
+{% block title %}
+    {{ version.bookBlock.book.title }} - {{ version.bookBlock.title }} - v {{ version.number }}
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('author_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{{ url('author_show_book',{token:version.bookBlock.book.token}) }}">{{ version.bookBlock.book.title }}</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">progression </span>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+

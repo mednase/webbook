@@ -1,0 +1,73 @@
+{% extends '@Messaging/message.layout.html.twig' %}
+{% block BCMInbox %}active{% endblock %}
+{% block message_body %}
+    <div class="col-md-9">
+        <div class="inbox-body">
+            <div class="inbox-content">
+                <table class="table table-striped table-advance">
+                    <thead>
+                        <tr>
+                            <th class="inbox-small-cells" colspan="1">
+                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline green ">
+                                    <input id="check-all-msg" type="checkbox" class="mail-checkbox" value="1">
+                                    <span></span>
+                                </label>
+
+                            </th>
+                            <th class="inbox-small-cells" colspan="2">
+                                <button id="btn-mq-read" data-toggle="tooltip" title="marquer comme lus " class="btn btn-default"><span class="fa fa-eye" style="color: #73879C!important;"></span></button>
+                                <button id="btn-dlt-msg" data-toggle="tooltip" title="supprimer" class="btn btn-default"><span class="fa fa-trash-o" style="color: #73879C!important;"></span></button>
+                            </th>
+                            <th colspan="3">
+                                <div class="pull-right" style="width: 150px;margin-left: 20px">
+                                    <div class="input-group">
+                                        <input id="dateSearch" value="{{ date }}" class="form-control datepicker" type="text" data-orientation="left">
+                                        <div class="input-group-addon" style="background:#32c5d2;color: white;"><span
+                                                    class="fa fa-calendar"></span></div>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if pagination|length==0 %}
+                        <tr ><td colspan="5" class="text-center no-message">Pas de message </td></tr>
+                    {% endif %}
+                    {% for hasMessage in pagination %}
+                    <tr data-type=1 class="msg-tr {% if not hasMessage.seen %}unread{% endif %}" data-id="{{ hasMessage.id }}" data-token="{{ hasMessage.token }}">
+                        <td class="inbox-small-cells">
+                            <label class="mt-checkbox mt-checkbox-single green mt-checkbox-outline green">
+                                <input type="checkbox" class="mail-checkbox" name="msg-check[]">
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="inbox-small-cells">
+                            <label for="important">
+                                <input data-msgt=0 data-msg="{{ hasMessage.id }}"  class="hidden important-btn" type="checkbox" {% if  hasMessage.important %} checked {% endif %}id="important" value="{{ hasMessage.important }}">
+                                {% if hasMessage.important %}<i class="fa fa-star"></i>{% else %}<i class="fa fa-star-o"></i>{% endif %}
+                            </label>
+                        </td>
+                        <td class="view-message col-md-3"><div>{{ hasMessage.message.sender.profile.fullName }}</div></td>
+                        <td class="view-message col-md-4"><div><a href="{{ url('messaging_show_msg',{token:hasMessage.token,role:getRole()}) }}">{{ hasMessage.message.subject }}</a></div></td>
+                        <td class="view-message inbox-small-cells  hidden-xs">
+                            {% if hasMessage.message.attachments|length>0 %}
+                            <i data-toggle="tooltip" title="attachements" class="fa fa-paperclip"></i>
+                            {% endif %}
+                        </td>
+                        <td class="col-md-2 view-message text-right">{{ hasMessage.message.dateSend|date('d-m-y H:i') }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer col-md-12">
+                <div class="col-md-4 nb-msg">
+                    {{ pagination|length }} - Messages
+                </div>
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block under_js %}
+{% endblock %}

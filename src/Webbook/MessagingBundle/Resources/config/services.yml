@@ -1,0 +1,14 @@
+services:
+#    messaging.example:
+#        class: Webbook\MessagingBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    message.support.twig_extension:
+        class: Webbook\MessagingBundle\Twig\Extension\MessageSupport
+        public: false
+        arguments: ["@service_container"]
+        tags:
+            - { name: twig.extension }
+
+    role.route.service:
+        class: Webbook\MessagingBundle\Services\routeRole
+        arguments: ["@security.authorization_checker"]

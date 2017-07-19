@@ -1,0 +1,39 @@
+
+    /**
+     * Displays a form to edit an existing {{ entity }} entity.
+     *
+{% if 'annotation' == format %}
+     * @Route("/{token}/edit", name="{{ route_name_prefix }}_edit")
+     * @Method("GET")
+     * @Template()
+{% endif %}
+     */
+    public function editAction($token)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->findOneBy(array(
+            'token' => $token
+        ));
+
+        if (!$entity) {
+            $this->get('session')->getFlashBag()->add('warning', 'Unable to find {{ entity }} entity.');
+            return $this->redirect($this->generateUrl('dashboard'));
+        }
+
+        $form = $this->createForm(new {{ entity_class }}Type(), $entity);
+
+{% if 'annotation' == format %}
+        return array(
+            'entity'      => $entity,
+            'form'   => $form->createView(),
+            'action' => $this->generateUrl('{{ route_name_prefix }}_update', array('token' => $token))
+        );
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'})|lower }}:edit.html.twig', array(
+            'entity'      => $entity,
+            'form'   => $form->createView(),
+            'action' => $this->generateUrl('{{ route_name_prefix }}_update', array('token' => $token))
+        ));
+{% endif %}
+    }

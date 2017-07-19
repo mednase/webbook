@@ -1,0 +1,145 @@
+{% extends '@Main/layout.html.twig' %}
+
+{% block title %}
+    Edit newsLetter
+{% endblock %}
+
+{% block body %}
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Edit newsLetter</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="portlet ">
+                <div class="portlet-body col-md-12" style="padding: 10px 0">
+                    {{ form_start(form,{'attr':{enctype:"multipart/form-data",'class':'messageForm',novalidate:true} }) }}
+                    <div class="form-group col-md-12">
+                        {{ form_label(form.subject,null,{label_attr:{class:'col-sm-2 col-sm-offset-1  control-label'} }) }}
+                        <div class="col-sm-7">
+                            {{ form_widget(form.subject,{attr:{class:'form-control'}}) }}
+                            <div class="help-block with-errors">vous devez entrer le sujet du newsletter</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        {{ form_label(form.body,null,{label_attr:{class:'control-label'}}) }}
+                        <div>
+                            {{ form_widget(form.body,{attr:{class:'summernote'}}) }}
+                            <div class="help-block with-errors">Le contenu de newsletter ne peut pas etre vide (20 caractéres minimum)</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label  class="control-label">Attachement</label>
+                        <div>
+                            {% for attachment in newsletter.attachments %}
+                                <div class="col-md-2 text-center" style="padding-top: 10px">
+                                    <span class="rm-attachment" data-id="{{ attachment.id }}" >
+                                        <i class="fa fa-times-circle-o close-btn"></i>
+                                    </span>
+                                    <img src="{{ asset('assets/file-manager/img/default.png') }}" alt="">
+                                    <span class="text-muted">{{ attachment.media.originalName }}</span>
+                                    <p class="text-muted">taille : {{ getFormattedSize(attachment.media.size) }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <input type="file" class="fileinput" name="attachments[]"/>
+                    </div>
+                    <div class="col-md-12 text-center" style="margin-top: 20px">
+                        <button  type="submit" class="btn green">Enregistrer</button>
+                        <button type="reset" class="btn btn-default">X Annuler</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input type="hidden" value="" id="menuSelected" data-menu="page-newsletter">
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .close-btn{
+            color: rgba(226, 0, 7, 0.61);
+            font-size: 30px;
+            position: absolute;
+            cursor: pointer;
+        }
+        .close-btn:hover{
+            color: #ed362f;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote(
+                {
+                    height: 300,
+                    language: 'fr',
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']]
+                    ],
+                }).trigger('summernote.change');
+            $(".summernote").on("summernote.change", function (e) {   // callback as jquery custom event
+                $(this).val().length >= 20 ? $(this).closest('.form-group').removeClass('has-error').addClass('has-success') :
+                    $(this).closest('.form-group').addClass('has-error').removeClass('has-success');
+            });
+
+            $('.messageForm').on('submit',function ($event) {
+                var subject=$('#webbook_mainbundle_newsletter_subject');
+                var content=$('#webbook_mainbundle_newsletter_body');
+
+                var error=false;
+
+                if(!subject.val()){
+                    error=true;
+                    subject.closest('.form-group').addClass('has-error');
+                }
+                if(!content.val() || $.trim(content.val()).length<20){
+                    error=true;
+                    content.closest('.form-group').addClass('has-error');
+                }
+                if(error){
+                    subject.on('change',function () {
+                        $(this).val()?$(this).closest('.form-group').removeClass('has-error').addClass('has-success'):
+                            $(this).closest('.form-group').addClass('has-error').removeClass('has-success');
+                    });
+                    $event.preventDefault();
+                }
+
+            });
+            $('button[type="reset"]').click(function () {
+                $('.has-error').removeClass("has-error");
+            });
+            $('.rm-attachment').click(function () {
+                var elem=$(this);
+                elem.off();
+                var id=elem.data('tr');
+                $.ajax({
+                    url:Routing.generate('newsletter_remove_attachment',{id:id}),
+                    method:'POST',
+                    success:function () {
+                        elem.parent().remove();
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

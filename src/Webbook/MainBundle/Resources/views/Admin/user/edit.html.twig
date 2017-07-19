@@ -1,0 +1,113 @@
+{% extends '@Main/layout.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    Modification des informations d'utilisateur
+{% endblock %}
+
+{% block classBody %}
+    page-container-bg-solid page-header-fixed
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="{{ url('administrator_homepage') }}">Tableau de bord</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <span class="active">Modification des informations d'utilisateur</span>
+            </li>
+
+        </ul>
+    </div>
+    <div class="m-heading-1 border-green m-bordered row" style="margin-bottom: 17px;">
+        <h2><span class="fa fa-id-card"></span> &nbsp; Modification des informations d'utilisateur </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box red">
+                <div class="portlet-title">
+                    <div class="caption"></div>
+                </div>
+                <div class="portlet-body ">
+
+                    {{ form_start(edit_form) }}
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(edit_form.profile.lastName, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(edit_form.profile.lastName,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(edit_form.profile.lastName) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(edit_form.profile.firstName, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(edit_form.profile.firstName,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(edit_form.profile.firstName) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(edit_form.username, null,{ 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(edit_form.username,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(edit_form.username) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(edit_form.email,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(edit_form.email,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(edit_form.email) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(edit_form.plainPassword.first,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(edit_form.plainPassword.first,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(edit_form.plainPassword.first) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        {{ form_label(edit_form.plainPassword.second,null, { 'label_attr': {'class': 'col-md-3 col-md-offset-1 custom-lb'}}) }}
+                        <div class="col-md-6">
+                            {{ form_widget(edit_form.plainPassword.second,{'attr':{'class':'form-control'}}) }}
+                            <div class="font-red" style="list-style: none">
+                                {{ form_errors(edit_form.plainPassword.second) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group margin-top-10">
+                        <label class="custom-lb col-md-3 col-md-offset-1" for="role">Choisir un role :</label>
+                        <div class="col-md-6">
+                            <select name="role" id="role" class="form-control">
+                                <option {% if 'ROLE_ADMINISTRATEUR' in edit_form.vars.value.roles %}  selected {% endif %} value="ROLE_ADMINISTRATEUR">Role Administrateur</option>
+                                <option  {% if 'ROLE_VALIDATEUR' in edit_form.vars.value.roles %}  selected {% endif %} value="ROLE_VALIDATEUR">Role Validateur </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <input  class="btn btn-lg btn-primary" type="submit" value="Edit"/>
+                    </div>
+                    {{ form_end(edit_form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-user">
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "MainBundle::layout.html.twig" %}
+{% block classBody %}page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo{% endblock %}
+{% block menu %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <!-- BEGIN PAGE BASE CONTENT -->
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a >Tableau de bord</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-body">
+                    <h1>Validateur Tableau de bord !</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="menuSelected" data-menu="page-index">
+
+{% endblock %}

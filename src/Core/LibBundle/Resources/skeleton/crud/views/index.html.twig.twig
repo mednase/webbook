@@ -1,0 +1,97 @@
+{{ "{% extends '::base.html.twig' %}" }}
+
+{{ "{% block title %}" }}
+{{ "{{ parent() }} | List " ~ entity|title }}
+{{ "{% endblock %}" }}
+
+{{ "{% block stylesheets %}" }}
+    {{ '<link rel="stylesheet" type="text/css" href="{{ asset("assets/js/plugins/DataTables/media/css/dataTables.bootstrap.min.css") }}">' }}
+{{ "{% endblock %}" }}
+
+{{ "{% block body %}" }}
+    <div class="page-container">
+        <h1 class="title-page">Administration</h1>
+        <div class="container-lvl2">
+            <h2 class="subtitle">List {{ entity|title }}</h2>
+            {% if 'new' in actions %}
+                <a title="Ajouter {{ entity|title }}" class="btn btn-sm btn-primary pull-right likepaginator" href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">
+                    <i class="fa fa-plus"></i> Ajouter
+                </a>
+            {% endif %}
+            <div class="form-type-1">
+                <div class="col-md-12">
+                    <table class="table table-collapse dataTable no-footer">
+                        <thead>
+                            <tr>
+                            {%- for field, metadata in fields %}
+
+                                {% if field not in ['id', 'token'] %}
+                                    <th>
+                                        {{ "{% spaceless %} "}}
+                                            {{ field|capitalize }}
+                                        {{ "{% endspaceless %}" }}
+                                    </th>
+                                {% endif %}
+
+                            {%- endfor %}
+
+                                <th style="width:5%;">Actions</th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                        {{ '{% for entity in entities %}' }}
+                            <tr>
+
+                        {%- for field, metadata in fields %}
+                            {% if field not in ['id', 'token'] %}
+
+                                {%- if metadata.type in ['date', 'datetime'] %}
+
+                                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+
+                                {%- else %}
+
+                                    <td>{{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}</td>
+
+                                {%- endif %}
+                            {% endif %}
+
+                            {%- if loop.last %}
+
+                                <td>
+                                    {%- include "crud/views/others/actions.html.twig.twig" %}
+                                </td>
+
+                            {%- endif %}
+                        {%- endfor %}
+
+                            </tr>
+                        {{ '{% endfor %}' }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ "{% endblock %}" }}
+
+{{ "{% block javascripts %}" }}
+{{ "{% include 'LibBundle:modal:modalDeleteHeader.html.twig' %}" }}
+    {{ '<script type="text/javascript" src="{{ asset("assets/js/plugins/DataTables/media/js/jquery.dataTables.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("assets/js/plugins/DataTables/media/js/dataTables.bootstrap.min.js") }}"></script>
+    <script type="text/javascript">
+        $(".table").DataTable( {
+            "language": {
+                "url": "{{ asset("assets/js/plugins/DataTables/media/lang/fr.json") }}"
+            }
+        });
+    </script>' }}
+{{ "{% if find_help('" ~ entity ~ "_list') %}
+        {% set message =  find_help('" ~ entity ~ "_list') %}
+    {% else %}
+        {% set message =  'Message d\\'aide de la liste des "~ entity ~"' %}
+    {% endif %}
+
+    {% include 'LibBundle:modal:help.html.twig' with {'message': message  , 'id' : 'modalHelp'} %}" }}
+{{ "{% endblock %}" }}

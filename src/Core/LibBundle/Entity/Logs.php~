@@ -1,0 +1,48 @@
+<?php
+
+namespace Core\LibBundle\Entity;
+
+use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Table(name="logs")
+ * @ORM\Entity(repositoryClass="Core\LibBundle\Repository\LogsRepository")
+ *
+ */
+class Logs extends AbstractLogEntry
+{
+    /**
+     * @ORM\ManyToOne(targetEntity="Core\UserBundle\Entity\User")
+     */
+    private $user;
+
+    /**
+     * Set user
+     *
+     * @param \Core\UserBundle\Entity\User $user
+     *
+     * @return Logs
+     */
+    public function setUser(\Core\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Chlorofil\CueillettesBundle\Entity\Cueillettes")
+     */
+    private $cueillette;
+
+    /**
+     * Get user
+     *
+     * @return \Core\UserBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+}

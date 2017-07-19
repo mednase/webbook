@@ -1,0 +1,343 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/layout/css/components-md.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/layout/css/font/matriel.font.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/global/plugins/bootstrap-fileinput/css/fileinput.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/global/plugins/viewer/viewer.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/global/plugins/bootstrap-sweetalert/sweetalert.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/file-manager/css/file-manager.css') }}">
+</head>
+<body class="fileManager">
+    <div class="fm-header">
+        <ul class="row">
+            <li id="selectFile" class="fm-btn disabled col-md-1 col-sm-2 col-xs-2">
+                <i style="color: #7de3af" class="fa fa-check-square-o fa-2x"></i>
+                <span>Selectionner</span>
+            </li>
+            <li id="displayImage" class="fm-btn disabled col-md-1 col-sm-2 col-xs-2">
+                <i style="height: 30px;background: url({{ asset('assets/file-manager/img/preview.png') }})center no-repeat"></i>
+                <span>Aperçu</span>
+            </li>
+            <li id="downloadMediaFile" class="fm-btn disabled col-md-1 col-sm-2 col-xs-2">
+                <i style="color: #25c7f5" class="fa fa-download fa-2x "></i>
+                <span>Télécharger</span>
+            </li>
+            <li id="uploadMediaFile" class="fm-btn col-md-1 col-sm-2 col-xs-2">
+                <i style="color: #59e323" class="fa fa-cloud-upload fa-2x"></i>
+                <span>Upload</span>
+            </li>
+            <li id="removeFile" class="fm-btn disabled col-md-1 col-sm-2 col-xs-2">
+                <i style="color: #ed362f" class="fa fa-trash fa-2x "></i>
+                <span>Supprimer</span>
+            </li>
+            <li id="mode-list" class="fm-btn col-md-1 active col-sm-2 col-xs-2">
+                <i style="height: 30px;background: url({{ asset('assets/file-manager/img/list.png') }})center no-repeat"></i>
+                <span>Liste</span>
+            </li>
+            <li id="mode-thumbnail" class="fm-btn col-md-1  col-sm-2 col-xs-2">
+                <i style="height: 30px;background: url({{ asset('assets/file-manager/img/thumbnails.png') }})center no-repeat"></i>
+                <span>Thumbnail</span>
+            </li>
+            <li class="col-md-2 col-offset-sm-1 col-sm-4 col-xs-5" style="display: -webkit-box">
+                <div style="display: inline-grid">
+                    <i style="color: #22eab3" class="fa fa-sort fa-2x"></i>
+                    <span>Trier par</span>
+                </div>
+                <select id="slcta" class="form-control">
+                    <option value="size">Taille</option>
+                    <option value="name">Nom</option>
+                    <option value="date" selected>Date</option>
+                </select>
+            </li>
+            <li class="col-md-3 col-sm-4 col-xs-5" style="display: -webkit-box">
+                <div style="display: inline-grid">
+                    <i  style="color: #f55c27" class="fa fa-filter fa-2x"></i>
+                    <span>Rechercher</span>
+                </div>
+                <input id="searchMediaFile" type="text" class="form-control" placeholder="recherche ..">
+            </li>
+        </ul>
+    </div>
+    <div class="fm-body" oncontextmenu="return false;">
+        <ul id="mediaFileBox" class="row list-group images ">
+            {% for file in files %}
+                {% if type!='image' or (type=='image' and 'image' in file.media.mimeType )%}
+                <li class="list" data-id="{{ file.id }}" data-url="{{ url('file_manager_remove_file') }}" data-path="{{file.path}}">
+                    <div class="media-image">
+                        {% if 'image' in file.media.mimeType %}
+                            <img class="real" style="pointer-events: none" src="{{ vich_uploader_asset(file,'mediaFile') }}">
+                        {% elseif 'text' in file.media.mimeType  %}
+                            <img src="{{ asset('assets/file-manager/img/txt.png') }}">
+                        {% elseif 'pdf' in file.media.mimeType  %}
+                            <img src="{{ asset('assets/file-manager/img/pdf.png') }}">
+                        {% elseif 'doc' in file.media.mimeType %}
+                            <img src="{{ asset('assets/file-manager/img/doc.png') }}">
+                        {% elseif 'video' in file.media.mimeType  %}
+                            <img src="{{ asset('assets/file-manager/img/media.ico') }}">
+                        {% else %}
+                            <img src="{{ asset('assets/file-manager/img/default.png') }}">
+                        {% endif %}
+                    </div>
+                    <div class="media-name">
+                        <h4 style="max-height: 20px;">{{ file.media.originalName }}</h4>
+                    </div>
+                    <div class="media-size">
+                        <strong>{% if file.media.size/1000>1000 %} {{ (file.media.size/1000000)|number_format(2,'.',',') }} Mb {% else %}{{ (file.media.size/1000)|number_format(2,'.',',') }} Kb{% endif %}</strong>
+                    </div>
+                    <div class="media-date">
+                        <b>{{ file.createdAt|date('Y-m-d H:i') }}</b>
+                    </div>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <div id="uploadMediaBox" style="padding: 30px" class="hidden">
+            <input id="mediaUpload" {% if type=='image' %} accept="image/*" {% endif %} name="media[]" type="file" multiple class="file-loading -input" style="max-height: 400px">
+            <div id="errorBlock" class="help-block" ></div>
+        </div>
+
+    </div>
+
+    <div class="fm-footer">
+
+    </div>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/bootstrap-fileinput/js/plugins/canvas-to-blob.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/bootstrap-fileinput/js/plugins/sortable.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/bootstrap-fileinput/js/plugins/purify.min.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/bootstrap-fileinput/js/fileinput.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/bootstrap-fileinput/js/locales/fr.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/viewer/viewer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js') }}"></script>
+    <script>
+        $(document).on('ready', function() {
+            $("#mediaUpload").fileinput({
+                uploadUrl: "{{ url('file_manager_upload_file',{version_token:version_token}) }}",
+                showUpload:true
+            }).on('fileuploaded', function(event, data, previewId, index) {
+                var id=data.response.id;
+                var path=data.response.path;
+                var size=(data.response.size/1000)>1000?(data.response.size/1000000)+" Mb ":(data.response.size/1000)+" Kb ";
+                var name=data.response.name;
+                var type=data.response.type;
+                var createdAt=data.response.date;
+                var displayMode=$('#mode-list.active').length?'list':'thumbnail';
+                var elem='<li class="'+displayMode+'" data-id='+id+' data-url="{{ url('file_manager_remove_file') }}" ' +
+                'data-path="'+path+'"> <div class="media-image">';
+                if(type.includes('image'))
+                    elem+=' <img  class="real" style="pointer-events: none" src="'+path+'" >';
+                else if(type.includes('text'))
+                    elem+=' <img  class="real" style="pointer-events: none" src="{{ asset('assets/file-manager/img/txt.png') }}" >';
+                else if(type.includes('pdf'))
+                    elem+=' <img  class="real" style="pointer-events: none" src="{{ asset('assets/file-manager/img/pdf.png') }}" >';
+                else if(type.includes('doc'))
+                    elem+=' <img  class="real" style="pointer-events: none" src="{{ asset('assets/file-manager/img/doc.png') }}" >';
+                else if(type.includes('video'))
+                    elem+=' <img  class="real" style="pointer-events: none" src="{{ asset('assets/file-manager/img/media.ico') }}" >';
+                else
+                    elem+=' <img  class="real" style="pointer-events: none" src="{{ asset('assets/file-manager/img/default.png') }}" >';
+                elem+='</div><div class="media-name"><h4 style="max-height: 20px;">'+name+'</h4></div>';
+                elem+='<div class="media-size"><strong>'+size+'</strong></div>';
+                elem+='<div class="media-date"><b>'+createdAt+'</b></div></li>';
+                $('#mediaFileBox').append(elem);
+                $('.images').viewer().destroy();
+                $('.images').viewer();
+
+            });
+
+            $('#uploadMediaFile').click(function () {
+                $('.fm-header>ul>li').each(function () {
+                    if($(this).attr('id')!=="uploadMediaFile")
+                        $(this).toggleClass('instant-disabled');
+                    else {
+                        if($(this).find('.fa-cloud-upload').length)
+                            $(this).html('<i style="color: red" class="fa fa-times fa-2x"></i> <span>Annuler</span>');
+                        else
+                            $(this).html('<i style="color: #59e323" class="fa fa-cloud-upload fa-2x"></i> <span>Upload</span>')
+                    }
+                });
+                $('#uploadMediaBox').toggleClass('hidden');
+                $('#mediaFileBox').toggleClass('hidden');
+
+            });
+            $(document).on('click','#mediaFileBox>li',function () {
+                var isSelected=$(this).hasClass('selected');
+                $('#mediaFileBox>li.selected').removeClass('selected');
+                if(!isSelected)
+                    $(this).addClass('selected');
+
+                $('#downloadMediaFile,#removeFile,#selectFile,#displayImage').trigger('contentchanged');
+            });
+            $('.images').viewer();
+            $('#displayImage').bind('contentchanged', function() {
+                if( $('#mediaFileBox>li.selected img.real').length>0)
+                    $(this).removeClass('disabled');
+                else
+                    $(this).addClass('disabled');
+            });
+            $('#removeFile,#selectFile,#downloadMediaFile').bind('contentchanged', function() {
+                $('.option-menu').remove();
+                if( $('#mediaFileBox>li.selected ').length>0)
+                    $(this).removeClass('disabled');
+                else
+                    $(this).addClass('disabled');
+            });
+
+            $(document).on('click','#selectFile:not(.disabled)',function (event) {
+                event.stopPropagation();
+                var selected=$('#mediaFileBox>li.selected');
+                var args = top.tinymce.activeEditor.windowManager.getParams();
+                var win = (args.window);
+                var input = (args.input);
+                win.document.getElementById(input).value =selected.data('path');
+
+                top.tinymce.activeEditor.windowManager.close();
+            });
+            $(document).on('click','#displayImage:not(.disabled)',function (event) {
+                event.stopPropagation();
+                $('.option-menu').remove();
+                var img=$('#mediaFileBox>li.selected img.real').first();
+                img.click();
+            });
+            $(document).on('click','#removeFile:not(.disabled)',function (event) {
+                event.stopPropagation();
+                $('.option-menu').remove();
+                var file=$('#mediaFileBox>li.selected');
+                var id=file.data('id');
+                var url=file.data('url');
+                swal({
+                    title: "Êtes-vous sûr",
+                    text: "Voulez vous vraiment supprimer ce fichier",
+                    type: "warning",
+                    cancelButtonText: 'Annuler',
+                    confirmButtonText:"Confirmer",
+                    confirmButtonClass:"blue",
+                    cancelButtonClass:"red",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function () {
+                    $.ajax({
+                        url:url,
+                        method:"POST",
+                        data:{id:id},
+                        success:function () {
+                            swal("Ce fichier a été supprimer !");
+                            file.remove();
+                        },
+                        error:function () {
+                            swal("Erreur !");
+                        }
+                    })
+
+                });
+            });
+
+            $('#mode-list').click(function () {
+                $(this).addClass('active');
+                $('#mode-thumbnail').removeClass('active');
+                $('#mediaFileBox>li').each(function () {
+                    $(this).addClass('list').removeClass('thumbnail');
+                })
+            });
+            $('#mode-thumbnail').click(function () {
+                $(this).addClass('active');
+                $('#mode-list').removeClass('active');
+                $('#mediaFileBox>li').each(function () {
+                    $(this).addClass('thumbnail').removeClass('list');
+                })
+            });
+
+            $('#slcta').change(function () {
+                var elems = $.makeArray($("#mediaFileBox>li"));
+                switch ($(this).val() ){
+                    case 'size': elems.sort(function(a, b) {
+                        return parseFloat( $(a).find('.media-size').text() ) < parseFloat( $(b).find('.media-size').text() );
+                    });break;
+                    case 'name':elems.sort(function(a, b) {
+                        var compA = $(a).find('.media-name h4').text().toUpperCase();
+                        var compB = $(b).find('.media-name h4').text().toUpperCase();
+                        return (compA < compB) ? -1 : 1;
+                    });break;
+                    case 'date':
+                        elems.sort(function(a, b) {
+                            return parseDate( $(a).find('.media-date').text() ) < parseDate( $(b).find('.media-date').text() );
+                        });break;
+                    default: elems;
+                }
+                $("#mediaFileBox").html(elems);
+            });
+
+            $('#searchMediaFile').on('change keyup', function () {
+                var search = $(this).val();
+                $('#mediaFileBox>li div.media-name>h4').each(function () {
+                    var txt = $(this).text();
+                    if (!(txt.toUpperCase()).includes(search.toUpperCase())){
+                        $(this).closest('li').addClass('hidden');
+                    }else{
+                        $(this).closest('li').removeClass('hidden')
+
+                    }
+                })
+            });
+            $(document).on('click','#downloadMediaFile:not(.disabled)',function () {
+                var file=$('#mediaFileBox>li.selected');
+                var file_name=file.find('.media-name h4').text();
+                saveFile(file.data('path'),file_name);
+            });
+            $(document).on('contextmenu','#mediaFileBox>li',function (event) {
+                $('.option-menu').remove();
+                if(!$(this).hasClass('selected'))
+                    $(this).click();
+               var menu='<ul class="option-menu">' +
+                   '<li onclick=$("#selectFile").click() >Selectionner</li>' ;
+                    if($(this).find('img.real').length)
+                        menu+='<li  onclick=$("#displayImage").click() >Aperçu</li>';
+                    else
+                        menu+='<li class="disabled">Aperçu</li>';
+                   menu+='<li onclick=$("#downloadMediaFile").click()>Télécharger</li>' +
+                   '<li onclick=$("#removeFile").click()>Supprimer</li>' +
+                   '</ul>';
+
+                menu=$(menu);
+                leftVal = event.pageX + "px";
+                topVal = event.pageY + "px";
+                if(event.pageY>=($('.fileManager').height()-180))
+                    topVal=event.pageY-100+"px";
+                menu.appendTo($('.fm-body')).css({ left: leftVal, top: topVal });
+            });
+            $('.fm-body').click(function () {
+                $('.option-menu').remove();
+            })
+        });
+
+        function parseDate(input) {
+            var parts = input.match(/(\d+)/g);
+            // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+            return new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], 0); //     months are 0-based
+        }
+
+        function saveFile(url,file_name) {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function() {
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(xhr.response); // xhr.response is a blob
+                a.download = file_name; // Set the file name.
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                delete a;
+            };
+            xhr.open('GET', url);
+            xhr.send();
+        }
+
+    </script>
+</body>
+</html>
+
+
